@@ -3,62 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>7Б — Расписание</title>
+<title>DOOM 7Б — АД</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   
   body {
-    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    background: #0a0000;
+    background-image: 
+      radial-gradient(circle at 20% 30%, rgba(255,0,0,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(255,50,0,0.1) 0%, transparent 50%);
     min-height: 100vh;
-    color: #333;
-    background-attachment: fixed;
+    color: #ff2200;
+    font-family: 'Press Start 2P', monospace;
+    overflow-x: hidden;
   }
   
   /* Шапка */
   header {
-    background: rgba(255,255,255,0.95);
-    padding: 15px 25px;
+    background: linear-gradient(180deg, #2a0000 0%, #1a0000 100%);
+    padding: 18px 25px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    border-bottom: 4px solid #ff2200;
+    box-shadow: 0 0 30px rgba(255,34,0,0.6), inset 0 -2px 10px rgba(255,0,0,0.3);
     position: sticky;
     top: 0;
     z-index: 100;
   }
   
   header h1 {
-    font-size: 1.6em;
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    font-weight: 800;
+    font-size: 1.4em;
+    color: #ff2200;
+    text-shadow: 
+      0 0 10px #ff2200,
+      0 0 20px #ff0000,
+      3px 3px 0 #000;
+    letter-spacing: 2px;
+    animation: flicker 3s infinite;
+  }
+  
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    92% { opacity: 1; }
+    93% { opacity: 0.6; }
+    94% { opacity: 1; }
+    96% { opacity: 0.8; }
+    97% { opacity: 1; }
   }
   
   /* Бургер */
   .burger {
-    width: 45px;
-    height: 45px;
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
-    border: none;
-    border-radius: 10px;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #4a0000, #8b0000);
+    border: 2px solid #ff2200;
+    border-radius: 4px;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     gap: 5px;
-    transition: transform 0.3s;
+    transition: all 0.3s;
+    box-shadow: 0 0 15px rgba(255,34,0,0.5);
   }
   
-  .burger:hover { transform: scale(1.08); }
+  .burger:hover { 
+    box-shadow: 0 0 25px rgba(255,34,0,0.9);
+    transform: scale(1.08);
+  }
   
   .burger span {
     display: block;
-    width: 24px;
+    width: 26px;
     height: 3px;
-    background: white;
-    border-radius: 3px;
+    background: #ff2200;
+    box-shadow: 0 0 8px #ff2200;
     transition: all 0.35s ease;
   }
   
@@ -69,12 +91,13 @@
   /* Меню */
   .menu {
     position: fixed;
-    top: 75px;
+    top: 85px;
     right: 0;
-    width: 280px;
-    height: calc(100vh - 75px);
-    background: white;
-    box-shadow: -5px 0 25px rgba(0,0,0,0.15);
+    width: 300px;
+    height: calc(100vh - 85px);
+    background: linear-gradient(180deg, #1a0000 0%, #0a0000 100%);
+    border-left: 3px solid #ff2200;
+    box-shadow: -10px 0 40px rgba(255,34,0,0.5);
     transform: translateX(100%);
     transition: transform 0.4s ease;
     z-index: 99;
@@ -86,29 +109,32 @@
   
   .menu a {
     display: block;
-    padding: 15px 20px;
-    margin-bottom: 8px;
-    color: #444;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    color: #ff6644;
     text-decoration: none;
-    font-weight: 600;
-    border-radius: 12px;
+    font-size: 0.85em;
+    border: 2px solid #4a0000;
+    border-radius: 4px;
     transition: all 0.3s;
-    border-left: 4px solid transparent;
     cursor: pointer;
+    text-align: center;
+    letter-spacing: 1px;
   }
   
   .menu a:hover,
   .menu a.active {
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
-    color: white;
-    border-left-color: #ffd700;
-    transform: translateX(-5px);
+    background: #8b0000;
+    color: #fff;
+    border-color: #ff2200;
+    box-shadow: 0 0 20px rgba(255,34,0,0.8);
+    text-shadow: 0 0 8px #fff;
   }
   
   .overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.85);
     opacity: 0;
     visibility: hidden;
     transition: all 0.35s;
@@ -124,17 +150,34 @@
     padding: 0 20px;
   }
   
-  /* Страницы */
   .page { display: none; }
   .page.active { display: block; }
   
   section {
-    background: white;
-    border-radius: 20px;
-    padding: 35px;
+    background: linear-gradient(180deg, #150000 0%, #0a0000 100%);
+    border: 3px solid #8b0000;
+    border-radius: 8px;
+    padding: 30px;
     margin-bottom: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    box-shadow: 
+      0 0 40px rgba(255,34,0,0.4),
+      inset 0 0 60px rgba(255,0,0,0.08);
     animation: fadeIn 0.5s ease;
+    position: relative;
+  }
+  
+  section::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 8px;
+    padding: 3px;
+    background: linear-gradient(45deg, #ff2200, #8b0000, #ff2200);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.6;
   }
   
   @keyframes fadeIn {
@@ -143,15 +186,96 @@
   }
   
   section h2 {
-    color: #0984e3;
+    color: #ff2200;
     margin-bottom: 25px;
-    font-size: 1.9em;
-    border-bottom: 3px solid #74b9ff;
-    padding-bottom: 10px;
+    font-size: 1.3em;
+    text-shadow: 0 0 15px #ff2200;
+    border-bottom: 3px solid #8b0000;
+    padding-bottom: 12px;
+    letter-spacing: 2px;
     display: inline-block;
   }
   
-  /* Счётчик посещений */
+  /* ИГРА */
+  .game-wrapper {
+    background: #000;
+    border: 4px solid #8b0000;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 
+      0 0 50px rgba(255,34,0,0.6),
+      inset 0 0 30px rgba(255,0,0,0.2);
+    text-align: center;
+  }
+  
+  #gameCanvas {
+    background: #000;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    border: 2px solid #ff2200;
+    box-shadow: inset 0 0 40px rgba(255,0,0,0.3);
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  
+  .game-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .stat {
+    color: #ff6644;
+    font-size: 0.85em;
+    text-shadow: 0 0 8px #ff2200;
+  }
+  
+  .stat b {
+    color: #ff2200;
+    font-size: 1.3em;
+    display: block;
+    margin-top: 5px;
+  }
+  
+  .game-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+  }
+  
+  .btn {
+    background: linear-gradient(180deg, #4a0000, #8b0000);
+    color: #ff6644;
+    border: 2px solid #ff2200;
+    padding: 12px 25px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.8em;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+  }
+  
+  .btn:hover {
+    background: #ff2200;
+    color: #fff;
+    box-shadow: 0 0 25px #ff2200;
+    text-shadow: 0 0 8px #fff;
+  }
+  
+  .game-hint {
+    color: #888;
+    font-size: 0.7em;
+    margin-top: 15px;
+    line-height: 2;
+  }
+  
+  /* Счётчик */
   .visits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -160,37 +284,44 @@
   }
   
   .visit-card {
-    background: linear-gradient(135deg, #74b9ff, #0984e3);
-    color: white;
+    background: linear-gradient(180deg, #4a0000, #1a0000);
+    color: #ff2200;
     padding: 22px 15px;
-    border-radius: 16px;
+    border-radius: 6px;
     text-align: center;
-    box-shadow: 0 6px 15px rgba(9,132,227,0.3);
-    transition: transform 0.3s;
+    border: 2px solid #8b0000;
+    box-shadow: 0 0 25px rgba(255,34,0,0.3), inset 0 0 20px rgba(255,0,0,0.1);
+    transition: all 0.3s;
   }
   
-  .visit-card:hover { transform: translateY(-5px); }
+  .visit-card:hover { 
+    transform: translateY(-5px);
+    box-shadow: 0 0 40px rgba(255,34,0,0.8);
+    border-color: #ff2200;
+  }
   
   .visit-card .num {
-    font-size: 2.2em;
+    font-size: 1.8em;
     font-weight: 800;
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    text-shadow: 0 0 15px #ff2200;
   }
   
-  .visit-card .lbl { font-size: 0.9em; opacity: 0.95; }
+  .visit-card .lbl { font-size: 0.7em; color: #ff6644; letter-spacing: 1px; }
   
   .visit-note {
-    margin-top: 15px;
-    font-size: 0.85em;
-    color: #666;
-    background: #f0f8ff;
-    padding: 12px 15px;
-    border-radius: 10px;
-    border-left: 4px solid #0984e3;
+    margin-top: 20px;
+    font-size: 0.65em;
+    color: #888;
+    background: #0a0000;
+    padding: 15px;
+    border-radius: 4px;
+    border-left: 4px solid #ff2200;
+    line-height: 1.8;
   }
   
-  /* Табы */
+  /* Таблицы (расписание) */
   .tabs {
     display: flex;
     gap: 8px;
@@ -199,141 +330,173 @@
   }
   
   .tab-btn {
-    padding: 10px 20px;
-    border: 2px solid #74b9ff;
-    background: white;
-    color: #0984e3;
-    border-radius: 25px;
-    font-weight: 600;
+    padding: 12px 20px;
+    border: 2px solid #8b0000;
+    background: #1a0000;
+    color: #ff6644;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.75em;
     cursor: pointer;
     transition: all 0.3s;
-    font-size: 0.95em;
+    letter-spacing: 1px;
   }
   
-  .tab-btn:hover { background: #f0f8ff; }
+  .tab-btn:hover { background: #4a0000; }
   
   .tab-btn.active {
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
-    color: white;
-    border-color: transparent;
+    background: #8b0000;
+    color: #fff;
+    border-color: #ff2200;
+    box-shadow: 0 0 20px rgba(255,34,0,0.7);
+    text-shadow: 0 0 8px #fff;
   }
   
   .tab-content { display: none; animation: fadeIn 0.4s ease; }
   .tab-content.active { display: block; }
   
-  /* Таблицы */
   .table-wrap {
     overflow-x: auto;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    border: 2px solid #4a0000;
+    border-radius: 6px;
   }
   
   table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.92em;
+    font-size: 0.7em;
     min-width: 700px;
+    font-family: 'Press Start 2P', monospace;
   }
   
   th, td {
-    padding: 10px 12px;
+    padding: 12px 8px;
     text-align: center;
-    border-bottom: 1px solid #eee;
-    vertical-align: middle;
+    border-bottom: 1px solid #2a0000;
+    border-right: 1px solid #2a0000;
+    color: #ff6644;
   }
   
   th {
-    background: linear-gradient(135deg, #0984e3, #74b9ff);
-    color: white;
-    font-weight: 600;
+    background: #4a0000;
+    color: #ff2200;
+    text-shadow: 0 0 8px #ff2200;
     white-space: nowrap;
+    border-bottom: 2px solid #8b0000;
   }
   
-  td:first-child { font-weight: 700; color: #0984e3; }
+  td:first-child { color: #ff2200; font-weight: bold; }
   
-  tr:hover { background: #f0f8ff; }
+  tr:hover { background: rgba(255,34,0,0.08); }
   tr:last-child td { border-bottom: none; }
   
   td small {
     display: block;
-    color: #888;
-    font-size: 0.75em;
-    margin-top: 3px;
+    color: #666;
+    font-size: 0.8em;
+    margin-top: 4px;
   }
   
   .big-break td {
-    background: #ffe0b2;
-    color: #d84315;
-    font-weight: 700;
+    background: rgba(139,0,0,0.4);
+    color: #ff2200;
+    font-weight: bold;
+    text-shadow: 0 0 6px #ff2200;
   }
   
   /* Футер */
   footer {
     text-align: center;
-    color: white;
+    color: #8b0000;
     padding: 30px;
-    font-size: 0.95em;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    font-size: 0.7em;
+    text-shadow: 0 0 8px #8b0000;
+    letter-spacing: 2px;
   }
   
   /* Мобильная */
   @media (max-width: 600px) {
-    header h1 { font-size: 1.2em; }
+    header h1 { font-size: 1em; }
     section { padding: 20px; }
-    section h2 { font-size: 1.4em; }
+    section h2 { font-size: 1em; }
     .visits-grid { grid-template-columns: repeat(2, 1fr); }
-    .visit-card .num { font-size: 1.8em; }
-    table { font-size: 0.75em; }
-    th, td { padding: 7px 8px; }
-    .tab-btn { padding: 8px 14px; font-size: 0.85em; }
+    .visit-card .num { font-size: 1.4em; }
+    table { font-size: 0.55em; }
+    th, td { padding: 8px 5px; }
+    .tab-btn { padding: 10px 14px; font-size: 0.6em; }
+    .btn { padding: 10px 18px; font-size: 0.65em; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🎓 7Б Класс</h1>
+  <h1>💀 DOOM 7Б</h1>
   <button class="burger" id="burger" aria-label="Меню">
     <span></span><span></span><span></span>
   </button>
 </header>
 
 <nav class="menu" id="menu">
-  <a data-page="schedule" class="active">📅 Расписание</a>
-  <a data-page="visits">📊 Посещаемость</a>
+  <a data-page="game" class="active">🎮 ИГРАТЬ</a>
+  <a data-page="schedule">📅 РАСПИСАНИЕ</a>
+  <a data-page="visits">📊 ПОСЕЩАЕМОСТЬ</a>
 </nav>
 
 <div class="overlay" id="overlay"></div>
 
 <div class="container">
 
-  <!-- РАСПИСАНИЕ (главная) -->
-  <div class="page active" id="page-schedule">
+  <!-- ИГРА (главная) -->
+  <div class="page active" id="page-game">
     <section>
-      <h2>📅 Расписание</h2>
+      <h2>🎮 РИП И ТИР</h2>
+      <div class="game-wrapper">
+        <div class="game-stats">
+          <div class="stat">HP<b id="statHp">100</b></div>
+          <div class="stat">ВОЛНА<b id="statWave">1</b></div>
+          <div class="stat">УБИТО<b id="statKills">0</b></div>
+          <div class="stat">ОЧКИ<b id="statScore">0</b></div>
+        </div>
+        <canvas id="gameCanvas" width="800" height="500"></canvas>
+        <div class="game-controls">
+          <button class="btn" id="btnStart">▶ СТАРТ</button>
+          <button class="btn" id="btnPause">⏸ ПАУЗА</button>
+        </div>
+        <div class="game-hint">
+          WASD / ← ↑ ↓ → — ДВИЖЕНИЕ<br>
+          МЫШЬ — ПРИЦЕЛ · ЛКМ — СТРЕЛЬБА<br>
+          ПРОБЕЛ — СТРЕЛЬБА
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- РАСПИСАНИЕ -->
+  <div class="page" id="page-schedule">
+    <section>
+      <h2>📅 РАСПИСАНИЕ</h2>
       
       <div class="tabs">
-        <button class="tab-btn active" data-tab="lessons">📚 Уроки</button>
-        <button class="tab-btn" data-tab="breaks">🔔 Перемены</button>
+        <button class="tab-btn active" data-tab="lessons">📚 УРОКИ</button>
+        <button class="tab-btn" data-tab="breaks">🔔 ПЕРЕМЕНЫ</button>
       </div>
 
-      <!-- УРОКИ -->
       <div class="tab-content active" id="lessons">
-        <p style="color:#666; margin-bottom:15px;">Расписание уроков 7Б (2-я смена):</p>
+        <p style="color:#888; margin-bottom:15px; font-size:0.75em;">Расписание уроков 7Б (2-я смена):</p>
         <div class="table-wrap">
           <table>
             <tr>
               <th>№</th>
-              <th>Время</th>
-              <th>Пн</th>
-              <th>Вт</th>
-              <th>Ср</th>
-              <th>Чт</th>
-              <th>Пт</th>
+              <th>ВРЕМЯ</th>
+              <th>ПН</th>
+              <th>ВТ</th>
+              <th>СР</th>
+              <th>ЧТ</th>
+              <th>ПТ</th>
             </tr>
             <tr>
               <td>1</td>
-              <td>08:00 – 08:40</td>
+              <td>08:00–08:40</td>
               <td>Рус. яз.<br><small>1102</small></td>
               <td>Матем.<br><small>5</small></td>
               <td>Рус. яз.<br><small>1102</small></td>
@@ -342,7 +505,7 @@
             </tr>
             <tr>
               <td>2</td>
-              <td>09:00 – 09:40</td>
+              <td>09:00–09:40</td>
               <td>Англ. яз.<br><small>114</small></td>
               <td>Физра<br><small>Спортзал</small></td>
               <td>Матем.<br><small>5</small></td>
@@ -351,7 +514,7 @@
             </tr>
             <tr>
               <td>3</td>
-              <td>10:00 – 10:40</td>
+              <td>10:00–10:40</td>
               <td>Литер.<br><small>102</small></td>
               <td>Физра<br><small>Спортзал</small></td>
               <td>Матем.<br><small>5</small></td>
@@ -360,7 +523,7 @@
             </tr>
             <tr>
               <td>4</td>
-              <td>10:50 – 11:30</td>
+              <td>10:50–11:30</td>
               <td>Матем.<br><small>5</small></td>
               <td>Англ. яз.<br><small>114</small></td>
               <td>Литер.<br><small>102</small></td>
@@ -369,7 +532,7 @@
             </tr>
             <tr>
               <td>5</td>
-              <td>11:45 – 12:25</td>
+              <td>11:45–12:25</td>
               <td>История<br><small>75</small></td>
               <td>Рус. яз.<br><small>102</small></td>
               <td>Матем.<br><small>5</small></td>
@@ -378,7 +541,7 @@
             </tr>
             <tr>
               <td>6</td>
-              <td>12:45 – 13:25</td>
+              <td>12:45–13:25</td>
               <td>География<br><small>78</small></td>
               <td>КИБ 7<br><small>5</small></td>
               <td>Биология<br><small>75</small></td>
@@ -387,7 +550,7 @@
             </tr>
             <tr>
               <td>7</td>
-              <td>13:40 – 14:20</td>
+              <td>13:40–14:20</td>
               <td>КИБ 7<br><small>102</small></td>
               <td>История<br><small>75</small></td>
               <td>—</td>
@@ -396,7 +559,7 @@
             </tr>
             <tr>
               <td>8</td>
-              <td>14:40 – 15:20</td>
+              <td>14:40–15:20</td>
               <td>Кл. час<br><small>78</small></td>
               <td>—</td>
               <td>—</td>
@@ -407,65 +570,64 @@
         </div>
       </div>
 
-      <!-- ПЕРЕМЕНЫ -->
       <div class="tab-content" id="breaks">
-        <p style="color:#666; margin-bottom:15px;">Расписание перемен:</p>
+        <p style="color:#888; margin-bottom:15px; font-size:0.75em;">Расписание перемен:</p>
         <div class="table-wrap">
           <table>
             <tr>
-              <th>Перемена</th>
-              <th>Время</th>
-              <th>Длительность</th>
+              <th>ПЕРЕМЕНА</th>
+              <th>ВРЕМЯ</th>
+              <th>ДЛИТ.</th>
             </tr>
             <tr class="big-break">
               <td>🔥 БОЛЬШАЯ 1</td>
-              <td>08:40 – 09:00</td>
-              <td>20 минут</td>
+              <td>08:40–09:00</td>
+              <td>20 МИН</td>
             </tr>
             <tr class="big-break">
               <td>🔥 БОЛЬШАЯ 2</td>
-              <td>09:40 – 10:00</td>
-              <td>20 минут</td>
+              <td>09:40–10:00</td>
+              <td>20 МИН</td>
             </tr>
             <tr>
               <td>Перемена 3</td>
-              <td>10:40 – 10:50</td>
-              <td>10 минут</td>
+              <td>10:40–10:50</td>
+              <td>10 МИН</td>
             </tr>
             <tr>
               <td>Перемена 4</td>
-              <td>11:30 – 11:45</td>
-              <td>15 минут</td>
+              <td>11:30–11:45</td>
+              <td>15 МИН</td>
             </tr>
             <tr class="big-break">
               <td>🔥 БОЛЬШАЯ 5</td>
-              <td>12:25 – 12:45</td>
-              <td>20 минут</td>
+              <td>12:25–12:45</td>
+              <td>20 МИН</td>
             </tr>
             <tr>
               <td>Перемена 6</td>
-              <td>13:25 – 13:40</td>
-              <td>15 минут</td>
+              <td>13:25–13:40</td>
+              <td>15 МИН</td>
             </tr>
             <tr class="big-break">
               <td>🔥 БОЛЬШАЯ 7</td>
-              <td>14:20 – 14:40</td>
-              <td>20 минут</td>
+              <td>14:20–14:40</td>
+              <td>20 МИН</td>
             </tr>
             <tr>
               <td>Перемена 8</td>
-              <td>15:20 – 15:30</td>
-              <td>10 минут</td>
+              <td>15:20–15:30</td>
+              <td>10 МИН</td>
             </tr>
             <tr>
               <td>Перемена 9</td>
-              <td>16:10 – 16:20</td>
-              <td>10 минут</td>
+              <td>16:10–16:20</td>
+              <td>10 МИН</td>
             </tr>
             <tr>
               <td>Перемена 10</td>
-              <td>17:00 – 17:10</td>
-              <td>10 минут</td>
+              <td>17:00–17:10</td>
+              <td>10 МИН</td>
             </tr>
           </table>
         </div>
@@ -477,29 +639,28 @@
   <!-- ПОСЕЩАЕМОСТЬ -->
   <div class="page" id="page-visits">
     <section>
-      <h2>📊 Посещаемость сайта</h2>
-      <p style="color:#666; margin-bottom:15px;">Статистика заходов:</p>
+      <h2>📊 ПОСЕЩАЕМОСТЬ</h2>
+      <p style="color:#888; margin-bottom:15px; font-size:0.75em;">Статистика заходов:</p>
       <div class="visits-grid">
         <div class="visit-card">
           <span class="num" id="visitsDay">0</span>
-          <span class="lbl">Сегодня</span>
+          <span class="lbl">СЕГОДНЯ</span>
         </div>
         <div class="visit-card">
           <span class="num" id="visitsWeek">0</span>
-          <span class="lbl">За неделю</span>
+          <span class="lbl">ЗА НЕДЕЛЮ</span>
         </div>
         <div class="visit-card">
           <span class="num" id="visitsMonth">0</span>
-          <span class="lbl">За месяц</span>
+          <span class="lbl">ЗА МЕСЯЦ</span>
         </div>
         <div class="visit-card">
           <span class="num" id="visitsTotal">0</span>
-          <span class="lbl">Всего</span>
+          <span class="lbl">ВСЕГО</span>
         </div>
       </div>
       <div class="visit-note">
-        ℹ️ Счётчик считает заходы <b>на этом устройстве</b> (браузер). 
-        Данные хранятся в localStorage.
+        ℹ️ Счётчик считает заходы на этом устройстве (браузер). Данные в localStorage.
       </div>
     </section>
   </div>
@@ -507,7 +668,7 @@
 </div>
 
 <footer>
-  <p>© 2026 7Б Класс | Все права защищены</p>
+  <p>© 2026 DOOM 7Б · RIP AND TEAR</p>
 </footer>
 
 <script>
@@ -529,19 +690,21 @@
   document.querySelectorAll('.menu a').forEach(link => {
     link.addEventListener('click', function() {
       const pageId = 'page-' + this.dataset.page;
-      
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
-      
       document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
       this.classList.add('active');
-      
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if (menu.classList.contains('open')) toggleMenu();
+      
+      // Пауза игры при переходе со страницы игры
+      if (pageId !== 'page-game' && game.running) {
+        game.pause();
+      }
     });
   });
 
-  // ===== ТАБЫ РАСПИСАНИЯ =====
+  // ===== ТАБЫ =====
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       const tabId = this.dataset.tab;
@@ -555,30 +718,22 @@
   // ===== СЧЁТЧИК ПОСЕЩЕНИЙ =====
   (function() {
     const today = new Date().toISOString().split('T')[0];
-    
-    let stats = JSON.parse(localStorage.getItem('7b_visits') || '{}');
+    let stats = JSON.parse(localStorage.getItem('doom7b_visits') || '{}');
     if (!stats.history) stats.history = [];
-    if (!stats.total)   stats.total = 0;
-    
+    if (!stats.total) stats.total = 0;
     stats.history.push(today);
     stats.total += 1;
-    
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - 365);
     const cutoffStr = cutoff.toISOString().split('T')[0];
     stats.history = stats.history.filter(d => d >= cutoffStr);
-    
-    localStorage.setItem('7b_visits', JSON.stringify(stats));
+    localStorage.setItem('doom7b_visits', JSON.stringify(stats));
     
     const now = new Date();
     const dayCount = stats.history.filter(d => d === today).length;
-    
-    const weekAgo = new Date();
-    weekAgo.setDate(now.getDate() - 7);
+    const weekAgo = new Date(); weekAgo.setDate(now.getDate() - 7);
     const weekCount = stats.history.filter(d => d >= weekAgo.toISOString().split('T')[0]).length;
-    
-    const monthAgo = new Date();
-    monthAgo.setDate(now.getDate() - 30);
+    const monthAgo = new Date(); monthAgo.setDate(now.getDate() - 30);
     const monthCount = stats.history.filter(d => d >= monthAgo.toISOString().split('T')[0]).length;
     
     document.getElementById('visitsDay').textContent = dayCount;
@@ -586,7 +741,142 @@
     document.getElementById('visitsMonth').textContent = monthCount;
     document.getElementById('visitsTotal').textContent = stats.total;
   })();
-</script>
 
-</body>
-</html>
+  // ===== ИГРА DOOM (top-down шутер) =====
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+
+  const keys = {};
+  const mouse = { x: W/2, y: H/2, down: false };
+
+  window.addEventListener('keydown', e => {
+    keys[e.key.toLowerCase()] = true;
+    if (e.key === ' ') e.preventDefault();
+  });
+  window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
+  canvas.addEventListener('mousemove', e => {
+    const r = canvas.getBoundingClientRect();
+    mouse.x = (e.clientX - r.left) * (W / r.width);
+    mouse.y = (e.clientY - r.top) * (H / r.height);
+  });
+  canvas.addEventListener('mousedown', () => mouse.down = true);
+  window.addEventListener('mouseup', () => mouse.down = false);
+
+  const game = {
+    player: null,
+    bullets: [],
+    enemies: [],
+    particles: [],
+    enemyBullets: [],
+    wave: 1,
+    kills: 0,
+    score: 0,
+    running: false,
+    paused: false,
+    gameOver: false,
+    lastSpawn: 0,
+    spawnInterval: 1500,
+    lastFrame: 0,
+    shake: 0,
+  };
+
+  function resetGame() {
+    game.player = {
+      x: W/2, y: H/2,
+      vx: 0, vy: 0,
+      hp: 100,
+      maxHp: 100,
+      angle: 0,
+      size: 18,
+      speed: 4,
+      cooldown: 0,
+      invuln: 0,
+    };
+    game.bullets = [];
+    game.enemies = [];
+    game.particles = [];
+    game.enemyBullets = [];
+    game.wave = 1;
+    game.kills = 0;
+    game.score = 0;
+    game.gameOver = false;
+    game.lastSpawn = 0;
+    game.spawnInterval = 1500;
+    game.shake = 0;
+    updateStats();
+  }
+
+  function updateStats() {
+    document.getElementById('statHp').textContent = Math.max(0, Math.round(game.player.hp));
+    document.getElementById('statWave').textContent = game.wave;
+    document.getElementById('statKills').textContent = game.kills;
+    document.getElementById('statScore').textContent = game.score;
+  }
+
+  function spawnEnemy() {
+    const side = Math.floor(Math.random() * 4);
+    let x, y;
+    if (side === 0) { x = Math.random() * W; y = -30; }
+    else if (side === 1) { x = W + 30; y = Math.random() * H; }
+    else if (side === 2) { x = Math.random() * W; y = H + 30; }
+    else { x = -30; y = Math.random() * H; }
+    
+    // Тип врага зависит от волны
+    const r = Math.random();
+    let type = 'imp';
+    if (game.wave >= 3 && r < 0.25) type = 'demon';
+    if (game.wave >= 5 && r < 0.15) type = 'caco';
+    
+    const configs = {
+      imp:   { hp: 30, speed: 1.4, size: 16, color: '#ff6600', score: 10, shoot: 0.008 },
+      demon: { hp: 60, speed: 2.2, size: 20, color: '#cc0000', score: 25, shoot: 0 },
+      caco:  { hp: 90, speed: 0.8, size: 26, color: '#9900ff', score: 40, shoot: 0.015 },
+    };
+    const c = configs[type];
+    
+    game.enemies.push({
+      x, y,
+      type,
+      hp: c.hp,
+      maxHp: c.hp,
+      speed: c.speed + game.wave * 0.1,
+      size: c.size,
+      color: c.color,
+      score: c.score,
+      shoot: c.shoot,
+      hitFlash: 0,
+    });
+  }
+
+  function fireBullet() {
+    const p = game.player;
+    if (p.cooldown > 0) return;
+    p.cooldown = 8;
+    const spread = (Math.random() - 0.5) * 0.1;
+    const a = p.angle + spread;
+    game.bullets.push({
+      x: p.x + Math.cos(a) * 20,
+      y: p.y + Math.sin(a) * 20,
+      vx: Math.cos(a) * 12,
+      vy: Math.sin(a) * 12,
+      life: 60,
+    });
+    // Отдача/вспышка
+    game.shake = 3;
+  }
+
+  function damagePlayer(dmg) {
+    const p = game.player;
+    if (p.invuln > 0) return;
+    p.hp -= dmg;
+    p.invuln = 20;
+    game.shake = 8;
+    // Красные частицы
+    for (let i = 0; i < 12; i++) {
+      game.particles.push({
+        x: p.x, y: p.y,
+        vx: (Math.random() - 0.5) * 6,
+        vy: (Math.random() - 0.5) * 6,
+        life: 30,
