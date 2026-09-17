@@ -124,7 +124,7 @@
     padding: 0 20px;
   }
   
-  /* Страницы (переключаемые) */
+  /* Страницы */
   .page { display: none; }
   .page.active { display: block; }
   
@@ -286,7 +286,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95em;
-    min-width: 500px;
+    min-width: 400px;
   }
   
   th, td {
@@ -305,21 +305,10 @@
   tr:hover { background: #f0f8ff; }
   tr:last-child td { border-bottom: none; }
   
-  .break-row td {
-    background: #fff8e1;
-    color: #b8860b;
-    font-weight: 600;
-  }
-  
   .big-break td {
     background: #ffe0b2;
     color: #d84315;
     font-weight: 700;
-  }
-  
-  .food-cell {
-    font-size: 0.85em;
-    color: #555;
   }
   
   /* Футер */
@@ -342,7 +331,7 @@
     .student .role { font-size: 0.7em; }
     .visits-grid { grid-template-columns: repeat(2, 1fr); }
     .visit-card .num { font-size: 1.8em; }
-    table { font-size: 0.78em; }
+    table { font-size: 0.8em; }
     th, td { padding: 8px 10px; }
     .tab-btn { padding: 8px 14px; font-size: 0.85em; }
   }
@@ -367,7 +356,7 @@
 
 <div class="container">
 
-  <!-- ================= ГЛАВНАЯ ================= -->
+  <!-- ГЛАВНАЯ -->
   <div class="page active" id="page-home">
     <section>
       <h2>👥 Наш класс</h2>
@@ -375,7 +364,7 @@
     </section>
   </div>
 
-  <!-- ================= ПОСЕЩАЕМОСТЬ ================= -->
+  <!-- ПОСЕЩАЕМОСТЬ -->
   <div class="page" id="page-visits">
     <section>
       <h2>📊 Посещаемость сайта</h2>
@@ -405,7 +394,7 @@
     </section>
   </div>
 
-  <!-- ================= РАСПИСАНИЕ ================= -->
+  <!-- РАСПИСАНИЕ -->
   <div class="page" id="page-schedule">
     <section>
       <h2>📅 Расписание</h2>
@@ -413,12 +402,11 @@
       <div class="tabs">
         <button class="tab-btn active" data-tab="lessons">📚 Уроки</button>
         <button class="tab-btn" data-tab="breaks">🔔 Перемены</button>
-        <button class="tab-btn" data-tab="food">🍽️ Питание</button>
       </div>
 
-      <!-- УРОКИ: вторая смена (7 класс) -->
+      <!-- УРОКИ -->
       <div class="tab-content active" id="lessons">
-        <p style="color:#666; margin-bottom:15px;">7Б учится во <b>2-й смене</b> (как и все 2–11 классы):</p>
+        <p style="color:#666; margin-bottom:15px;">Расписание звонков (2–11 классы):</p>
         <div class="table-wrap">
           <table>
             <tr>
@@ -466,7 +454,7 @@
 
       <!-- ПЕРЕМЕНЫ -->
       <div class="tab-content" id="breaks">
-        <p style="color:#666; margin-bottom:15px;">Расписание перемен для 2–11 классов:</p>
+        <p style="color:#666; margin-bottom:15px;">Расписание перемен:</p>
         <div class="table-wrap">
           <table>
             <tr>
@@ -523,55 +511,6 @@
               <td>Перемена 10</td>
               <td>17:00 – 17:10</td>
               <td>10 минут</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <!-- ПИТАНИЕ -->
-      <div class="tab-content" id="food">
-        <p style="color:#666; margin-bottom:15px;">График питания по классам:</p>
-        <div class="table-wrap">
-          <table>
-            <tr>
-              <th>Событие</th>
-              <th>Время</th>
-              <th>Кто</th>
-            </tr>
-            <tr>
-              <td>☕ Завтрак</td>
-              <td>08:40 (Большая 1)</td>
-              <td class="food-cell">1-е, 2-е классы + ОВЗ 5-7 классы</td>
-            </tr>
-            <tr>
-              <td>☕ Завтрак</td>
-              <td>09:40 (Большая 2)</td>
-              <td class="food-cell">3-и классы + ОВЗ 8-11 классы</td>
-            </tr>
-            <tr>
-              <td>🥐 Буфет</td>
-              <td>Перемена 3</td>
-              <td class="food-cell">5-11 классы</td>
-            </tr>
-            <tr>
-              <td>🍲 Обед</td>
-              <td>Перемена 4</td>
-              <td class="food-cell">5, 6, 7, 8 классы</td>
-            </tr>
-            <tr>
-              <td>🍲 Обед (льготники по талонам)</td>
-              <td>11:45 – 12:25</td>
-              <td class="food-cell">5-11 классы</td>
-            </tr>
-            <tr>
-              <td>🍲 Обед</td>
-              <td>12:45 – 13:25</td>
-              <td class="food-cell">9, 10, 11 классы</td>
-            </tr>
-            <tr>
-              <td>🍲 Обед</td>
-              <td>13:40 – 14:20</td>
-              <td class="food-cell">4 классы, 10-11 классы</td>
             </tr>
           </table>
         </div>
@@ -645,15 +584,12 @@
     link.addEventListener('click', function() {
       const pageId = 'page-' + this.dataset.page;
       
-      // Скрываем все страницы, показываем нужную
       document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
       
-      // Меняем активную ссылку
       document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
       this.classList.add('active');
       
-      // Прокрутка вверх и закрытие меню
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if (menu.classList.contains('open')) toggleMenu();
     });
@@ -681,7 +617,6 @@
     stats.history.push(today);
     stats.total += 1;
     
-    // Чистим историю старше года
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - 365);
     const cutoffStr = cutoff.toISOString().split('T')[0];
