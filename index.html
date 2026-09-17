@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Крутой сайт</title>
+<title>7Б — Расписание</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
   
@@ -231,14 +231,15 @@
   table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.92em;
+    font-size: 0.85em;
     min-width: 700px;
   }
   
   th, td {
-    padding: 10px 12px;
+    padding: 8px 6px;
     text-align: center;
     border-bottom: 1px solid #eee;
+    border-right: 1px solid #f5f5f5;
     vertical-align: middle;
   }
   
@@ -247,6 +248,7 @@
     color: white;
     font-weight: 600;
     white-space: nowrap;
+    font-size: 0.9em;
   }
   
   td:first-child { font-weight: 700; color: #0984e3; }
@@ -257,9 +259,11 @@
   td small {
     display: block;
     color: #888;
-    font-size: 0.75em;
-    margin-top: 3px;
+    font-size: 0.8em;
+    margin-top: 2px;
   }
+  
+  .empty { color: #ccc; }
   
   .big-break td {
     background: #ffe0b2;
@@ -320,7 +324,6 @@
   .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(9,132,227,0.6); }
   .btn:active { transform: translateY(0); }
   
-  /* Мобильное управление змейкой */
   .dpad {
     display: grid;
     grid-template-columns: repeat(3, 65px);
@@ -361,18 +364,20 @@
   /* Мобильная */
   @media (max-width: 600px) {
     header h1 { font-size: 1.2em; }
-    section { padding: 20px; }
+    section { padding: 18px; }
     section h2 { font-size: 1.4em; }
     .visits-grid { grid-template-columns: repeat(2, 1fr); }
     .visit-card .num { font-size: 1.8em; }
-    table { font-size: 0.75em; }
-    th, td { padding: 7px 8px; }
+    table { font-size: 0.7em; }
+    th, td { padding: 6px 4px; }
     .tab-btn { padding: 8px 14px; font-size: 0.85em; }
+    td small { font-size: 0.7em; }
   }
   
   @media (max-width: 400px) {
     .dpad { grid-template-columns: repeat(3, 58px); grid-template-rows: repeat(3, 58px); }
     .dpad button { font-size: 1.5em; }
+    table { font-size: 0.6em; }
   }
   
   /* Оверлей конец игры */
@@ -416,9 +421,7 @@
     text-shadow: 0 4px 15px rgba(9,132,227,0.4);
   }
   
-  .overlay-content .btn {
-    margin: 5px;
-  }
+  .overlay-content .btn { margin: 5px; }
   
   .btn.pink {
     background: linear-gradient(135deg, #ff6b9d, #c44569);
@@ -462,16 +465,16 @@
             <tr>
               <th>№</th>
               <th>Время</th>
-              <th>Пн</th>
-              <th>Вт</th>
-              <th>Ср</th>
-              <th>Чт</th>
-              <th>Пт</th>
+              <th>ПН</th>
+              <th>ВТ</th>
+              <th>СР</th>
+              <th>ЧТ</th>
+              <th>ПТ</th>
             </tr>
             <tr>
               <td>1</td>
-              <td>08:00 – 08:40</td>
-              <td>Рус. яз.<br><small>1102</small></td>
+              <td>08:00–08:40</td>
+              <td>Разговоры о важном<br><small>78</small></td>
               <td>Матем.<br><small>5</small></td>
               <td>Рус. яз.<br><small>1102</small></td>
               <td>БЛГ (ТПС)<br><small>78</small></td>
@@ -479,8 +482,8 @@
             </tr>
             <tr>
               <td>2</td>
-              <td>09:00 – 09:40</td>
-              <td>Англ. яз.<br><small>114</small></td>
+              <td>09:00–09:40</td>
+              <td>Физра<br><small>Спортзал</small></td>
               <td>Физра<br><small>Спортзал</small></td>
               <td>Матем.<br><small>5</small></td>
               <td>Матем.<br><small>5</small></td>
@@ -488,25 +491,25 @@
             </tr>
             <tr>
               <td>3</td>
-              <td>10:00 – 10:40</td>
-              <td>Литер.<br><small>102</small></td>
+              <td>10:00–10:40</td>
+              <td>Рус. яз.<br><small>102</small></td>
               <td>Физра<br><small>Спортзал</small></td>
-              <td>Матем.<br><small>5</small></td>
+              <td>Рус. яз.<br><small>102</small></td>
               <td>Матем.<br><small>5</small></td>
               <td>Рус. яз.<br><small>1102</small></td>
             </tr>
             <tr>
               <td>4</td>
-              <td>10:50 – 11:30</td>
+              <td>10:50–11:30</td>
               <td>Матем.<br><small>5</small></td>
               <td>Англ. яз.<br><small>114</small></td>
-              <td>Литер.<br><small>102</small></td>
+              <td>Матем.<br><small>5</small></td>
               <td>ИЗО<br><small>28</small></td>
               <td>Матем.<br><small>5</small></td>
             </tr>
             <tr>
               <td>5</td>
-              <td>11:45 – 12:25</td>
+              <td>11:45–12:25</td>
               <td>История<br><small>75</small></td>
               <td>Рус. яз.<br><small>102</small></td>
               <td>Матем.<br><small>5</small></td>
@@ -515,7 +518,7 @@
             </tr>
             <tr>
               <td>6</td>
-              <td>12:45 – 13:25</td>
+              <td>12:45–13:25</td>
               <td>География<br><small>78</small></td>
               <td>КИБ 7<br><small>5</small></td>
               <td>Биология<br><small>75</small></td>
@@ -524,23 +527,27 @@
             </tr>
             <tr>
               <td>7</td>
-              <td>13:40 – 14:20</td>
+              <td>13:40–14:20</td>
               <td>КИБ 7<br><small>102</small></td>
               <td>История<br><small>75</small></td>
-              <td>—</td>
-              <td>—</td>
+              <td class="empty">—</td>
+              <td class="empty">—</td>
               <td>География<br><small>78</small></td>
             </tr>
             <tr>
               <td>8</td>
-              <td>14:40 – 15:20</td>
+              <td>14:40–15:20</td>
               <td>Кл. час<br><small>78</small></td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
+              <td class="empty">—</td>
+              <td class="empty">—</td>
+              <td class="empty">—</td>
+              <td class="empty">—</td>
             </tr>
           </table>
+        </div>
+        <div class="visit-note" style="margin-top:15px;">
+          ℹ️ <b>КИБ 7</b> — «Клуб интересных встреч»? Если это другой предмет — скажи название, исправлю.<br>
+          <b>БЛГ (ТПС)</b> — тоже оставил как на фото. Расшифруешь — впишу.
         </div>
       </div>
 
@@ -645,7 +652,7 @@
 
 <script>
   // ================================================================
-  // МЕНЮ И ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ
+  // МЕНЮ
   // ================================================================
   const burger = document.getElementById('burger');
   const menu = document.getElementById('menu');
@@ -720,12 +727,8 @@
   const snake = {
     canvas: document.getElementById('snakeCanvas'),
     ctx: null,
-    cols: 20,
-    rows: 20,
-    cell: 20,
-    snake: [],
-    dir: { x: 1, y: 0 },
-    nextDir: { x: 1, y: 0 },
+    cols: 20, rows: 20, cell: 20,
+    snake: [], dir: { x: 1, y: 0 }, nextDir: { x: 1, y: 0 },
     food: { x: 5, y: 5 },
     score: 0,
     best: parseInt(localStorage.getItem('snakeBest') || '0'),
@@ -751,7 +754,6 @@
         else this.start();
       };
       
-      // Управление клавиатурой (ПК)
       window.addEventListener('keydown', (e) => {
         const k = e.key.toLowerCase();
         if (['arrowup','arrowdown','arrowleft','arrowright'].includes(k)) e.preventDefault();
@@ -762,7 +764,6 @@
         if ((k === 'd' || k === 'arrowright') && this.dir.x === 0) this.nextDir = { x: 1, y: 0 };
       });
       
-      // Управление кнопками (телефон)
       document.querySelectorAll('.dpad button').forEach(btn => {
         const dir = btn.dataset.dir;
         const handler = (e) => {
@@ -781,12 +782,9 @@
         btn.addEventListener('mouseup', release);
       });
       
-      // Свайпы по canvas (тоже для телефона)
       let touchStart = null;
       this.canvas.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-          touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-        }
+        if (e.touches.length === 1) touchStart = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       }, { passive: true });
       this.canvas.addEventListener('touchmove', (e) => {
         if (!touchStart || !this.running) return;
@@ -846,83 +844,4 @@
     tick() {
       if (!this.running) return;
       this.update();
-      this.draw();
-      this.timer = setTimeout(() => this.tick(), this.speed);
-    },
-
-    update() {
-      this.dir = { ...this.nextDir };
-      const head = { x: this.snake[0].x + this.dir.x, y: this.snake[0].y + this.dir.y };
-      if (head.x < 0 || head.x >= this.cols || head.y < 0 || head.y >= this.rows) return this.gameOver();
-      if (this.snake.some(s => s.x === head.x && s.y === head.y)) return this.gameOver();
-      this.snake.unshift(head);
-      if (head.x === this.food.x && head.y === this.food.y) {
-        this.score += 10;
-        document.getElementById('snakeScore').textContent = this.score;
-        this.spawnFood();
-        if (this.speed > 70) this.speed -= 3;
-      } else this.snake.pop();
-    },
-
-    draw() {
-      const c = this.ctx, s = this.canvas.width;
-      c.fillStyle = '#0a0a1a';
-      c.fillRect(0, 0, s, s);
-      
-      // Сетка
-      c.strokeStyle = 'rgba(116,185,255,0.08)';
-      c.lineWidth = 1;
-      for (let i = 0; i <= this.cols; i++) {
-        c.beginPath(); c.moveTo(i * this.cell, 0); c.lineTo(i * this.cell, s); c.stroke();
-        c.beginPath(); c.moveTo(0, i * this.cell); c.lineTo(s, i * this.cell); c.stroke();
-      }
-      
-      // Еда
-      c.fillStyle = '#ff6b9d';
-      c.shadowColor = '#ff6b9d';
-      c.shadowBlur = 15;
-      c.beginPath();
-      c.arc(this.food.x * this.cell + this.cell/2, this.food.y * this.cell + this.cell/2, this.cell/2 - 2, 0, Math.PI * 2);
-      c.fill();
-      c.shadowBlur = 0;
-      
-      // Змейка
-      this.snake.forEach((seg, i) => {
-        const t = i / this.snake.length;
-        c.fillStyle = i === 0 ? '#ffd700' : `rgba(116,185,255,${1 - t*0.4})`;
-        c.shadowColor = i === 0 ? '#ffd700' : '#74b9ff';
-        c.shadowBlur = i === 0 ? 20 : 6;
-        c.fillRect(seg.x * this.cell + 1, seg.y * this.cell + 1, this.cell - 2, this.cell - 2);
-      });
-      c.shadowBlur = 0;
-    },
-
-    gameOver() {
-      this.stop();
-      if (this.score > this.best) {
-        this.best = this.score;
-        localStorage.setItem('snakeBest', this.best);
-        document.getElementById('snakeBest').textContent = this.best;
-      }
-      document.getElementById('overScore').textContent = this.score;
-      document.getElementById('gameOver').classList.add('show');
-      
-      document.getElementById('overRetry').onclick = () => {
-        document.getElementById('gameOver').classList.remove('show');
-        this.start();
-      };
-      document.getElementById('overMenu').onclick = () => {
-        document.getElementById('gameOver').classList.remove('show');
-        // Просто закрываем оверлей, остаёмся на странице змейки
-      };
-    }
-  };
-
-  // Инициализация змейки при первом открытии
-  window.addEventListener('load', () => {
-    // Не инициализируем пока не откроют
-  });
-</script>
-
- </body>
-</html>
+      this.draw
