@@ -35,7 +35,7 @@
     font-weight: 800;
   }
   
-  /* Кнопка-гамбургер */
+  /* Бургер */
   .burger {
     width: 45px;
     height: 45px;
@@ -66,7 +66,7 @@
   .burger.active span:nth-child(2) { opacity: 0; }
   .burger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
   
-  /* Выдвижное меню */
+  /* Меню */
   .menu {
     position: fixed;
     top: 75px;
@@ -94,6 +94,7 @@
     border-radius: 12px;
     transition: all 0.3s;
     border-left: 4px solid transparent;
+    cursor: pointer;
   }
   
   .menu a:hover,
@@ -104,7 +105,6 @@
     transform: translateX(-5px);
   }
   
-  /* Затемнение */
   .overlay {
     position: fixed;
     inset: 0;
@@ -124,17 +124,21 @@
     padding: 0 20px;
   }
   
+  /* Страницы (переключаемые) */
+  .page { display: none; }
+  .page.active { display: block; }
+  
   section {
     background: white;
     border-radius: 20px;
     padding: 35px;
     margin-bottom: 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    animation: fadeIn 0.6s ease;
+    animation: fadeIn 0.5s ease;
   }
   
   @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
+    from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
   
@@ -201,7 +205,7 @@
     font-weight: 600;
   }
   
-  /* ===== СЧЁТЧИК ПОСЕЩЕНИЙ ===== */
+  /* Счётчик посещений */
   .visits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -228,10 +232,7 @@
     margin-bottom: 5px;
   }
   
-  .visit-card .lbl {
-    font-size: 0.9em;
-    opacity: 0.95;
-  }
+  .visit-card .lbl { font-size: 0.9em; opacity: 0.95; }
   
   .visit-note {
     margin-top: 15px;
@@ -243,7 +244,7 @@
     border-left: 4px solid #0984e3;
   }
   
-  /* ===== РАСПИСАНИЕ ===== */
+  /* Табы */
   .tabs {
     display: flex;
     gap: 8px;
@@ -274,13 +275,18 @@
   .tab-content { display: none; animation: fadeIn 0.4s ease; }
   .tab-content.active { display: block; }
   
+  /* Таблицы */
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  }
+  
   table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
-    border-radius: 10px;
-    overflow: hidden;
     font-size: 0.95em;
+    min-width: 500px;
   }
   
   th, td {
@@ -293,17 +299,27 @@
     background: linear-gradient(135deg, #0984e3, #74b9ff);
     color: white;
     font-weight: 600;
+    white-space: nowrap;
   }
   
   tr:hover { background: #f0f8ff; }
-  
   tr:last-child td { border-bottom: none; }
   
   .break-row td {
     background: #fff8e1;
     color: #b8860b;
     font-weight: 600;
-    font-style: italic;
+  }
+  
+  .big-break td {
+    background: #ffe0b2;
+    color: #d84315;
+    font-weight: 700;
+  }
+  
+  .food-cell {
+    font-size: 0.85em;
+    color: #555;
   }
   
   /* Футер */
@@ -318,15 +334,17 @@
   /* Мобильная */
   @media (max-width: 600px) {
     header h1 { font-size: 1.2em; }
-    section { padding: 22px; }
+    section { padding: 20px; }
     section h2 { font-size: 1.4em; }
-    .students-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-    .avatar { width: 55px; height: 55px; font-size: 1.3em; }
-    .student .name { font-size: 0.85em; }
+    .students-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .avatar { width: 50px; height: 50px; font-size: 1.2em; }
+    .student .name { font-size: 0.82em; }
+    .student .role { font-size: 0.7em; }
     .visits-grid { grid-template-columns: repeat(2, 1fr); }
     .visit-card .num { font-size: 1.8em; }
-    table { font-size: 0.8em; }
+    table { font-size: 0.78em; }
     th, td { padding: 8px 10px; }
+    .tab-btn { padding: 8px 14px; font-size: 0.85em; }
   }
 </style>
 </head>
@@ -335,137 +353,232 @@
 <header>
   <h1>🎓 7Б Класс</h1>
   <button class="burger" id="burger" aria-label="Меню">
-    <span></span>
-    <span></span>
-    <span></span>
+    <span></span><span></span><span></span>
   </button>
 </header>
 
-<!-- Меню -->
 <nav class="menu" id="menu">
-  <a href="#" class="active" data-target="home">🏠 Главная</a>
-  <a href="#" data-target="visits">📊 Посещаемость</a>
-  <a href="#" data-target="schedule">📅 Расписание</a>
+  <a data-page="home" class="active">🏠 Главная</a>
+  <a data-page="visits">📊 Посещаемость</a>
+  <a data-page="schedule">📅 Расписание</a>
 </nav>
 
 <div class="overlay" id="overlay"></div>
 
 <div class="container">
 
-  <!-- ГЛАВНАЯ -->
-  <section id="home">
-    <h2>👥 Наш класс</h2>
-    <div class="students-grid" id="studentsGrid"></div>
-  </section>
+  <!-- ================= ГЛАВНАЯ ================= -->
+  <div class="page active" id="page-home">
+    <section>
+      <h2>👥 Наш класс</h2>
+      <div class="students-grid" id="studentsGrid"></div>
+    </section>
+  </div>
 
-  <!-- ПОСЕЩАЕМОСТЬ -->
-  <section id="visits">
-    <h2>📊 Посещаемость сайта</h2>
-    <p style="color:#666; margin-bottom:15px;">Статистика по заходам на сайт:</p>
-    <div class="visits-grid">
-      <div class="visit-card">
-        <span class="num" id="visitsDay">0</span>
-        <span class="lbl">Сегодня</span>
+  <!-- ================= ПОСЕЩАЕМОСТЬ ================= -->
+  <div class="page" id="page-visits">
+    <section>
+      <h2>📊 Посещаемость сайта</h2>
+      <p style="color:#666; margin-bottom:15px;">Статистика заходов:</p>
+      <div class="visits-grid">
+        <div class="visit-card">
+          <span class="num" id="visitsDay">0</span>
+          <span class="lbl">Сегодня</span>
+        </div>
+        <div class="visit-card">
+          <span class="num" id="visitsWeek">0</span>
+          <span class="lbl">За неделю</span>
+        </div>
+        <div class="visit-card">
+          <span class="num" id="visitsMonth">0</span>
+          <span class="lbl">За месяц</span>
+        </div>
+        <div class="visit-card">
+          <span class="num" id="visitsTotal">0</span>
+          <span class="lbl">Всего</span>
+        </div>
       </div>
-      <div class="visit-card">
-        <span class="num" id="visitsWeek">0</span>
-        <span class="lbl">За неделю</span>
+      <div class="visit-note">
+        ℹ️ Счётчик считает заходы <b>на этом устройстве</b> (браузер). 
+        Данные хранятся в localStorage.
       </div>
-      <div class="visit-card">
-        <span class="num" id="visitsMonth">0</span>
-        <span class="lbl">За месяц</span>
-      </div>
-      <div class="visit-card">
-        <span class="num" id="visitsTotal">0</span>
-        <span class="lbl">Всего</span>
-      </div>
-    </div>
-    <div class="visit-note">
-      ℹ️ Счётчик считает заходы <b>на этом устройстве</b> (браузер). 
-      Он работает через <b>localStorage</b> — данные хранятся в твоём браузере, а не на сервере.
-    </div>
-  </section>
+    </section>
+  </div>
 
-  <!-- РАСПИСАНИЕ -->
-  <section id="schedule">
-    <h2>📅 Расписание</h2>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="lessons">📚 Уроки</button>
-      <button class="tab-btn" data-tab="breaks">🔔 Перемены</button>
-    </div>
+  <!-- ================= РАСПИСАНИЕ ================= -->
+  <div class="page" id="page-schedule">
+    <section>
+      <h2>📅 Расписание</h2>
+      
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="lessons">📚 Уроки</button>
+        <button class="tab-btn" data-tab="breaks">🔔 Перемены</button>
+        <button class="tab-btn" data-tab="food">🍽️ Питание</button>
+      </div>
 
-    <!-- Уроки -->
-    <div class="tab-content active" id="lessons">
-      <table>
-        <tr>
-          <th>№</th>
-          <th>Время</th>
-          <th>Понедельник</th>
-          <th>Вторник</th>
-          <th>Среда</th>
-          <th>Четверг</th>
-          <th>Пятница</th>
-        </tr>
-        <tr>
-          <td>1</td><td>08:00–08:45</td>
-          <td>Алгебра</td><td>Геометрия</td><td>Физика</td><td>Химия</td><td>Русский</td>
-        </tr>
-        <tr>
-          <td>2</td><td>08:55–09:40</td>
-          <td>Русский</td><td>Литература</td><td>Алгебра</td><td>История</td><td>Биология</td>
-        </tr>
-        <tr>
-          <td>3</td><td>09:55–10:40</td>
-          <td>История</td><td>Биология</td><td>Русский</td><td>Литература</td><td>Английский</td>
-        </tr>
-        <tr>
-          <td>4</td><td>10:55–11:40</td>
-          <td>Физра</td><td>География</td><td>Английский</td><td>Музыка</td><td>Технология</td>
-        </tr>
-        <tr>
-          <td>5</td><td>11:55–12:40</td>
-          <td>Английский</td><td>ИЗО</td><td>Физра</td><td>Геометрия</td><td>Кл. час</td>
-        </tr>
-      </table>
-    </div>
+      <!-- УРОКИ: вторая смена (7 класс) -->
+      <div class="tab-content active" id="lessons">
+        <p style="color:#666; margin-bottom:15px;">7Б учится во <b>2-й смене</b> (как и все 2–11 классы):</p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>№</th>
+              <th>Время урока</th>
+              <th>Перемена</th>
+              <th>Длит.</th>
+            </tr>
+            <tr>
+              <td>1</td><td>08:00 – 08:40</td><td>БОЛЬШАЯ 1</td><td>20 мин</td>
+            </tr>
+            <tr>
+              <td>2</td><td>09:00 – 09:40</td><td>БОЛЬШАЯ 2</td><td>20 мин</td>
+            </tr>
+            <tr>
+              <td>3</td><td>10:00 – 10:40</td><td>Перемена 3</td><td>10 мин</td>
+            </tr>
+            <tr>
+              <td>4</td><td>10:50 – 11:30</td><td>Перемена 4</td><td>15 мин</td>
+            </tr>
+            <tr>
+              <td>5</td><td>11:45 – 12:25</td><td>БОЛЬШАЯ 5</td><td>20 мин</td>
+            </tr>
+            <tr>
+              <td>6</td><td>12:45 – 13:25</td><td>Перемена 6</td><td>15 мин</td>
+            </tr>
+            <tr>
+              <td>7</td><td>13:40 – 14:20</td><td>БОЛЬШАЯ 7</td><td>20 мин</td>
+            </tr>
+            <tr>
+              <td>8</td><td>14:40 – 15:20</td><td>Перемена 8</td><td>10 мин</td>
+            </tr>
+            <tr>
+              <td>9</td><td>15:30 – 16:10</td><td>Перемена 9</td><td>10 мин</td>
+            </tr>
+            <tr>
+              <td>10</td><td>16:20 – 17:00</td><td>Перемена 10</td><td>10 мин</td>
+            </tr>
+            <tr>
+              <td>11</td><td>17:10 – 17:50</td><td>—</td><td>—</td>
+            </tr>
+          </table>
+        </div>
+      </div>
 
-    <!-- Перемены -->
-    <div class="tab-content" id="breaks">
-      <table>
-        <tr>
-          <th>Перемена</th>
-          <th>Время</th>
-          <th>Длительность</th>
-        </tr>
-        <tr>
-          <td>После 1 урока</td>
-          <td>08:45 – 08:55</td>
-          <td>10 минут</td>
-        </tr>
-        <tr>
-          <td>После 2 урока</td>
-          <td>09:40 – 09:55</td>
-          <td>15 минут</td>
-        </tr>
-        <tr>
-          <td>После 3 урока</td>
-          <td>10:40 – 10:55</td>
-          <td>15 минут</td>
-        </tr>
-        <tr>
-          <td>После 4 урока</td>
-          <td>11:40 – 11:55</td>
-          <td>15 минут</td>
-        </tr>
-        <tr class="break-row">
-          <td>Обед (после 5 урока)</td>
-          <td>12:40 – 13:20</td>
-          <td>40 минут</td>
-        </tr>
-      </table>
-    </div>
-  </section>
+      <!-- ПЕРЕМЕНЫ -->
+      <div class="tab-content" id="breaks">
+        <p style="color:#666; margin-bottom:15px;">Расписание перемен для 2–11 классов:</p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Перемена</th>
+              <th>Время</th>
+              <th>Длительность</th>
+            </tr>
+            <tr class="big-break">
+              <td>🔥 БОЛЬШАЯ 1</td>
+              <td>08:40 – 09:00</td>
+              <td>20 минут</td>
+            </tr>
+            <tr class="big-break">
+              <td>🔥 БОЛЬШАЯ 2</td>
+              <td>09:40 – 10:00</td>
+              <td>20 минут</td>
+            </tr>
+            <tr>
+              <td>Перемена 3</td>
+              <td>10:40 – 10:50</td>
+              <td>10 минут</td>
+            </tr>
+            <tr>
+              <td>Перемена 4</td>
+              <td>11:30 – 11:45</td>
+              <td>15 минут</td>
+            </tr>
+            <tr class="big-break">
+              <td>🔥 БОЛЬШАЯ 5</td>
+              <td>12:25 – 12:45</td>
+              <td>20 минут</td>
+            </tr>
+            <tr>
+              <td>Перемена 6</td>
+              <td>13:25 – 13:40</td>
+              <td>15 минут</td>
+            </tr>
+            <tr class="big-break">
+              <td>🔥 БОЛЬШАЯ 7</td>
+              <td>14:20 – 14:40</td>
+              <td>20 минут</td>
+            </tr>
+            <tr>
+              <td>Перемена 8</td>
+              <td>15:20 – 15:30</td>
+              <td>10 минут</td>
+            </tr>
+            <tr>
+              <td>Перемена 9</td>
+              <td>16:10 – 16:20</td>
+              <td>10 минут</td>
+            </tr>
+            <tr>
+              <td>Перемена 10</td>
+              <td>17:00 – 17:10</td>
+              <td>10 минут</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- ПИТАНИЕ -->
+      <div class="tab-content" id="food">
+        <p style="color:#666; margin-bottom:15px;">График питания по классам:</p>
+        <div class="table-wrap">
+          <table>
+            <tr>
+              <th>Событие</th>
+              <th>Время</th>
+              <th>Кто</th>
+            </tr>
+            <tr>
+              <td>☕ Завтрак</td>
+              <td>08:40 (Большая 1)</td>
+              <td class="food-cell">1-е, 2-е классы + ОВЗ 5-7 классы</td>
+            </tr>
+            <tr>
+              <td>☕ Завтрак</td>
+              <td>09:40 (Большая 2)</td>
+              <td class="food-cell">3-и классы + ОВЗ 8-11 классы</td>
+            </tr>
+            <tr>
+              <td>🥐 Буфет</td>
+              <td>Перемена 3</td>
+              <td class="food-cell">5-11 классы</td>
+            </tr>
+            <tr>
+              <td>🍲 Обед</td>
+              <td>Перемена 4</td>
+              <td class="food-cell">5, 6, 7, 8 классы</td>
+            </tr>
+            <tr>
+              <td>🍲 Обед (льготники по талонам)</td>
+              <td>11:45 – 12:25</td>
+              <td class="food-cell">5-11 классы</td>
+            </tr>
+            <tr>
+              <td>🍲 Обед</td>
+              <td>12:45 – 13:25</td>
+              <td class="food-cell">9, 10, 11 классы</td>
+            </tr>
+            <tr>
+              <td>🍲 Обед</td>
+              <td>13:40 – 14:20</td>
+              <td class="food-cell">4 классы, 10-11 классы</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+    </section>
+  </div>
 
 </div>
 
@@ -474,7 +587,7 @@
 </footer>
 
 <script>
-  // ===== СПИСОК УЧЕНИКОВ =====
+  // ===== УЧЕНИКИ =====
   const students = [
     { name: "Елисей Дейнеко Алексеевич", role: "Ученик" },
     { name: "Менг Геннадий Алексеевич", role: "Ученик" },
@@ -527,18 +640,21 @@
   burger.addEventListener('click', toggleMenu);
   overlay.addEventListener('click', toggleMenu);
 
-  // Плавный переход к разделам из меню
+  // ===== ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ =====
   document.querySelectorAll('.menu a').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const target = document.getElementById(this.dataset.target);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-      // Снимаем активный класс со всех, ставим на этот
+    link.addEventListener('click', function() {
+      const pageId = 'page-' + this.dataset.page;
+      
+      // Скрываем все страницы, показываем нужную
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      
+      // Меняем активную ссылку
       document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
       this.classList.add('active');
-      // Закрываем меню
+      
+      // Прокрутка вверх и закрытие меню
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       if (menu.classList.contains('open')) toggleMenu();
     });
   });
@@ -554,19 +670,18 @@
     });
   });
 
-  // ===== СЧЁТЧИК ПОСЕЩЕНИЙ (localStorage) =====
+  // ===== СЧЁТЧИК ПОСЕЩЕНИЙ =====
   (function() {
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
     
     let stats = JSON.parse(localStorage.getItem('7b_visits') || '{}');
-    if (!stats.history) stats.history = [];   // массив дат посещений
+    if (!stats.history) stats.history = [];
     if (!stats.total)   stats.total = 0;
     
-    // Добавляем текущий заход
     stats.history.push(today);
     stats.total += 1;
     
-    // Чистим историю: оставляем только за последние 365 дней
+    // Чистим историю старше года
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - 365);
     const cutoffStr = cutoff.toISOString().split('T')[0];
@@ -574,25 +689,17 @@
     
     localStorage.setItem('7b_visits', JSON.stringify(stats));
     
-    // Считаем статистику
     const now = new Date();
-    
-    // За сегодня
     const dayCount = stats.history.filter(d => d === today).length;
     
-    // За неделю (последние 7 дней)
     const weekAgo = new Date();
     weekAgo.setDate(now.getDate() - 7);
-    const weekAgoStr = weekAgo.toISOString().split('T')[0];
-    const weekCount = stats.history.filter(d => d >= weekAgoStr).length;
+    const weekCount = stats.history.filter(d => d >= weekAgo.toISOString().split('T')[0]).length;
     
-    // За месяц (последние 30 дней)
     const monthAgo = new Date();
     monthAgo.setDate(now.getDate() - 30);
-    const monthAgoStr = monthAgo.toISOString().split('T')[0];
-    const monthCount = stats.history.filter(d => d >= monthAgoStr).length;
+    const monthCount = stats.history.filter(d => d >= monthAgo.toISOString().split('T')[0]).length;
     
-    // Выводим
     document.getElementById('visitsDay').textContent = dayCount;
     document.getElementById('visitsWeek').textContent = weekCount;
     document.getElementById('visitsMonth').textContent = monthCount;
