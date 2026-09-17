@@ -2,32 +2,29 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DOOM 7Б — АД</title>
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎮 Мини-игры</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
   
   body {
-    background: #0a0000;
-    background-image: 
-      radial-gradient(circle at 20% 30%, rgba(255,0,0,0.15) 0%, transparent 50%),
-      radial-gradient(circle at 80% 70%, rgba(255,50,0,0.1) 0%, transparent 50%);
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
     min-height: 100vh;
-    color: #ff2200;
-    font-family: 'Press Start 2P', monospace;
+    color: #fff;
     overflow-x: hidden;
+    user-select: none;
   }
   
   /* Шапка */
   header {
-    background: linear-gradient(180deg, #2a0000 0%, #1a0000 100%);
-    padding: 18px 25px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    padding: 15px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 4px solid #ff2200;
-    box-shadow: 0 0 30px rgba(255,34,0,0.6), inset 0 -2px 10px rgba(255,0,0,0.3);
+    border-bottom: 2px solid #00d4ff;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.3);
     position: sticky;
     top: 0;
     z-index: 100;
@@ -35,848 +32,884 @@
   
   header h1 {
     font-size: 1.4em;
-    color: #ff2200;
-    text-shadow: 
-      0 0 10px #ff2200,
-      0 0 20px #ff0000,
-      3px 3px 0 #000;
-    letter-spacing: 2px;
-    animation: flicker 3s infinite;
+    background: linear-gradient(90deg, #00d4ff, #ff00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
   }
   
-  @keyframes flicker {
-    0%, 100% { opacity: 1; }
-    92% { opacity: 1; }
-    93% { opacity: 0.6; }
-    94% { opacity: 1; }
-    96% { opacity: 0.8; }
-    97% { opacity: 1; }
-  }
-  
-  /* Бургер */
-  .burger {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, #4a0000, #8b0000);
-    border: 2px solid #ff2200;
-    border-radius: 4px;
+  .back-btn {
+    background: rgba(0,212,255,0.15);
+    border: 2px solid #00d4ff;
+    color: #00d4ff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
     cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
     transition: all 0.3s;
-    box-shadow: 0 0 15px rgba(255,34,0,0.5);
+    display: none;
   }
   
-  .burger:hover { 
-    box-shadow: 0 0 25px rgba(255,34,0,0.9);
-    transform: scale(1.08);
-  }
-  
-  .burger span {
-    display: block;
-    width: 26px;
-    height: 3px;
-    background: #ff2200;
-    box-shadow: 0 0 8px #ff2200;
-    transition: all 0.35s ease;
-  }
-  
-  .burger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
-  .burger.active span:nth-child(2) { opacity: 0; }
-  .burger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-  
-  /* Меню */
-  .menu {
-    position: fixed;
-    top: 85px;
-    right: 0;
-    width: 300px;
-    height: calc(100vh - 85px);
-    background: linear-gradient(180deg, #1a0000 0%, #0a0000 100%);
-    border-left: 3px solid #ff2200;
-    box-shadow: -10px 0 40px rgba(255,34,0,0.5);
-    transform: translateX(100%);
-    transition: transform 0.4s ease;
-    z-index: 99;
-    padding: 25px 15px;
-    overflow-y: auto;
-  }
-  
-  .menu.open { transform: translateX(0); }
-  
-  .menu a {
-    display: block;
-    padding: 16px 20px;
-    margin-bottom: 10px;
-    color: #ff6644;
-    text-decoration: none;
-    font-size: 0.85em;
-    border: 2px solid #4a0000;
-    border-radius: 4px;
-    transition: all 0.3s;
-    cursor: pointer;
-    text-align: center;
-    letter-spacing: 1px;
-  }
-  
-  .menu a:hover,
-  .menu a.active {
-    background: #8b0000;
-    color: #fff;
-    border-color: #ff2200;
-    box-shadow: 0 0 20px rgba(255,34,0,0.8);
-    text-shadow: 0 0 8px #fff;
-  }
-  
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.85);
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.35s;
-    z-index: 98;
-  }
-  
-  .overlay.show { opacity: 1; visibility: visible; }
+  .back-btn.show { display: block; }
+  .back-btn:hover { background: #00d4ff; color: #000; box-shadow: 0 0 20px #00d4ff; }
   
   /* Контейнер */
   .container {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 25px 20px;
   }
   
   .page { display: none; }
-  .page.active { display: block; }
-  
-  section {
-    background: linear-gradient(180deg, #150000 0%, #0a0000 100%);
-    border: 3px solid #8b0000;
-    border-radius: 8px;
-    padding: 30px;
-    margin-bottom: 30px;
-    box-shadow: 
-      0 0 40px rgba(255,34,0,0.4),
-      inset 0 0 60px rgba(255,0,0,0.08);
-    animation: fadeIn 0.5s ease;
-    position: relative;
-  }
-  
-  section::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 8px;
-    padding: 3px;
-    background: linear-gradient(45deg, #ff2200, #8b0000, #ff2200);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    opacity: 0.6;
-  }
+  .page.active { display: block; animation: fadeIn 0.4s ease; }
   
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
   
-  section h2 {
-    color: #ff2200;
-    margin-bottom: 25px;
-    font-size: 1.3em;
-    text-shadow: 0 0 15px #ff2200;
-    border-bottom: 3px solid #8b0000;
-    padding-bottom: 12px;
-    letter-spacing: 2px;
-    display: inline-block;
-  }
-  
-  /* ИГРА */
-  .game-wrapper {
-    background: #000;
-    border: 4px solid #8b0000;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 
-      0 0 50px rgba(255,34,0,0.6),
-      inset 0 0 30px rgba(255,0,0,0.2);
+  /* ===== ГЛАВНОЕ МЕНЮ ===== */
+  .menu-title {
     text-align: center;
+    font-size: 2em;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #00d4ff, #ff00ff, #00d4ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
   }
   
-  #gameCanvas {
-    background: #000;
+  @keyframes shine {
+    to { background-position: 200% center; }
+  }
+  
+  .menu-subtitle {
+    text-align: center;
+    color: #8899aa;
+    margin-bottom: 30px;
+    font-size: 0.95em;
+  }
+  
+  .section-title {
+    color: #00d4ff;
+    font-size: 1.1em;
+    margin: 25px 0 15px;
+    padding-left: 10px;
+    border-left: 4px solid #ff00ff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+  }
+  
+  .game-card {
+    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(255,0,255,0.05));
+    border: 2px solid rgba(0,212,255,0.4);
+    border-radius: 16px;
+    padding: 25px 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .game-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent, rgba(255,0,255,0.2));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .game-card:hover {
+    transform: translateY(-5px);
+    border-color: #ff00ff;
+    box-shadow: 0 10px 40px rgba(255,0,255,0.4);
+  }
+  
+  .game-card:hover::before { opacity: 1; }
+  
+  .game-card .icon {
+    font-size: 3em;
     display: block;
-    margin: 0 auto;
-    max-width: 100%;
-    border: 2px solid #ff2200;
-    box-shadow: inset 0 0 40px rgba(255,0,0,0.3);
-    image-rendering: pixelated;
-    image-rendering: crisp-edges;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  
+  .game-card .name {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    position: relative;
+  }
+  
+  .game-card .desc {
+    font-size: 0.85em;
+    color: #8899aa;
+    position: relative;
+  }
+  
+  .game-card .tag {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 4px 12px;
+    background: rgba(0,212,255,0.2);
+    border: 1px solid #00d4ff;
+    border-radius: 20px;
+    font-size: 0.7em;
+    color: #00d4ff;
+    font-weight: 600;
+    position: relative;
+  }
+  
+  /* ===== ИГРОВАЯ СТРАНИЦА ===== */
+  .game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 10px;
   }
   
   .game-stats {
     display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-bottom: 15px;
+    gap: 20px;
     flex-wrap: wrap;
   }
   
-  .stat {
-    color: #ff6644;
-    font-size: 0.85em;
-    text-shadow: 0 0 8px #ff2200;
+  .stat-item {
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.9em;
   }
   
-  .stat b {
-    color: #ff2200;
-    font-size: 1.3em;
+  .stat-item b {
+    color: #00d4ff;
+    margin-left: 8px;
+    font-size: 1.1em;
+  }
+  
+  canvas {
+    background: #000;
     display: block;
-    margin-top: 5px;
+    margin: 0 auto;
+    border: 2px solid #00d4ff;
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0,212,255,0.4);
+    max-width: 100%;
+    touch-action: none;
   }
   
   .game-controls {
     display: flex;
     gap: 10px;
     justify-content: center;
-    flex-wrap: wrap;
     margin-top: 15px;
+    flex-wrap: wrap;
   }
   
   .btn {
-    background: linear-gradient(180deg, #4a0000, #8b0000);
-    color: #ff6644;
-    border: 2px solid #ff2200;
-    padding: 12px 25px;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 0.8em;
+    background: linear-gradient(135deg, #00d4ff, #0088cc);
+    color: #000;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 1em;
+    font-weight: 700;
     cursor: pointer;
-    border-radius: 4px;
     transition: all 0.3s;
-    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(0,212,255,0.4);
   }
   
-  .btn:hover {
-    background: #ff2200;
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(0,212,255,0.6); }
+  .btn:active { transform: translateY(0); }
+  
+  .btn.pink {
+    background: linear-gradient(135deg, #ff00ff, #cc00cc);
     color: #fff;
-    box-shadow: 0 0 25px #ff2200;
-    text-shadow: 0 0 8px #fff;
+    box-shadow: 0 4px 15px rgba(255,0,255,0.4);
   }
   
   .game-hint {
-    color: #888;
-    font-size: 0.7em;
-    margin-top: 15px;
-    line-height: 2;
-  }
-  
-  /* Счётчик */
-  .visits-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
-  }
-  
-  .visit-card {
-    background: linear-gradient(180deg, #4a0000, #1a0000);
-    color: #ff2200;
-    padding: 22px 15px;
-    border-radius: 6px;
     text-align: center;
-    border: 2px solid #8b0000;
-    box-shadow: 0 0 25px rgba(255,34,0,0.3), inset 0 0 20px rgba(255,0,0,0.1);
-    transition: all 0.3s;
-  }
-  
-  .visit-card:hover { 
-    transform: translateY(-5px);
-    box-shadow: 0 0 40px rgba(255,34,0,0.8);
-    border-color: #ff2200;
-  }
-  
-  .visit-card .num {
-    font-size: 1.8em;
-    font-weight: 800;
-    display: block;
-    margin-bottom: 8px;
-    text-shadow: 0 0 15px #ff2200;
-  }
-  
-  .visit-card .lbl { font-size: 0.7em; color: #ff6644; letter-spacing: 1px; }
-  
-  .visit-note {
-    margin-top: 20px;
-    font-size: 0.65em;
-    color: #888;
-    background: #0a0000;
-    padding: 15px;
-    border-radius: 4px;
-    border-left: 4px solid #ff2200;
+    color: #8899aa;
+    font-size: 0.85em;
+    margin-top: 15px;
     line-height: 1.8;
+    padding: 10px;
   }
   
-  /* Таблицы (расписание) */
-  .tabs {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
+  .game-hint kbd {
+    background: rgba(0,212,255,0.2);
+    border: 1px solid #00d4ff;
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: #00d4ff;
+    font-family: monospace;
+    font-weight: bold;
+  }
+  
+  /* Мобильные кнопки управления */
+  .mobile-controls {
+    display: none;
+    margin-top: 15px;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
   }
   
-  .tab-btn {
-    padding: 12px 20px;
-    border: 2px solid #8b0000;
-    background: #1a0000;
-    color: #ff6644;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 0.75em;
+  .mobile-controls.show { display: flex; }
+  
+  .dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(3, 60px);
+    gap: 5px;
+  }
+  
+  .dpad button {
+    background: rgba(0,212,255,0.2);
+    border: 2px solid #00d4ff;
+    border-radius: 12px;
+    color: #00d4ff;
+    font-size: 1.5em;
     cursor: pointer;
-    transition: all 0.3s;
-    letter-spacing: 1px;
+    transition: all 0.15s;
+    touch-action: none;
+    user-select: none;
   }
   
-  .tab-btn:hover { background: #4a0000; }
+  .dpad button:active,
+  .dpad button.active {
+    background: #00d4ff;
+    color: #000;
+  }
   
-  .tab-btn.active {
-    background: #8b0000;
+  .action-btn {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: rgba(255,0,255,0.2);
+    border: 3px solid #ff00ff;
+    color: #ff00ff;
+    font-size: 0.9em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    touch-action: none;
+    user-select: none;
+  }
+  
+  .action-btn:active,
+  .action-btn.active {
+    background: #ff00ff;
     color: #fff;
-    border-color: #ff2200;
-    box-shadow: 0 0 20px rgba(255,34,0,0.7);
-    text-shadow: 0 0 8px #fff;
+    transform: scale(0.95);
   }
   
-  .tab-content { display: none; animation: fadeIn 0.4s ease; }
-  .tab-content.active { display: block; }
-  
-  .table-wrap {
-    overflow-x: auto;
-    border: 2px solid #4a0000;
-    border-radius: 6px;
+  /* Оверлеи */
+  .game-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 500;
+    padding: 20px;
   }
   
-  table {
+  .game-overlay.show { display: flex; }
+  
+  .overlay-content {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 2px solid #00d4ff;
+    border-radius: 20px;
+    padding: 40px 30px;
+    text-align: center;
+    max-width: 400px;
     width: 100%;
-    border-collapse: collapse;
-    font-size: 0.7em;
-    min-width: 700px;
-    font-family: 'Press Start 2P', monospace;
+    box-shadow: 0 0 60px rgba(0,212,255,0.5);
+    animation: fadeIn 0.3s ease;
   }
   
-  th, td {
-    padding: 12px 8px;
-    text-align: center;
-    border-bottom: 1px solid #2a0000;
-    border-right: 1px solid #2a0000;
-    color: #ff6644;
+  .overlay-content h2 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #00d4ff, #ff00ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
   
-  th {
-    background: #4a0000;
-    color: #ff2200;
-    text-shadow: 0 0 8px #ff2200;
-    white-space: nowrap;
-    border-bottom: 2px solid #8b0000;
+  .overlay-content p {
+    color: #8899aa;
+    margin-bottom: 20px;
+    font-size: 1.1em;
   }
   
-  td:first-child { color: #ff2200; font-weight: bold; }
-  
-  tr:hover { background: rgba(255,34,0,0.08); }
-  tr:last-child td { border-bottom: none; }
-  
-  td small {
-    display: block;
-    color: #666;
-    font-size: 0.8em;
-    margin-top: 4px;
+  .overlay-content .score-big {
+    font-size: 3em;
+    color: #00d4ff;
+    font-weight: 800;
+    margin: 15px 0;
+    text-shadow: 0 0 20px #00d4ff;
   }
   
-  .big-break td {
-    background: rgba(139,0,0,0.4);
-    color: #ff2200;
-    font-weight: bold;
-    text-shadow: 0 0 6px #ff2200;
-  }
-  
-  /* Футер */
-  footer {
-    text-align: center;
-    color: #8b0000;
-    padding: 30px;
-    font-size: 0.7em;
-    text-shadow: 0 0 8px #8b0000;
-    letter-spacing: 2px;
-  }
-  
-  /* Мобильная */
+  /* Мобильное меню */
   @media (max-width: 600px) {
-    header h1 { font-size: 1em; }
-    section { padding: 20px; }
-    section h2 { font-size: 1em; }
-    .visits-grid { grid-template-columns: repeat(2, 1fr); }
-    .visit-card .num { font-size: 1.4em; }
-    table { font-size: 0.55em; }
-    th, td { padding: 8px 5px; }
-    .tab-btn { padding: 10px 14px; font-size: 0.6em; }
-    .btn { padding: 10px 18px; font-size: 0.65em; }
+    header h1 { font-size: 1.1em; }
+    .menu-title { font-size: 1.5em; }
+    .games-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .game-card { padding: 18px 12px; }
+    .game-card .icon { font-size: 2.2em; }
+    .game-card .name { font-size: 0.95em; }
+    .game-card .desc { font-size: 0.75em; }
+    .stat-item { padding: 6px 12px; font-size: 0.8em; }
+    .btn { padding: 10px 20px; font-size: 0.9em; }
+  }
+  
+  @media (max-width: 400px) {
+    .dpad { grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px); }
+    .action-btn { width: 75px; height: 75px; font-size: 0.8em; }
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>💀 DOOM 7Б</h1>
-  <button class="burger" id="burger" aria-label="Меню">
-    <span></span><span></span><span></span>
-  </button>
+  <h1>🎮 МИНИ-ИГРЫ</h1>
+  <button class="back-btn" id="backBtn">← МЕНЮ</button>
 </header>
-
-<nav class="menu" id="menu">
-  <a data-page="game" class="active">🎮 ИГРАТЬ</a>
-  <a data-page="schedule">📅 РАСПИСАНИЕ</a>
-  <a data-page="visits">📊 ПОСЕЩАЕМОСТЬ</a>
-</nav>
-
-<div class="overlay" id="overlay"></div>
 
 <div class="container">
 
-  <!-- ИГРА (главная) -->
-  <div class="page active" id="page-game">
-    <section>
-      <h2>🎮 РИП И ТИР</h2>
-      <div class="game-wrapper">
-        <div class="game-stats">
-          <div class="stat">HP<b id="statHp">100</b></div>
-          <div class="stat">ВОЛНА<b id="statWave">1</b></div>
-          <div class="stat">УБИТО<b id="statKills">0</b></div>
-          <div class="stat">ОЧКИ<b id="statScore">0</b></div>
-        </div>
-        <canvas id="gameCanvas" width="800" height="500"></canvas>
-        <div class="game-controls">
-          <button class="btn" id="btnStart">▶ СТАРТ</button>
-          <button class="btn" id="btnPause">⏸ ПАУЗА</button>
-        </div>
-        <div class="game-hint">
-          WASD / ← ↑ ↓ → — ДВИЖЕНИЕ<br>
-          МЫШЬ — ПРИЦЕЛ · ЛКМ — СТРЕЛЬБА<br>
-          ПРОБЕЛ — СТРЕЛЬБА
-        </div>
+  <!-- ============ ГЛАВНОЕ МЕНЮ ============ -->
+  <div class="page active" id="page-menu">
+    <h1 class="menu-title">ВЫБЕРИ ИГРУ</h1>
+    <p class="menu-subtitle">4 игры: 2 для ПК, 2 для телефона</p>
+    
+    <h3 class="section-title">💻 Для ПК (клавиатура)</h3>
+    <div class="games-grid">
+      <div class="game-card" data-game="snake">
+        <span class="icon">🐍</span>
+        <div class="name">Змейка</div>
+        <div class="desc">Собирай еду, расти</div>
+        <span class="tag">ПК</span>
       </div>
-    </section>
+      <div class="game-card" data-game="shooter">
+        <span class="icon">🚀</span>
+        <div class="name">Космо-шутер</div>
+        <div class="desc">Стреляй по врагам</div>
+        <span class="tag">ПК</span>
+      </div>
+    </div>
+    
+    <h3 class="section-title">📱 Для телефона (тач)</h3>
+    <div class="games-grid">
+      <div class="game-card" data-game="tap">
+        <span class="icon">👆</span>
+        <div class="name">Тапалка</div>
+        <div class="desc">Успей тапнуть по цели</div>
+        <span class="tag">Мобилка</span>
+      </div>
+      <div class="game-card" data-game="flappy">
+        <span class="icon">🐦</span>
+        <div class="name">Птичка</div>
+        <div class="desc">Пролетай сквозь трубы</div>
+        <span class="tag">Мобилка</span>
+      </div>
+    </div>
   </div>
 
-  <!-- РАСПИСАНИЕ -->
-  <div class="page" id="page-schedule">
-    <section>
-      <h2>📅 РАСПИСАНИЕ</h2>
-      
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="lessons">📚 УРОКИ</button>
-        <button class="tab-btn" data-tab="breaks">🔔 ПЕРЕМЕНЫ</button>
+  <!-- ============ ИГРА: ЗМЕЙКА ============ -->
+  <div class="page" id="page-snake">
+    <div class="game-header">
+      <div class="game-stats">
+        <div class="stat-item">Очки: <b id="snakeScore">0</b></div>
+        <div class="stat-item">Рекорд: <b id="snakeBest">0</b></div>
       </div>
-
-      <div class="tab-content active" id="lessons">
-        <p style="color:#888; margin-bottom:15px; font-size:0.75em;">Расписание уроков 7Б (2-я смена):</p>
-        <div class="table-wrap">
-          <table>
-            <tr>
-              <th>№</th>
-              <th>ВРЕМЯ</th>
-              <th>ПН</th>
-              <th>ВТ</th>
-              <th>СР</th>
-              <th>ЧТ</th>
-              <th>ПТ</th>
-            </tr>
-            <tr>
-              <td>1</td>
-              <td>08:00–08:40</td>
-              <td>Рус. яз.<br><small>1102</small></td>
-              <td>Матем.<br><small>5</small></td>
-              <td>Рус. яз.<br><small>1102</small></td>
-              <td>БЛГ (ТПС)<br><small>78</small></td>
-              <td>Рус. яз.<br><small>1102</small></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>09:00–09:40</td>
-              <td>Англ. яз.<br><small>114</small></td>
-              <td>Физра<br><small>Спортзал</small></td>
-              <td>Матем.<br><small>5</small></td>
-              <td>Матем.<br><small>5</small></td>
-              <td>Физра<br><small>Спортзал</small></td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>10:00–10:40</td>
-              <td>Литер.<br><small>102</small></td>
-              <td>Физра<br><small>Спортзал</small></td>
-              <td>Матем.<br><small>5</small></td>
-              <td>Матем.<br><small>5</small></td>
-              <td>Рус. яз.<br><small>1102</small></td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>10:50–11:30</td>
-              <td>Матем.<br><small>5</small></td>
-              <td>Англ. яз.<br><small>114</small></td>
-              <td>Литер.<br><small>102</small></td>
-              <td>ИЗО<br><small>28</small></td>
-              <td>Матем.<br><small>5</small></td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>11:45–12:25</td>
-              <td>История<br><small>75</small></td>
-              <td>Рус. яз.<br><small>102</small></td>
-              <td>Матем.<br><small>5</small></td>
-              <td>Англ. яз.<br><small>114</small></td>
-              <td>История<br><small>75</small></td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>12:45–13:25</td>
-              <td>География<br><small>78</small></td>
-              <td>КИБ 7<br><small>5</small></td>
-              <td>Биология<br><small>75</small></td>
-              <td>Рус. яз.<br><small>102</small></td>
-              <td>Физра<br><small>Спортзал</small></td>
-            </tr>
-            <tr>
-              <td>7</td>
-              <td>13:40–14:20</td>
-              <td>КИБ 7<br><small>102</small></td>
-              <td>История<br><small>75</small></td>
-              <td>—</td>
-              <td>—</td>
-              <td>География<br><small>78</small></td>
-            </tr>
-            <tr>
-              <td>8</td>
-              <td>14:40–15:20</td>
-              <td>Кл. час<br><small>78</small></td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-              <td>—</td>
-            </tr>
-          </table>
-        </div>
+    </div>
+    <canvas id="snakeCanvas" width="600" height="600"></canvas>
+    <div class="game-controls">
+      <button class="btn" id="snakeStart">▶ СТАРТ</button>
+    </div>
+    <div class="game-hint">
+      <kbd>W A S D</kbd> или <kbd>← ↑ ↓ →</kbd> — движение
+    </div>
+    <div class="mobile-controls" id="snakeMobile">
+      <div class="dpad">
+        <div></div><button data-dir="up">▲</button><div></div>
+        <button data-dir="left">◀</button><div></div><button data-dir="right">▶</button>
+        <div></div><button data-dir="down">▼</button><div></div>
       </div>
-
-      <div class="tab-content" id="breaks">
-        <p style="color:#888; margin-bottom:15px; font-size:0.75em;">Расписание перемен:</p>
-        <div class="table-wrap">
-          <table>
-            <tr>
-              <th>ПЕРЕМЕНА</th>
-              <th>ВРЕМЯ</th>
-              <th>ДЛИТ.</th>
-            </tr>
-            <tr class="big-break">
-              <td>🔥 БОЛЬШАЯ 1</td>
-              <td>08:40–09:00</td>
-              <td>20 МИН</td>
-            </tr>
-            <tr class="big-break">
-              <td>🔥 БОЛЬШАЯ 2</td>
-              <td>09:40–10:00</td>
-              <td>20 МИН</td>
-            </tr>
-            <tr>
-              <td>Перемена 3</td>
-              <td>10:40–10:50</td>
-              <td>10 МИН</td>
-            </tr>
-            <tr>
-              <td>Перемена 4</td>
-              <td>11:30–11:45</td>
-              <td>15 МИН</td>
-            </tr>
-            <tr class="big-break">
-              <td>🔥 БОЛЬШАЯ 5</td>
-              <td>12:25–12:45</td>
-              <td>20 МИН</td>
-            </tr>
-            <tr>
-              <td>Перемена 6</td>
-              <td>13:25–13:40</td>
-              <td>15 МИН</td>
-            </tr>
-            <tr class="big-break">
-              <td>🔥 БОЛЬШАЯ 7</td>
-              <td>14:20–14:40</td>
-              <td>20 МИН</td>
-            </tr>
-            <tr>
-              <td>Перемена 8</td>
-              <td>15:20–15:30</td>
-              <td>10 МИН</td>
-            </tr>
-            <tr>
-              <td>Перемена 9</td>
-              <td>16:10–16:20</td>
-              <td>10 МИН</td>
-            </tr>
-            <tr>
-              <td>Перемена 10</td>
-              <td>17:00–17:10</td>
-              <td>10 МИН</td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-    </section>
+    </div>
   </div>
 
-  <!-- ПОСЕЩАЕМОСТЬ -->
-  <div class="page" id="page-visits">
-    <section>
-      <h2>📊 ПОСЕЩАЕМОСТЬ</h2>
-      <p style="color:#888; margin-bottom:15px; font-size:0.75em;">Статистика заходов:</p>
-      <div class="visits-grid">
-        <div class="visit-card">
-          <span class="num" id="visitsDay">0</span>
-          <span class="lbl">СЕГОДНЯ</span>
-        </div>
-        <div class="visit-card">
-          <span class="num" id="visitsWeek">0</span>
-          <span class="lbl">ЗА НЕДЕЛЮ</span>
-        </div>
-        <div class="visit-card">
-          <span class="num" id="visitsMonth">0</span>
-          <span class="lbl">ЗА МЕСЯЦ</span>
-        </div>
-        <div class="visit-card">
-          <span class="num" id="visitsTotal">0</span>
-          <span class="lbl">ВСЕГО</span>
-        </div>
+  <!-- ============ ИГРА: КОСМО-ШУТЕР ============ -->
+  <div class="page" id="page-shooter">
+    <div class="game-header">
+      <div class="game-stats">
+        <div class="stat-item">Очки: <b id="shooterScore">0</b></div>
+        <div class="stat-item">HP: <b id="shooterHp">100</b></div>
       </div>
-      <div class="visit-note">
-        ℹ️ Счётчик считает заходы на этом устройстве (браузер). Данные в localStorage.
+    </div>
+    <canvas id="shooterCanvas" width="600" height="600"></canvas>
+    <div class="game-controls">
+      <button class="btn" id="shooterStart">▶ СТАРТ</button>
+    </div>
+    <div class="game-hint">
+      <kbd>← →</kbd> движение · <kbd>ПРОБЕЛ</kbd> стрельба
+    </div>
+  </div>
+
+  <!-- ============ ИГРА: ТАПАЛКА ============ -->
+  <div class="page" id="page-tap">
+    <div class="game-header">
+      <div class="game-stats">
+        <div class="stat-item">Очки: <b id="tapScore">0</b></div>
+        <div class="stat-item">Время: <b id="tapTime">30</b></div>
       </div>
-    </section>
+    </div>
+    <canvas id="tapCanvas" width="600" height="600"></canvas>
+    <div class="game-controls">
+      <button class="btn" id="tapStart">▶ СТАРТ</button>
+    </div>
+    <div class="game-hint">
+      👆 Тапай по мишеням, успей за 30 секунд
+    </div>
+  </div>
+
+  <!-- ============ ИГРА: ПТИЧКА ============ -->
+  <div class="page" id="page-flappy">
+    <div class="game-header">
+      <div class="game-stats">
+        <div class="stat-item">Очки: <b id="flappyScore">0</b></div>
+        <div class="stat-item">Рекорд: <b id="flappyBest">0</b></div>
+      </div>
+    </div>
+    <canvas id="flappyCanvas" width="600" height="600"></canvas>
+    <div class="game-controls">
+      <button class="btn" id="flappyStart">▶ СТАРТ</button>
+    </div>
+    <div class="game-hint">
+      👆 Тап или <kbd>ПРОБЕЛ</kbd> — прыжок
+    </div>
   </div>
 
 </div>
 
-<footer>
-  <p>© 2026 DOOM 7Б · RIP AND TEAR</p>
-</footer>
+<!-- Оверлей "Игра окончена" -->
+<div class="game-overlay" id="gameOver">
+  <div class="overlay-content">
+    <h2 id="overTitle">ИГРА ОКОНЧЕНА</h2>
+    <p id="overText">Твой результат:</p>
+    <div class="score-big" id="overScore">0</div>
+    <div class="game-controls">
+      <button class="btn" id="overRetry">🔄 ЗАНОВО</button>
+      <button class="btn pink" id="overMenu">🏠 МЕНЮ</button>
+    </div>
+  </div>
+</div>
 
 <script>
-  // ===== МЕНЮ =====
-  const burger = document.getElementById('burger');
-  const menu = document.getElementById('menu');
-  const overlay = document.getElementById('overlay');
+  // ================================================================
+  // НАВИГАЦИЯ
+  // ================================================================
+  const pages = document.querySelectorAll('.page');
+  const backBtn = document.getElementById('backBtn');
+  let currentGame = null;
 
-  function toggleMenu() {
-    burger.classList.toggle('active');
-    menu.classList.toggle('open');
-    overlay.classList.toggle('show');
+  function showPage(id) {
+    pages.forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+    
+    if (id === 'page-menu') {
+      backBtn.classList.remove('show');
+      stopAllGames();
+      currentGame = null;
+    } else {
+      backBtn.classList.add('show');
+    }
   }
 
-  burger.addEventListener('click', toggleMenu);
-  overlay.addEventListener('click', toggleMenu);
-
-  // ===== ПЕРЕКЛЮЧЕНИЕ СТРАНИЦ =====
-  document.querySelectorAll('.menu a').forEach(link => {
-    link.addEventListener('click', function() {
-      const pageId = 'page-' + this.dataset.page;
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
-      this.classList.add('active');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (menu.classList.contains('open')) toggleMenu();
-      
-      // Пауза игры при переходе со страницы игры
-      if (pageId !== 'page-game' && game.running) {
-        game.pause();
+  document.querySelectorAll('.game-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const game = card.dataset.game;
+      currentGame = game;
+      showPage('page-' + game);
+      // Показываем мобильные контролы для змейки на тач-устройствах
+      if (game === 'snake' && isTouch()) {
+        document.getElementById('snakeMobile').classList.add('show');
       }
+      setTimeout(() => {
+        if (game === 'snake') snake.init();
+        if (game === 'shooter') shooter.init();
+        if (game === 'tap') tap.init();
+        if (game === 'flappy') flappy.init();
+      }, 50);
     });
   });
 
-  // ===== ТАБЫ =====
-  document.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      const tabId = this.dataset.tab;
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      this.classList.add('active');
-      document.getElementById(tabId).classList.add('active');
-    });
+  backBtn.addEventListener('click', () => {
+    stopAllGames();
+    showPage('page-menu');
   });
 
-  // ===== СЧЁТЧИК ПОСЕЩЕНИЙ =====
-  (function() {
-    const today = new Date().toISOString().split('T')[0];
-    let stats = JSON.parse(localStorage.getItem('doom7b_visits') || '{}');
-    if (!stats.history) stats.history = [];
-    if (!stats.total) stats.total = 0;
-    stats.history.push(today);
-    stats.total += 1;
-    const cutoff = new Date();
-    cutoff.setDate(cutoff.getDate() - 365);
-    const cutoffStr = cutoff.toISOString().split('T')[0];
-    stats.history = stats.history.filter(d => d >= cutoffStr);
-    localStorage.setItem('doom7b_visits', JSON.stringify(stats));
+  function isTouch() {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  }
+
+  function showGameOver(title, score, onRetry) {
+    document.getElementById('overTitle').textContent = title;
+    document.getElementById('overScore').textContent = score;
+    document.getElementById('gameOver').classList.add('show');
     
-    const now = new Date();
-    const dayCount = stats.history.filter(d => d === today).length;
-    const weekAgo = new Date(); weekAgo.setDate(now.getDate() - 7);
-    const weekCount = stats.history.filter(d => d >= weekAgo.toISOString().split('T')[0]).length;
-    const monthAgo = new Date(); monthAgo.setDate(now.getDate() - 30);
-    const monthCount = stats.history.filter(d => d >= monthAgo.toISOString().split('T')[0]).length;
-    
-    document.getElementById('visitsDay').textContent = dayCount;
-    document.getElementById('visitsWeek').textContent = weekCount;
-    document.getElementById('visitsMonth').textContent = monthCount;
-    document.getElementById('visitsTotal').textContent = stats.total;
-  })();
+    document.getElementById('overRetry').onclick = () => {
+      document.getElementById('gameOver').classList.remove('show');
+      onRetry();
+    };
+    document.getElementById('overMenu').onclick = () => {
+      document.getElementById('gameOver').classList.remove('show');
+      stopAllGames();
+      showPage('page-menu');
+    };
+  }
 
-  // ===== ИГРА DOOM (top-down шутер) =====
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-  const W = canvas.width, H = canvas.height;
+  function stopAllGames() {
+    snake.stop();
+    shooter.stop();
+    tap.stop();
+    flappy.stop();
+  }
 
-  const keys = {};
-  const mouse = { x: W/2, y: H/2, down: false };
+  // ================================================================
+  // ИГРА 1: ЗМЕЙКА (ПК)
+  // ================================================================
+  const snake = {
+    canvas: document.getElementById('snakeCanvas'),
+    ctx: null,
+    cell: 20,
+    cols: 30,
+    rows: 30,
+    snake: [],
+    dir: { x: 1, y: 0 },
+    nextDir: { x: 1, y: 0 },
+    food: { x: 5, y: 5 },
+    score: 0,
+    best: parseInt(localStorage.getItem('snakeBest') || '0'),
+    running: false,
+    timer: null,
+    speed: 120,
 
-  window.addEventListener('keydown', e => {
-    keys[e.key.toLowerCase()] = true;
-    if (e.key === ' ') e.preventDefault();
-  });
-  window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+    init() {
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      this.reset();
+      document.getElementById('snakeBest').textContent = this.best;
+      this.draw();
+      
+      document.getElementById('snakeStart').onclick = () => {
+        if (this.running) {
+          this.stop();
+        } else {
+          this.start();
+        }
+      };
+      
+      // Управление с клавиатуры
+      if (!this._keyHandler) {
+        this._keyHandler = (e) => {
+          const k = e.key.toLowerCase();
+          if (['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase())) e.preventDefault();
+          if (!this.running) return;
+          
+          if ((k === 'w' || k === 'arrowup') && this.dir.y === 0) this.nextDir = { x: 0, y: -1 };
+          if ((k === 's' || k === 'arrowdown') && this.dir.y === 0) this.nextDir = { x: 0, y: 1 };
+          if ((k === 'a' || k === 'arrowleft') && this.dir.x === 0) this.nextDir = { x: -1, y: 0 };
+          if ((k === 'd' || k === 'arrowright') && this.dir.x === 0) this.nextDir = { x: 1, y: 0 };
+        };
+        window.addEventListener('keydown', this._keyHandler);
+      }
+      
+      // Управление с тача (dpad)
+      document.querySelectorAll('#snakeMobile button').forEach(btn => {
+        const dir = btn.dataset.dir;
+        const handler = (e) => {
+          e.preventDefault();
+          if (!this.running) return;
+          if (dir === 'up' && this.dir.y === 0) this.nextDir = { x: 0, y: -1 };
+          if (dir === 'down' && this.dir.y === 0) this.nextDir = { x: 0, y: 1 };
+          if (dir === 'left' && this.dir.x === 0) this.nextDir = { x: -1, y: 0 };
+          if (dir === 'right' && this.dir.x === 0) this.nextDir = { x: 1, y: 0 };
+        };
+        btn.addEventListener('touchstart', handler, { passive: false });
+        btn.addEventListener('mousedown', handler);
+      });
+    },
 
-  canvas.addEventListener('mousemove', e => {
-    const r = canvas.getBoundingClientRect();
-    mouse.x = (e.clientX - r.left) * (W / r.width);
-    mouse.y = (e.clientY - r.top) * (H / r.height);
-  });
-  canvas.addEventListener('mousedown', () => mouse.down = true);
-  window.addEventListener('mouseup', () => mouse.down = false);
+    resize() {
+      const maxSize = Math.min(window.innerWidth - 60, 600, window.innerHeight - 250);
+      const size = Math.max(300, maxSize);
+      this.canvas.width = size;
+      this.canvas.height = size;
+      this.cell = size / this.cols;
+    },
 
-  const game = {
+    reset() {
+      this.snake = [{ x: 15, y: 15 }, { x: 14, y: 15 }, { x: 13, y: 15 }];
+      this.dir = { x: 1, y: 0 };
+      this.nextDir = { x: 1, y: 0 };
+      this.score = 0;
+      this.spawnFood();
+      document.getElementById('snakeScore').textContent = 0;
+    },
+
+    spawnFood() {
+      while (true) {
+        const f = { x: Math.floor(Math.random() * this.cols), y: Math.floor(Math.random() * this.rows) };
+        if (!this.snake.some(s => s.x === f.x && s.y === f.y)) {
+          this.food = f;
+          return;
+        }
+      }
+    },
+
+    start() {
+      this.reset();
+      this.running = true;
+      document.getElementById('snakeStart').textContent = '⏸ СТОП';
+      this.tick();
+    },
+
+    stop() {
+      this.running = false;
+      clearTimeout(this.timer);
+      const btn = document.getElementById('snakeStart');
+      if (btn) btn.textContent = '▶ СТАРТ';
+    },
+
+    tick() {
+      if (!this.running) return;
+      this.update();
+      this.draw();
+      this.timer = setTimeout(() => this.tick(), this.speed);
+    },
+
+    update() {
+      this.dir = { ...this.nextDir };
+      const head = { x: this.snake[0].x + this.dir.x, y: this.snake[0].y + this.dir.y };
+      
+      // Стены
+      if (head.x < 0 || head.x >= this.cols || head.y < 0 || head.y >= this.rows) {
+        return this.gameOver();
+      }
+      // Себя
+      if (this.snake.some(s => s.x === head.x && s.y === head.y)) {
+        return this.gameOver();
+      }
+      
+      this.snake.unshift(head);
+      
+      if (head.x === this.food.x && head.y === this.food.y) {
+        this.score += 10;
+        document.getElementById('snakeScore').textContent = this.score;
+        this.spawnFood();
+        if (this.speed > 60) this.speed -= 2;
+      } else {
+        this.snake.pop();
+      }
+    },
+
+    draw() {
+      const c = this.ctx;
+      const s = this.canvas.width;
+      c.fillStyle = '#000';
+      c.fillRect(0, 0, s, s);
+      
+      // Сетка
+      c.strokeStyle = 'rgba(0,212,255,0.05)';
+      c.lineWidth = 1;
+      for (let i = 0; i <= this.cols; i++) {
+        c.beginPath(); c.moveTo(i * this.cell, 0); c.lineTo(i * this.cell, s); c.stroke();
+        c.beginPath(); c.moveTo(0, i * this.cell); c.lineTo(s, i * this.cell); c.stroke();
+      }
+      
+      // Еда
+      c.fillStyle = '#ff00ff';
+      c.shadowColor = '#ff00ff';
+      c.shadowBlur = 15;
+      c.beginPath();
+      c.arc(this.food.x * this.cell + this.cell/2, this.food.y * this.cell + this.cell/2, this.cell/2 - 2, 0, Math.PI * 2);
+      c.fill();
+      c.shadowBlur = 0;
+      
+      // Змейка
+      this.snake.forEach((seg, i) => {
+        const t = i / this.snake.length;
+        c.fillStyle = i === 0 ? '#00ffff' : `rgba(0,${212 - t*100},255,${1 - t*0.3})`;
+        c.shadowColor = '#00d4ff';
+        c.shadowBlur = i === 0 ? 20 : 5;
+        c.fillRect(seg.x * this.cell + 1, seg.y * this.cell + 1, this.cell - 2, this.cell - 2);
+      });
+      c.shadowBlur = 0;
+    },
+
+    gameOver() {
+      this.stop();
+      if (this.score > this.best) {
+        this.best = this.score;
+        localStorage.setItem('snakeBest', this.best);
+        document.getElementById('snakeBest').textContent = this.best;
+      }
+      showGameOver('🐍 ИГРА ОКОНЧЕНА', this.score, () => this.start());
+    }
+  };
+
+  // ================================================================
+  // ИГРА 2: КОСМО-ШУТЕР (ПК)
+  // ================================================================
+  const shooter = {
+    canvas: document.getElementById('shooterCanvas'),
+    ctx: null,
     player: null,
     bullets: [],
     enemies: [],
     particles: [],
-    enemyBullets: [],
-    wave: 1,
-    kills: 0,
+    stars: [],
     score: 0,
+    hp: 100,
     running: false,
-    paused: false,
-    gameOver: false,
-    lastSpawn: 0,
-    spawnInterval: 1500,
     lastFrame: 0,
-    shake: 0,
-  };
+    rafId: null,
+    spawnTimer: 0,
 
-  function resetGame() {
-    game.player = {
-      x: W/2, y: H/2,
-      vx: 0, vy: 0,
-      hp: 100,
-      maxHp: 100,
-      angle: 0,
-      size: 18,
-      speed: 4,
-      cooldown: 0,
-      invuln: 0,
-    };
-    game.bullets = [];
-    game.enemies = [];
-    game.particles = [];
-    game.enemyBullets = [];
-    game.wave = 1;
-    game.kills = 0;
-    game.score = 0;
-    game.gameOver = false;
-    game.lastSpawn = 0;
-    game.spawnInterval = 1500;
-    game.shake = 0;
-    updateStats();
-  }
+    init() {
+      this.ctx = this.canvas.getContext('2d');
+      this.resize();
+      this.reset();
+      
+      if (!this._keyHandler) {
+        this._keyHandler = (e) => {
+          if (['arrowleft','arrowright',' '].includes(e.key.toLowerCase())) e.preventDefault();
+          this.keys[e.key.toLowerCase()] = true;
+          if (e.key === ' ') this.keys[' '] = true;
+        };
+        this._keyUpHandler = (e) => {
+          this.keys[e.key.toLowerCase()] = false;
+          if (e.key === ' ') this.keys[' '] = false;
+        };
+        window.addEventListener('keydown', this._keyHandler);
+        window.addEventListener('keyup', this._keyUpHandler);
+      }
+      
+      document.getElementById('shooterStart').onclick = () => {
+        if (this.running) this.stop();
+        else this.start();
+      };
+      
+      this.keys = {};
+      this.draw();
+    },
 
-  function updateStats() {
-    document.getElementById('statHp').textContent = Math.max(0, Math.round(game.player.hp));
-    document.getElementById('statWave').textContent = game.wave;
-    document.getElementById('statKills').textContent = game.kills;
-    document.getElementById('statScore').textContent = game.score;
-  }
+    resize() {
+      const maxSize = Math.min(window.innerWidth - 60, 600, window.innerHeight - 250);
+      const size = Math.max(300, maxSize);
+      this.canvas.width = size;
+      this.canvas.height = size;
+    },
 
-  function spawnEnemy() {
-    const side = Math.floor(Math.random() * 4);
-    let x, y;
-    if (side === 0) { x = Math.random() * W; y = -30; }
-    else if (side === 1) { x = W + 30; y = Math.random() * H; }
-    else if (side === 2) { x = Math.random() * W; y = H + 30; }
-    else { x = -30; y = Math.random() * H; }
-    
-    // Тип врага зависит от волны
-    const r = Math.random();
-    let type = 'imp';
-    if (game.wave >= 3 && r < 0.25) type = 'demon';
-    if (game.wave >= 5 && r < 0.15) type = 'caco';
-    
-    const configs = {
-      imp:   { hp: 30, speed: 1.4, size: 16, color: '#ff6600', score: 10, shoot: 0.008 },
-      demon: { hp: 60, speed: 2.2, size: 20, color: '#cc0000', score: 25, shoot: 0 },
-      caco:  { hp: 90, speed: 0.8, size: 26, color: '#9900ff', score: 40, shoot: 0.015 },
-    };
-    const c = configs[type];
-    
-    game.enemies.push({
-      x, y,
-      type,
-      hp: c.hp,
-      maxHp: c.hp,
-      speed: c.speed + game.wave * 0.1,
-      size: c.size,
-      color: c.color,
-      score: c.score,
-      shoot: c.shoot,
-      hitFlash: 0,
-    });
-  }
+    reset() {
+      const s = this.canvas.width;
+      this.player = { x: s/2, y: s - 60, size: 22, speed: 6, cooldown: 0 };
+      this.bullets = [];
+      this.enemies = [];
+      this.particles = [];
+      this.stars = [];
+      for (let i = 0; i < 80; i++) {
+        this.stars.push({
+          x: Math.random() * s,
+          y: Math.random() * s,
+          size: Math.random() * 2 + 0.5,
+          speed: Math.random() * 2 + 0.5,
+        });
+      }
+      this.score = 0;
+      this.hp = 100;
+      this.spawnTimer = 0;
+      document.getElementById('shooterScore').textContent = 0;
+      document.getElementById('shooterHp').textContent = 100;
+    },
 
-  function fireBullet() {
-    const p = game.player;
-    if (p.cooldown > 0) return;
-    p.cooldown = 8;
-    const spread = (Math.random() - 0.5) * 0.1;
-    const a = p.angle + spread;
-    game.bullets.push({
-      x: p.x + Math.cos(a) * 20,
-      y: p.y + Math.sin(a) * 20,
-      vx: Math.cos(a) * 12,
-      vy: Math.sin(a) * 12,
-      life: 60,
-    });
-    // Отдача/вспышка
-    game.shake = 3;
-  }
+    start() {
+      this.reset();
+      this.running = true;
+      document.getElementById('shooterStart').textContent = '⏸ СТОП';
+      this.lastFrame = performance.now();
+      this.loop(this.lastFrame);
+    },
 
-  function damagePlayer(dmg) {
-    const p = game.player;
-    if (p.invuln > 0) return;
-    p.hp -= dmg;
-    p.invuln = 20;
-    game.shake = 8;
-    // Красные частицы
-    for (let i = 0; i < 12; i++) {
-      game.particles.push({
-        x: p.x, y: p.y,
-        vx: (Math.random() - 0.5) * 6,
-        vy: (Math.random() - 0.5) * 6,
-        life: 30,
+    stop() {
+      this.running = false;
+      if (this.rafId) cancelAnimationFrame(this.rafId);
+      const btn = document.getElementById('shooterStart');
+      if (btn) btn.textContent = '▶ СТАРТ';
+    },
+
+    loop(t) {
+      if (!this.running) return;
+      const dt = Math.min((t - this.lastFrame) / 16, 3);
+      this.lastFrame = t;
+      this.update(dt);
+      this.draw();
+      this.rafId = requestAnimationFrame((tt) => this.loop(tt));
+    },
+
+    update(dt) {
+      const s = this.canvas.width;
+      const p = this.player;
+      
+      // Движение
+      if (this.keys['arrowleft'] || this.keys['a']) p.x -= p.speed * dt;
+      if (this.keys['arrowright'] || this.keys['d']) p.x += p.speed * dt;
+      p.x = Math.max(p.size, Math.min(s - p.size, p.x));
+      
+      // Стрельба
+      if (p.cooldown > 0) p.cooldown -= dt;
+      if (this.keys[' '] && p.cooldown <= 0) {
+        p.cooldown = 10;
+        this.bullets.push({ x: p.x, y: p.y - p.size, vy: -10 });
+        this.bullets.push({ x: p.x - 8, y: p.y - p.size + 5, vy: -10 });
+        this.bullets.push({ x: p.x + 8, y: p.y - p.size + 5, vy: -10 });
+      }
+      
+      // Пули
+      this.bullets = this.bullets.filter(b => {
+        b.y += b.vy * dt;
+        return b.y > -20;
+      });
+      
+      // Спавн врагов
+      this.spawnTimer -= dt;
+      if (this.spawnTimer <= 0) {
+        this.spawnTimer = Math.max(30, 70 - this.score / 30);
+        this.enemies.push({
+          x: Math.random() * (s - 60) + 30,
+          y: -30,
+          size: 18 + Math.random() * 10,
+          vy: 1.5 + Math.random() * 1.5 + this.score / 500,
+          hp: 1,
+          color:
