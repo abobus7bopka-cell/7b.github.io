@@ -690,7 +690,7 @@
   });
 
   // ================================================================
-  // СЧЁТЧИК ПОСЕЩЕНИЙ
+  // СЧЁТЧИК ПОСЕЩЕНИЙ (локальный — для отдельного устройства)
   // ================================================================
   (function() {
     const today = new Date().toISOString().split('T')[0];
@@ -851,18 +851,15 @@
         y: this.snake[0].y + this.dir.y
       };
 
-      // столкновение со стенами
       if (head.x < 0 || head.x >= this.cols || head.y < 0 || head.y >= this.rows) {
         return this.gameOver();
       }
-      // столкновение с собой
       if (this.snake.some(s => s.x === head.x && s.y === head.y)) {
         return this.gameOver();
       }
 
       this.snake.unshift(head);
 
-      // съели еду
       if (head.x === this.food.x && head.y === this.food.y) {
         this.score += 1;
         document.getElementById('snakeScore').textContent = this.score;
@@ -877,11 +874,9 @@
       const ctx = this.ctx;
       const c = this.cell;
 
-      // фон
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-      // сетка (лёгкая)
       ctx.strokeStyle = 'rgba(255,255,255,0.05)';
       for (let i = 0; i <= this.cols; i++) {
         ctx.beginPath();
@@ -894,7 +889,6 @@
         ctx.stroke();
       }
 
-      // еда
       ctx.fillStyle = '#ff4757';
       ctx.beginPath();
       ctx.arc(
@@ -904,7 +898,6 @@
       );
       ctx.fill();
 
-      // змейка
       this.snake.forEach((seg, i) => {
         const grad = ctx.createLinearGradient(
           seg.x * c, seg.y * c,
@@ -936,7 +929,6 @@
     }
   };
 
-  // Кнопки оверлея
   document.getElementById('overRetry').addEventListener('click', () => {
     document.getElementById('gameOver').classList.remove('show');
     snake.start();
@@ -944,14 +936,12 @@
   document.getElementById('overMenu').addEventListener('click', () => {
     document.getElementById('gameOver').classList.remove('show');
     snake.stop();
-    // возврат на страницу расписания
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-schedule').classList.add('active');
     document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
     document.querySelector('.menu a[data-page="schedule"]').classList.add('active');
   });
 
-  // Пересчёт размера канваса при повороте/ресайзе
   window.addEventListener('resize', () => {
     if (snake._inited) {
       snake.resize();
@@ -959,5 +949,8 @@
     }
   });
 </script>
+<script data-goatcounter="https://abobusbopka.goatcounter.com/count"
+        async src="//gc.zgo.at/count.js"></script>
+
 </body>
 </html>
