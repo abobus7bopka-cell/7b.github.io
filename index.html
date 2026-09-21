@@ -840,4 +840,124 @@
     tick() {
       if (!this.running) return;
       this.update();
-      this.draw
+      this.draw();
+      this.timer = setTimeout(() => this.tick(), this.speed);
+    },
+
+    update() {
+      this.dir = { ...this.nextDir };
+      const head = {
+        x: this.snake[0].x + this.dir.x,
+        y: this.snake[0].y + this.dir.y
+      };
+
+      // столкновение со стенами
+      if (head.x < 0 || head.x >= this.cols || head.y < 0 || head.y >= this.rows) {
+        return this.gameOver();
+      }
+      // столкновение с собой
+      if (this.snake.some(s => s.x === head.x && s.y === head.y)) {
+        return this.gameOver();
+      }
+
+      this.snake.unshift(head);
+
+      // съели еду
+      if (head.x === this.food.x && head.y === this.food.y) {
+        this.score += 1;
+        document.getElementById('snakeScore').textContent = this.score;
+        if (this.speed > 60) this.speed -= 3;
+        this.spawnFood();
+      } else {
+        this.snake.pop();
+      }
+    },
+
+    draw() {
+      const ctx = this.ctx;
+      const c = this.cell;
+
+      // фон
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+      // сетка (лёгкая)
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      for (let i = 0; i <= this.cols; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * c, 0);
+        ctx.lineTo(i * c, this.canvas.height);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(0, i * c);
+        ctx.lineTo(this.canvas.width, i * c);
+        ctx.stroke();
+      }
+
+      // еда
+      ctx.fillStyle = '#ff4757';
+      ctx.beginPath();
+      ctx.arc(
+        this.food.x * c + c / 2,
+        this.food.y * c + c / 2,
+        c / 2 - 2, 0, Math.PI * 2
+      );
+      ctx.fill();
+
+      // змейка
+      this.snake.forEach((seg, i) => {
+        const grad = ctx.createLinearGradient(
+          seg.x * c, seg.y * c,
+          seg.x * c + c, seg.y * c + c
+        );
+        if (i === 0) {
+          grad.addColorStop(0, '#ffd700');
+          grad.addColorStop(1, '#ff8800');
+        } else {
+          grad.addColorStop(0, '#74b9ff');
+          grad.addColorStop(1, '#0984e3');
+        }
+        ctx.fillStyle = grad;
+        ctx.fillRect(seg.x * c + 1, seg.y * c + 1, c - 2, c - 2);
+      });
+    },
+
+    gameOver() {
+      this.running = false;
+      clearTimeout(this.timer);
+      if (this.score > this.best) {
+        this.best = this.score;
+        localStorage.setItem('snakeBest', String(this.best));
+      }
+      document.getElementById('snakeBest').textContent = this.best;
+      document.getElementById('overScore').textContent = this.score;
+      document.getElementById('gameOver').classList.add('show');
+      document.getElementById('snakeStart').textContent = '▶ СТАРТ';
+    }
+  };
+
+  // Кнопки оверлея
+  document.getElementById('overRetry').addEventListener('click', () => {
+    document.getElementById('gameOver').classList.remove('show');
+    snake.start();
+  });
+  document.getElementById('overMenu').addEventListener('click', () => {
+    document.getElementById('gameOver').classList.remove('show');
+    snake.stop();
+    // возврат на страницу расписания
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-schedule').classList.add('active');
+    document.querySelectorAll('.menu a').forEach(a => a.classList.remove('active'));
+    document.querySelector('.menu a[data-page="schedule"]').classList.add('active');
+  });
+
+  // Пересчёт размера канваса при повороте/ресайзе
+  window.addEventListener('resize', () => {
+    if (snake._inited) {
+      snake.resize();
+      snake.draw();
+    }
+  });
+</script>
+</body>
+</html>
