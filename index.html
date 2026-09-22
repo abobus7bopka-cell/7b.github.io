@@ -428,7 +428,6 @@
         
         <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
           <button class="btn" id="marioRestart">🔄 Заново</button>
-          <button class="btn" id="marioSkipLevel" style="background:linear-gradient(135deg,#f39c12,#e67e22);">⏭ След. уровень</button>
         </div>
         
         <div class="mario-hint">
@@ -711,7 +710,7 @@
   });
 
   // ================================================================
-  // 🍄 SUPER MARIO — ТОЧНАЯ КОПИЯ NES, ФИКСИРОВАННЫЕ УРОВНИ
+  // 🍄 SUPER MARIO
   // ================================================================
   const marioGame = (function() {
     const canvas = document.getElementById('marioCanvas');
@@ -724,12 +723,6 @@
     let W, H;
     const GROUND_Y_BASE = 0.85;
 
-    // ===== ТОЧНАЯ ФИЗИКА NES =====
-    // Оригинал: при 60 FPS
-    // Walk speed: 1.5625 px/frame ≈ 2.6 px/frame при нашем масштабе
-    // Run speed: 2.5625 px/frame ≈ 4.3 px/frame
-    // Jump: -4.0 px/frame начальная, гравитация 0.15 px/frame²
-    // Но у нас canvas больше, поэтому масштабируем
     const GRAVITY = 0.55;
     const JUMP_FORCE = -12;
     const WALK_SPEED = 2.7;
@@ -745,44 +738,21 @@
       vx: 0, vy: 0, onGround: false,
       facing: 1, big: false, fire: false,
       invuln: 0, anim: 0, dead: false, deadTimer: 0,
-      jumpHeld: false, coyote: 0, jumpBuffer: 0,
-      starTimer: 0,
-      isRunning: false
+      coyote: 0, jumpBuffer: 0, starTimer: 0
     };
 
-    // ===== МИР =====
-    let platforms = [];      // земля и парящие платформы
-    let questionBlocks = []; // блоки с ?
-    let bricks = [];         // кирпичи
-    let pipes = [];          // трубы
-    let coins = [];          // монеты
-    let powerups = [];       // грибы, цветы
-    let fireballs = [];      // огненные шары
-    let enemies = [];        // враги
-    let particles = [];      // частицы
-    let clouds = [];         // облака
-    let bushes = [];         // кусты
-    let hills = [];          // холмы
-    let flag = null;         // флаг в конце
+    let platforms = [], questionBlocks = [], bricks = [], pipes = [];
+    let coins = [], powerups = [], fireballs = [], enemies = [];
+    let particles = [], clouds = [], bushes = [], hills = [], flag = null;
 
-    let coinCount = 0;
-    let score = 0;
-    let lives = 3;
-    let gameOver = false;
-    let win = false;
-    let levelComplete = false;
+    let coinCount = 0, score = 0, lives = 3;
+    let gameOver = false, win = false, levelComplete = false;
     let keys = { left: false, right: false, up: false, run: false, jumpPressed: false, fire: false };
     let currentLevel = 1;
     const TOTAL_LEVELS = 3;
-    let GROUND_Y = 0;
-    let cameraX = 0;
-    let levelWidth = 0;
-    let paused = true;
-    let rafId = null;
-    let lastTime = 0;
-    let flagPoleAnim = 0;
-    let levelTransitionTimer = 0;
-    let invulnFlicker = 0;
+    let GROUND_Y = 0, cameraX = 0, levelWidth = 0;
+    let paused = true, rafId = null, lastTime = 0;
+    let flagPoleAnim = 0, levelTransitionTimer = 0;
 
     // ---------- ЗВУК ----------
     const audioCtx = (() => {
@@ -821,38 +791,21 @@
     };
 
     // ================================================================
-    // ФИКСИРОВАННЫЕ УРОВНИ (гарантированно проходимы)
+    // УРОВНИ (фиксированные, проходимые)
     // ================================================================
-    // Все координаты в "мировых" пикселях. GROUND_Y вычисляется динамически.
-    // Используем относительные координаты (относительно groundY).
-    //
-    // Символы:
-    //   ground: {x, w}             — земля
-    //   brick: {x, y, w}           — платформа (y относительно земли, отрицательное = вверх)
-    //   qblock: {x, y, content}    — блок с вопросом
-    //   brickBlock: {x, y}         — кирпич
-    //   pipe: {x, h}               — труба
-    //   coin: {x, y}               — монета (y относительно земли)
-    //   enemy: {x, type, range}    — враг
-    //
-    // ВАЖНО: между сегментами земли разрывы НЕ БОЛЬШЕ 80px
-    //        на каждой дыре есть спасательная платформа
-
     const LEVELS = [
-      // ===== УРОВЕНЬ 1 =====
       {
         length: 3400,
         grounds: [
           {x: 0, w: 700},
           {x: 780, w: 600},
           {x: 1460, w: 800},
-          {x: 2340, w: 1100}  // финальная зона с флагом
+          {x: 2340, w: 1060}
         ],
-        // платформы-помощники над дырами (x — середина дыры)
         helpers: [
-          {x: 740, y: -80, w: 80},   // над дырой 700-780
-          {x: 1420, y: -80, w: 80},  // над дырой 1380-1460
-          {x: 2300, y: -80, w: 80}   // над дырой 2260-2340
+          {x: 740, y: -80, w: 80},
+          {x: 1420, y: -80, w: 80},
+          {x: 2300, y: -80, w: 80}
         ],
         bricks: [
           {x: 500, y: -120, w: 100},
@@ -903,57 +856,34 @@
         ],
         flagX: 3150
       },
-
-      // ===== УРОВЕНЬ 2 =====
       {
         length: 3800,
         grounds: [
-          {x: 0, w: 600},
-          {x: 680, w: 500},
-          {x: 1260, w: 700},
-          {x: 2040, w: 900},
-          {x: 3020, w: 780}
+          {x: 0, w: 600}, {x: 680, w: 500}, {x: 1260, w: 700},
+          {x: 2040, w: 900}, {x: 3020, w: 780}
         ],
         helpers: [
-          {x: 640, y: -80, w: 80},
-          {x: 1220, y: -80, w: 80},
-          {x: 2000, y: -80, w: 80},
-          {x: 2980, y: -80, w: 80}
+          {x: 640, y: -80, w: 80}, {x: 1220, y: -80, w: 80},
+          {x: 2000, y: -80, w: 80}, {x: 2980, y: -80, w: 80}
         ],
         bricks: [
-          {x: 400, y: -120, w: 120},
-          {x: 800, y: -120, w: 100},
-          {x: 1050, y: -180, w: 100},
-          {x: 1400, y: -120, w: 150},
-          {x: 1800, y: -120, w: 100},
-          {x: 2200, y: -180, w: 120},
-          {x: 2600, y: -120, w: 100},
-          {x: 2900, y: -180, w: 100}
+          {x: 400, y: -120, w: 120}, {x: 800, y: -120, w: 100},
+          {x: 1050, y: -180, w: 100}, {x: 1400, y: -120, w: 150},
+          {x: 1800, y: -120, w: 100}, {x: 2200, y: -180, w: 120},
+          {x: 2600, y: -120, w: 100}, {x: 2900, y: -180, w: 100}
         ],
         qblocks: [
-          {x: 350, y: -140, content: 'coin'},
-          {x: 600, y: -140, content: 'mushroom'},
-          {x: 900, y: -140, content: 'coin'},
-          {x: 1200, y: -140, content: 'fireflower'},
-          {x: 1500, y: -140, content: 'coin'},
-          {x: 1900, y: -140, content: 'coin'},
-          {x: 2300, y: -140, content: 'mushroom'},
-          {x: 2700, y: -140, content: 'coin'},
+          {x: 350, y: -140, content: 'coin'}, {x: 600, y: -140, content: 'mushroom'},
+          {x: 900, y: -140, content: 'coin'}, {x: 1200, y: -140, content: 'fireflower'},
+          {x: 1500, y: -140, content: 'coin'}, {x: 1900, y: -140, content: 'coin'},
+          {x: 2300, y: -140, content: 'mushroom'}, {x: 2700, y: -140, content: 'coin'},
           {x: 3000, y: -140, content: 'coin'}
         ],
         brickBlocks: [
-          {x: 500, y: -140},
-          {x: 1000, y: -140},
-          {x: 1300, y: -200},
-          {x: 1700, y: -140},
-          {x: 2100, y: -140},
-          {x: 2500, y: -140}
+          {x: 500, y: -140}, {x: 1000, y: -140}, {x: 1300, y: -200},
+          {x: 1700, y: -140}, {x: 2100, y: -140}, {x: 2500, y: -140}
         ],
-        pipes: [
-          {x: 700, h: 80},
-          {x: 1500, h: 100},
-          {x: 2400, h: 80}
-        ],
+        pipes: [{x: 700, h: 80}, {x: 1500, h: 100}, {x: 2400, h: 80}],
         coins: [
           {x: 150, y: -100}, {x: 200, y: -100}, {x: 250, y: -100},
           {x: 400, y: -180}, {x: 440, y: -180}, {x: 480, y: -180},
@@ -971,77 +901,48 @@
           {x: 3200, y: -100}, {x: 3250, y: -100}, {x: 3300, y: -100}
         ],
         enemies: [
-          {x: 800, type: 'goomba', range: 100},
-          {x: 1100, type: 'goomba', range: 120},
-          {x: 1400, type: 'turtle', range: 120},
-          {x: 1800, type: 'goomba', range: 100},
-          {x: 2100, type: 'goomba', range: 120},
-          {x: 2400, type: 'turtle', range: 100},
-          {x: 2800, type: 'goomba', range: 120},
-          {x: 3100, type: 'goomba', range: 100}
+          {x: 800, type: 'goomba', range: 100}, {x: 1100, type: 'goomba', range: 120},
+          {x: 1400, type: 'turtle', range: 120}, {x: 1800, type: 'goomba', range: 100},
+          {x: 2100, type: 'goomba', range: 120}, {x: 2400, type: 'turtle', range: 100},
+          {x: 2800, type: 'goomba', range: 120}, {x: 3100, type: 'goomba', range: 100}
         ],
         flagX: 3550
       },
-
-      // ===== УРОВЕНЬ 3 (сложнее) =====
       {
         length: 4200,
         grounds: [
-          {x: 0, w: 500},
-          {x: 580, w: 400},
-          {x: 1060, w: 500},
-          {x: 1640, w: 500},
-          {x: 2220, w: 500},
-          {x: 2800, w: 500},
+          {x: 0, w: 500}, {x: 580, w: 400}, {x: 1060, w: 500},
+          {x: 1640, w: 500}, {x: 2220, w: 500}, {x: 2800, w: 500},
           {x: 3380, w: 820}
         ],
         helpers: [
-          {x: 540, y: -80, w: 80},
-          {x: 1020, y: -80, w: 80},
-          {x: 1600, y: -80, w: 80},
-          {x: 2180, y: -80, w: 80},
-          {x: 2760, y: -80, w: 80},
-          {x: 3340, y: -80, w: 80}
+          {x: 540, y: -80, w: 80}, {x: 1020, y: -80, w: 80},
+          {x: 1600, y: -80, w: 80}, {x: 2180, y: -80, w: 80},
+          {x: 2760, y: -80, w: 80}, {x: 3340, y: -80, w: 80}
         ],
         bricks: [
-          {x: 300, y: -120, w: 120},
-          {x: 700, y: -120, w: 100},
-          {x: 1200, y: -120, w: 120},
-          {x: 1500, y: -180, w: 100},
-          {x: 1800, y: -120, w: 120},
-          {x: 2400, y: -120, w: 120},
-          {x: 2900, y: -180, w: 100},
-          {x: 3200, y: -120, w: 100},
+          {x: 300, y: -120, w: 120}, {x: 700, y: -120, w: 100},
+          {x: 1200, y: -120, w: 120}, {x: 1500, y: -180, w: 100},
+          {x: 1800, y: -120, w: 120}, {x: 2400, y: -120, w: 120},
+          {x: 2900, y: -180, w: 100}, {x: 3200, y: -120, w: 100},
           {x: 3600, y: -120, w: 100}
         ],
         qblocks: [
-          {x: 250, y: -140, content: 'coin'},
-          {x: 500, y: -140, content: 'mushroom'},
-          {x: 800, y: -140, content: 'coin'},
-          {x: 1100, y: -140, content: 'fireflower'},
-          {x: 1400, y: -140, content: 'coin'},
-          {x: 1700, y: -140, content: 'coin'},
-          {x: 2000, y: -140, content: 'mushroom'},
-          {x: 2300, y: -140, content: 'coin'},
-          {x: 2600, y: -140, content: 'coin'},
-          {x: 3000, y: -140, content: 'fireflower'},
-          {x: 3300, y: -140, content: 'coin'},
-          {x: 3700, y: -140, content: 'coin'}
+          {x: 250, y: -140, content: 'coin'}, {x: 500, y: -140, content: 'mushroom'},
+          {x: 800, y: -140, content: 'coin'}, {x: 1100, y: -140, content: 'fireflower'},
+          {x: 1400, y: -140, content: 'coin'}, {x: 1700, y: -140, content: 'coin'},
+          {x: 2000, y: -140, content: 'mushroom'}, {x: 2300, y: -140, content: 'coin'},
+          {x: 2600, y: -140, content: 'coin'}, {x: 3000, y: -140, content: 'fireflower'},
+          {x: 3300, y: -140, content: 'coin'}, {x: 3700, y: -140, content: 'coin'}
         ],
         brickBlocks: [
-          {x: 400, y: -140},
-          {x: 900, y: -140},
-          {x: 1300, y: -200},
-          {x: 1900, y: -200},
-          {x: 2200, y: -140},
-          {x: 2700, y: -140},
+          {x: 400, y: -140}, {x: 900, y: -140}, {x: 1300, y: -200},
+          {x: 1900, y: -200}, {x: 2200, y: -140}, {x: 2700, y: -140},
           {x: 3100, y: -140}
         ],
         pipes: [
-          {x: 600, h: 80},
-          {x: 1400, h: 100},
-          {x: 2100, h: 80},
-          {x: 2900, h: 100}
+          {x: 600, h: 80}, {x: 1400, h: 100},
+          {x: 2100, h: 80}, {x: 2900, h: 100}
         ],
         coins: [
           {x: 120, y: -100}, {x: 160, y: -100}, {x: 200, y: -100},
@@ -1063,16 +964,11 @@
           {x: 3800, y: -100}, {x: 3850, y: -100}, {x: 3900, y: -100}
         ],
         enemies: [
-          {x: 700, type: 'goomba', range: 100},
-          {x: 1000, type: 'goomba', range: 120},
-          {x: 1300, type: 'turtle', range: 100},
-          {x: 1600, type: 'goomba', range: 100},
-          {x: 1900, type: 'goomba', range: 120},
-          {x: 2300, type: 'turtle', range: 100},
-          {x: 2600, type: 'goomba', range: 120},
-          {x: 2900, type: 'goomba', range: 100},
-          {x: 3200, type: 'turtle', range: 100},
-          {x: 3500, type: 'goomba', range: 120}
+          {x: 700, type: 'goomba', range: 100}, {x: 1000, type: 'goomba', range: 120},
+          {x: 1300, type: 'turtle', range: 100}, {x: 1600, type: 'goomba', range: 100},
+          {x: 1900, type: 'goomba', range: 120}, {x: 2300, type: 'turtle', range: 100},
+          {x: 2600, type: 'goomba', range: 120}, {x: 2900, type: 'goomba', range: 100},
+          {x: 3200, type: 'turtle', range: 100}, {x: 3500, type: 'goomba', range: 120}
         ],
         flagX: 3950
       }
@@ -1090,122 +986,65 @@
       const L = LEVELS[levelNum - 1];
       levelWidth = L.length;
 
-      // Очищаем
       platforms = []; questionBlocks = []; bricks = []; pipes = [];
       coins = []; powerups = []; enemies = []; particles = [];
       clouds = []; bushes = []; hills = []; fireballs = []; flag = null;
 
-      // --- ЗЕМЛЯ ---
       for (let g of L.grounds) {
-        platforms.push({
-          x: g.x, y: GROUND_Y, w: g.w, h: 100, type: 'ground'
-        });
+        platforms.push({ x: g.x, y: GROUND_Y, w: g.w, h: 100, type: 'ground' });
       }
-
-      // --- ПЛАТФОРМЫ-ПОМОЩНИКИ над дырами ---
       for (let h of L.helpers) {
-        platforms.push({
-          x: h.x, y: GROUND_Y + h.y, w: h.w, h: 20, type: 'brick'
-        });
+        platforms.push({ x: h.x, y: GROUND_Y + h.y, w: h.w, h: 20, type: 'brick' });
       }
-
-      // --- ПАРЯЩИЕ ПЛАТФОРМЫ ---
       for (let b of L.bricks) {
-        platforms.push({
-          x: b.x, y: GROUND_Y + b.y, w: b.w, h: 20, type: 'brick'
-        });
+        platforms.push({ x: b.x, y: GROUND_Y + b.y, w: b.w, h: 20, type: 'brick' });
       }
-
-      // --- БЛОКИ С ВОПРОСОМ ---
       for (let qb of L.qblocks) {
-        questionBlocks.push({
-          x: qb.x, y: GROUND_Y + qb.y, w: 32, h: 32,
-          hit: false, bump: 0, content: qb.content
-        });
+        questionBlocks.push({ x: qb.x, y: GROUND_Y + qb.y, w: 32, h: 32, hit: false, bump: 0, content: qb.content });
       }
-
-      // --- КИРПИЧИ (разрушаемые) ---
       for (let bb of L.brickBlocks) {
-        bricks.push({
-          x: bb.x, y: GROUND_Y + bb.y, w: 32, h: 32,
-          hit: false, bump: 0, break: false
-        });
+        bricks.push({ x: bb.x, y: GROUND_Y + bb.y, w: 32, h: 32, hit: false, bump: 0, break: false });
       }
-
-      // --- ТРУБЫ ---
       for (let p of L.pipes) {
-        pipes.push({
-          x: p.x, y: GROUND_Y - p.h, w: 56, h: p.h
-        });
+        pipes.push({ x: p.x, y: GROUND_Y - p.h, w: 56, h: p.h });
       }
-
-      // --- МОНЕТЫ ---
       for (let c of L.coins) {
-        coins.push({
-          x: c.x, y: GROUND_Y + c.y, w: 20, h: 20,
-          collected: false, anim: Math.random() * Math.PI * 2
-        });
+        coins.push({ x: c.x, y: GROUND_Y + c.y, w: 20, h: 20, collected: false, anim: Math.random() * Math.PI * 2 });
       }
-
-      // --- ВРАГИ ---
       for (let e of L.enemies) {
-        // проверяем, что враг стоит на земле
         let onGround = false;
         for (let g of L.grounds) {
-          if (e.x > g.x + 20 && e.x < g.x + g.w - 50) {
-            onGround = true;
-            break;
-          }
+          if (e.x > g.x + 20 && e.x < g.x + g.w - 50) { onGround = true; break; }
         }
         if (!onGround) continue;
-
         enemies.push({
           x: e.x, y: GROUND_Y - 34, w: 30, h: 34,
           vx: (0.4 + Math.random() * 0.2) * (Math.random() > 0.5 ? 1 : -1),
-          minX: e.x - e.range,
-          maxX: e.x + e.range,
-          alive: true,
-          type: e.type || 'goomba',
-          squashTimer: 0,
-          anim: Math.random() * Math.PI * 2
+          minX: e.x - e.range, maxX: e.x + e.range,
+          alive: true, type: e.type || 'goomba',
+          squashTimer: 0, anim: Math.random() * Math.PI * 2
         });
       }
 
-      // --- ФЛАГ ---
-      flag = {
-        x: L.flagX, y: GROUND_Y - 260, w: 8, h: 260,
-        poleX: L.flagX, reached: false, flagY: GROUND_Y - 240
-      };
+      flag = { x: L.flagX, y: GROUND_Y - 260, w: 8, h: 260, poleX: L.flagX, reached: false, flagY: GROUND_Y - 240 };
 
-      // --- ФОН ---
       for (let i = 0; i < 20; i++) {
-        clouds.push({
-          x: Math.random() * L.length,
-          y: 40 + Math.random() * 150,
-          scale: 0.6 + Math.random() * 0.7
-        });
+        clouds.push({ x: Math.random() * L.length, y: 40 + Math.random() * 150, scale: 0.6 + Math.random() * 0.7 });
       }
       for (let i = 0; i < 10; i++) {
         hills.push({
-          x: Math.random() * L.length,
-          y: GROUND_Y,
-          w: 180 + Math.random() * 180,
-          h: 70 + Math.random() * 90,
+          x: Math.random() * L.length, y: GROUND_Y,
+          w: 180 + Math.random() * 180, h: 70 + Math.random() * 90,
           color: Math.random() < 0.5 ? '#5fa843' : '#4a8f34'
         });
       }
       for (let g of L.grounds) {
         const count = Math.floor(g.w / 100);
         for (let i = 0; i < count; i++) {
-          bushes.push({
-            x: g.x + 30 + i * 100 + Math.random() * 40,
-            y: GROUND_Y,
-            scale: 0.6 + Math.random() * 0.5
-          });
+          bushes.push({ x: g.x + 30 + i * 100 + Math.random() * 40, y: GROUND_Y, scale: 0.6 + Math.random() * 0.5 });
         }
       }
 
-      // --- СБРОС ИГРОКА ---
       player.x = 60;
       player.y = GROUND_Y - player.h;
       player.vx = 0; player.vy = 0;
@@ -1218,18 +1057,12 @@
       player.jumpBuffer = 0;
       player.big = false;
       player.fire = false;
-      player.starTimer = 0;
 
-      gameOver = false;
-      win = false;
-      levelComplete = false;
+      gameOver = false; win = false; levelComplete = false;
       cameraX = 0;
-      particles = [];
-      fireballs = [];
-      flagPoleAnim = 0;
-      levelTransitionTimer = 0;
+      particles = []; fireballs = [];
+      flagPoleAnim = 0; levelTransitionTimer = 0;
 
-      // UI
       levelSpan.textContent = levelNum;
       coinSpan.textContent = coinCount;
       livesSpan.textContent = lives;
@@ -1245,46 +1078,23 @@
       startLoop();
     }
 
-    function nextLevel() {
-      if (currentLevel < TOTAL_LEVELS) {
-        currentLevel++;
-        loadLevel(currentLevel);
-      } else {
-        win = true;
-      }
-    }
-
     // ================================================================
     // ФИЗИКА
     // ================================================================
     function rectCollide(a, b) {
-      return a.x < b.x + b.w && a.x + a.w > b.x &&
-             a.y < b.y + b.h && a.y + a.h > b.y;
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
     }
 
     function update(dt) {
       const step = Math.min(dt * 60, 3);
 
-      // ===== GAME OVER — полностью заморожен =====
-      if (gameOver) {
-        updateParticles(step);
-        return;
-      }
+      if (gameOver) { updateParticles(step); return; }
+      if (win) { updateParticles(step); return; }
 
-      // ===== ПОБЕДА =====
-      if (win) {
-        updateParticles(step);
-        return;
-      }
-
-      // ===== СМЕРТЬ ИГРОКА =====
       if (player.dead) {
         player.deadTimer += step;
-        // физика падения вниз
         player.vy += GRAVITY * step;
         player.y += player.vy * step;
-        
-        // После анимации — респавн или game over
         if (player.deadTimer > 90) {
           if (lives <= 0) {
             gameOver = true;
@@ -1298,7 +1108,6 @@
         return;
       }
 
-      // ===== ЗАВЕРШЕНИЕ УРОВНЯ =====
       if (levelComplete) {
         levelTransitionTimer += step;
         if (levelTransitionTimer > 150) {
@@ -1313,69 +1122,53 @@
         return;
       }
 
-      // ===== УПРАВЛЕНИЕ =====
       const runMul = keys.run ? (RUN_SPEED / WALK_SPEED) : 1;
       const maxSpeed = WALK_SPEED * runMul;
       const accel = keys.run ? ACCEL_RUN : ACCEL_WALK;
 
-      // Горизонтальное движение
       if (keys.left) {
         player.facing = -1;
-        if (player.vx > 0) {
-          // скольжение при смене направления
-          player.vx -= SKID_DECEL * step;
-        } else {
+        if (player.vx > 0) player.vx -= SKID_DECEL * step;
+        else {
           player.vx -= accel * step;
           if (player.vx < -maxSpeed) player.vx = -maxSpeed;
         }
       } else if (keys.right) {
         player.facing = 1;
-        if (player.vx < 0) {
-          player.vx += SKID_DECEL * step;
-        } else {
+        if (player.vx < 0) player.vx += SKID_DECEL * step;
+        else {
           player.vx += accel * step;
           if (player.vx > maxSpeed) player.vx = maxSpeed;
         }
       } else {
-        // трение
         player.vx *= Math.pow(FRICTION, step);
         if (Math.abs(player.vx) < 0.1) player.vx = 0;
       }
 
-      // ===== COYOTE TIME =====
       if (player.onGround) player.coyote = 6;
       else player.coyote = Math.max(0, player.coyote - step);
 
-      // ===== JUMP BUFFER =====
       if (keys.jumpPressed) { player.jumpBuffer = 6; keys.jumpPressed = false; }
       else player.jumpBuffer = Math.max(0, player.jumpBuffer - step);
 
-      // ===== ПРЫЖОК =====
       if (player.jumpBuffer > 0 && player.coyote > 0) {
         player.vy = JUMP_FORCE;
         player.onGround = false;
         player.coyote = 0;
         player.jumpBuffer = 0;
-        player.jumpHeld = true;
         if (player.big) sfx.jumpBig(); else sfx.jump();
         spawnJumpParticles();
       }
 
-      // Переменная высота прыжка
-      if (!keys.up && player.vy < -4) {
-        player.vy += 0.7 * step;
-      }
+      if (!keys.up && player.vy < -4) player.vy += 0.7 * step;
 
-      // ===== ГРАВИТАЦИЯ =====
       player.vy += GRAVITY * step;
       if (player.vy > MAX_FALL) player.vy = MAX_FALL;
 
-      // ===== ДВИЖЕНИЕ X =====
       player.x += player.vx * step;
       if (player.x < 0) player.x = 0;
       if (player.x + player.w > levelWidth) player.x = levelWidth - player.w;
 
-      // Коллизии X
       const allSolids = [...platforms, ...bricks, ...questionBlocks, ...pipes];
       for (let p of allSolids) {
         if (p.break) continue;
@@ -1390,7 +1183,6 @@
         }
       }
 
-      // ===== ДВИЖЕНИЕ Y =====
       player.y += player.vy * step;
       player.onGround = false;
       for (let p of allSolids) {
@@ -1398,9 +1190,8 @@
         if (rectCollide(player, p)) {
           const overlapX = Math.min(player.x + player.w, p.x + p.w) - Math.max(player.x, p.x);
           const overlapY = Math.min(player.y + player.h, p.y + p.h) - Math.max(player.y, p.y);
-          if (overlapX < overlapY) {
-            // обработано по X
-          } else {
+          if (overlapX < overlapY) { }
+          else {
             if (player.vy > 0) {
               player.y = p.y - player.h;
               player.vy = 0;
@@ -1424,23 +1215,16 @@
         }
       }
 
-      // ===== ПАДЕНИЕ В ДЫРУ =====
-      if (player.y > H + 100) {
-        killPlayer();
-        return;
-      }
+      if (player.y > H + 100) { killPlayer(); return; }
 
-      // ===== АНИМАЦИЯ =====
       player.anim += Math.abs(player.vx) * 0.15 * step;
 
-      // ===== МОНЕТЫ =====
       for (let coin of coins) {
         if (coin.collected) continue;
         coin.anim += 0.1 * step;
         if (rectCollide(player, coin)) {
           coin.collected = true;
-          coinCount++;
-          score += 100;
+          coinCount++; score += 100;
           coinSpan.textContent = coinCount;
           scoreSpan.textContent = score;
           sfx.coin();
@@ -1448,7 +1232,6 @@
         }
       }
 
-      // ===== БОНУСЫ =====
       for (let i = powerups.length - 1; i >= 0; i--) {
         const p = powerups[i];
         p.vy += GRAVITY * 0.8 * step;
@@ -1456,36 +1239,21 @@
         p.y += p.vy * step;
         p.anim += 0.15 * step;
 
-        // коллизии
         for (let plat of platforms) {
           if (plat.type !== 'ground' && plat.type !== 'brick') continue;
           if (rectCollide(p, plat)) {
-            if (p.vy > 0 && p.y + p.h - plat.y < 20) { 
-              p.y = plat.y - p.h; 
-              p.vy = 0; 
-            }
+            if (p.vy > 0 && p.y + p.h - plat.y < 20) { p.y = plat.y - p.h; p.vy = 0; }
           }
         }
         for (let b of [...bricks, ...questionBlocks]) {
           if (rectCollide(p, b)) {
-            if (p.vy > 0 && p.y + p.h - b.y < 20) { 
-              p.y = b.y - p.h; 
-              p.vy = 0; 
-            }
+            if (p.vy > 0 && p.y + p.h - b.y < 20) { p.y = b.y - p.h; p.vy = 0; }
           }
         }
 
         if (rectCollide(player, p)) {
-          if (p.type === 'mushroom') {
-            if (!player.big) player.big = true;
-            score += 1000;
-            sfx.powerup();
-          } else if (p.type === 'fireflower') {
-            player.fire = true;
-            player.big = true;
-            score += 1000;
-            sfx.powerup();
-          }
+          if (p.type === 'mushroom') { if (!player.big) player.big = true; score += 1000; sfx.powerup(); }
+          else if (p.type === 'fireflower') { player.fire = true; player.big = true; score += 1000; sfx.powerup(); }
           scoreSpan.textContent = score;
           spawnPowerupParticles(p.x + 12, p.y + 12);
           powerups.splice(i, 1);
@@ -1493,19 +1261,15 @@
         if (p.y > H + 200) powerups.splice(i, 1);
       }
 
-      // ===== ОГНЕННЫЕ ШАРЫ =====
       if (keys.fire && player.fire && !player.dead) {
         keys.fire = false;
-        // ограничим количество шаров
         if (fireballs.length < 3) {
           fireballs.push({
             x: player.x + (player.facing > 0 ? player.w : -8),
             y: player.y + player.h * 0.4,
             w: 12, h: 12,
-            vx: player.facing * 7,
-            vy: -2,
-            life: 180,
-            anim: 0
+            vx: player.facing * 7, vy: -2,
+            life: 180, anim: 0
           });
           sfx.fire();
         }
@@ -1518,18 +1282,13 @@
         fb.y += fb.vy * step;
         fb.life -= step;
         fb.anim += 0.3 * step;
-
         for (let p of platforms) {
-          if (p.type === 'ground' && rectCollide(fb, p) && fb.vy > 0) {
-            fb.y = p.y - fb.h;
-            fb.vy = -7;
-          }
+          if (p.type === 'ground' && rectCollide(fb, p) && fb.vy > 0) { fb.y = p.y - fb.h; fb.vy = -7; }
         }
         for (let e of enemies) {
           if (!e.alive) continue;
           if (rectCollide(fb, e)) {
-            e.alive = false;
-            score += 200;
+            e.alive = false; score += 200;
             scoreSpan.textContent = score;
             sfx.stomp();
             spawnEnemyParticles(e.x + 15, e.y + 17);
@@ -1537,12 +1296,9 @@
             break;
           }
         }
-        if (fb.life <= 0 || fb.x < cameraX - 300 || fb.x > cameraX + W + 300) {
-          fireballs.splice(i, 1);
-        }
+        if (fb.life <= 0 || fb.x < cameraX - 300 || fb.x > cameraX + W + 300) fireballs.splice(i, 1);
       }
 
-      // ===== ВРАГИ =====
       for (let e of enemies) {
         if (!e.alive) continue;
         if (e.squashTimer > 0) {
@@ -1550,30 +1306,21 @@
           if (e.squashTimer <= 0) e.alive = false;
           continue;
         }
-
         e.x += e.vx * step;
         e.anim += 0.15 * step;
-
-        // проверка, что враг на платформе
         let onPlat = false;
         for (let p of platforms) {
           if (p.type !== 'ground') continue;
-          if (e.x + e.w/2 > p.x && e.x + e.w/2 < p.x + p.w && Math.abs(e.y + e.h - p.y) < 5) {
-            onPlat = true;
-            break;
-          }
+          if (e.x + e.w/2 > p.x && e.x + e.w/2 < p.x + p.w && Math.abs(e.y + e.h - p.y) < 5) { onPlat = true; break; }
         }
         if (!onPlat || e.x <= e.minX || e.x + e.w >= e.maxX) {
           e.vx *= -1;
           if (e.x <= e.minX) e.x = e.minX;
           if (e.x + e.w >= e.maxX) e.x = e.maxX - e.w;
         }
-
-        // столкновение с игроком
         if (rectCollide(player, e)) {
           const playerBottom = player.y + player.h;
           const enemyTop = e.y;
-          // Если игрок падает сверху — топчем
           if (player.vy > 0 && playerBottom - enemyTop < 25) {
             e.squashTimer = 20;
             player.vy = -8;
@@ -1581,27 +1328,20 @@
             scoreSpan.textContent = score;
             sfx.stomp();
             spawnEnemyParticles(e.x + 15, e.y + 17);
-          } else if (player.invuln <= 0 && player.starTimer <= 0) {
-            // получение урона
+          } else if (player.invuln <= 0) {
             if (player.fire || player.big) {
-              player.big = false;
-              player.fire = false;
+              player.big = false; player.fire = false;
               player.invuln = 120;
               sfx.powerdown();
               spawnPowerupParticles(player.x + 14, player.y + 19);
-            } else {
-              killPlayer();
-              return;
-            }
+            } else { killPlayer(); return; }
           }
         }
       }
 
-      // ===== BUMP АНИМАЦИЯ =====
       for (let qb of questionBlocks) if (qb.bump > 0) qb.bump = Math.max(0, qb.bump - step);
       for (let b of bricks) if (b.bump > 0) b.bump = Math.max(0, b.bump - step);
 
-      // ===== ФЛАГ =====
       if (flag && !flag.reached && player.x + player.w > flag.poleX) {
         flag.reached = true;
         levelComplete = true;
@@ -1609,19 +1349,14 @@
         scoreSpan.textContent = score;
         sfx.complete();
       }
-      if (flag && flag.reached) {
-        flagPoleAnim = Math.min(flagPoleAnim + 3 * step, flag.h - 60);
-      }
+      if (flag && flag.reached) flagPoleAnim = Math.min(flagPoleAnim + 3 * step, flag.h - 60);
 
-      // ===== КАМЕРА =====
       let targetCam = player.x - W * 0.35;
       if (targetCam < 0) targetCam = 0;
       if (targetCam > levelWidth - W) targetCam = levelWidth - W;
       cameraX += (targetCam - cameraX) * 0.15 * step;
 
-      // ===== INVULN =====
       if (player.invuln > 0) player.invuln -= step;
-      if (player.starTimer > 0) player.starTimer -= step;
 
       updateParticles(step);
     }
@@ -1629,37 +1364,23 @@
     function hitQuestionBlock(qb) {
       qb.hit = true;
       if (qb.content === 'coin') {
-        coinCount++;
-        score += 200;
+        coinCount++; score += 200;
         coinSpan.textContent = coinCount;
         scoreSpan.textContent = score;
         sfx.coin();
         spawnCoinParticles(qb.x + 16, qb.y - 10);
       } else if (qb.content === 'mushroom') {
-        powerups.push({
-          x: qb.x + 2, y: qb.y - 32,
-          w: 28, h: 28, vx: 1.5, vy: 0,
-          type: 'mushroom', anim: 0
-        });
+        powerups.push({ x: qb.x + 2, y: qb.y - 32, w: 28, h: 28, vx: 1.5, vy: 0, type: 'mushroom', anim: 0 });
         sfx.powerup();
       } else if (qb.content === 'fireflower') {
-        powerups.push({
-          x: qb.x + 2, y: qb.y - 32,
-          w: 28, h: 28, vx: 0, vy: -3,
-          type: 'fireflower', anim: 0
-        });
+        powerups.push({ x: qb.x + 2, y: qb.y - 32, w: 28, h: 28, vx: 0, vy: -3, type: 'fireflower', anim: 0 });
         sfx.powerup();
       }
     }
 
     function killPlayer() {
-      // ЗАЩИТА: не убиваем, если уже мертвы или game over
       if (player.dead || gameOver) return;
-      if (lives <= 0) {
-        gameOver = true;
-        return;
-      }
-      
+      if (lives <= 0) { gameOver = true; return; }
       player.dead = true;
       player.deadTimer = 0;
       player.vy = -12;
@@ -1670,19 +1391,15 @@
     }
 
     function respawn() {
-      // ЗАЩИТА: если жизней нет — game over
       if (lives <= 0) {
         gameOver = true;
         player.dead = false;
         player.deadTimer = 0;
         return;
       }
-      
-      // Проверяем, есть ли валидная точка старта
       player.x = 60;
       player.y = GROUND_Y - player.h - 20;
-      player.vx = 0; 
-      player.vy = 0;
+      player.vx = 0; player.vy = 0;
       player.dead = false;
       player.deadTimer = 0;
       player.big = false;
@@ -1693,9 +1410,6 @@
       cameraX = 0;
     }
 
-    // ================================================================
-    // ЧАСТИЦЫ
-    // ================================================================
     function spawnJumpParticles() {
       for (let i = 0; i < 6; i++) {
         particles.push({
@@ -1712,63 +1426,28 @@
 
     function spawnCoinParticles(x, y) {
       for (let i = 0; i < 10; i++) {
-        particles.push({
-          x, y,
-          vx: (Math.random() - 0.5) * 6,
-          vy: (Math.random() - 0.5) * 6 - 3,
-          life: 22 + Math.random() * 12, maxLife: 34,
-          size: 3 + Math.random() * 3,
-          color: `hsl(45, 100%, ${60 + Math.random() * 30}%)`
-        });
+        particles.push({ x, y, vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6 - 3, life: 22 + Math.random() * 12, maxLife: 34, size: 3 + Math.random() * 3, color: `hsl(45, 100%, ${60 + Math.random() * 30}%)` });
       }
     }
-
     function spawnEnemyParticles(x, y) {
       for (let i = 0; i < 15; i++) {
-        particles.push({
-          x, y,
-          vx: (Math.random() - 0.5) * 8,
-          vy: (Math.random() - 0.5) * 8 - 3,
-          life: 22 + Math.random() * 15, maxLife: 37,
-          size: 4 + Math.random() * 5,
-          color: `hsl(0, 80%, ${50 + Math.random() * 30}%)`
-        });
+        particles.push({ x, y, vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8 - 3, life: 22 + Math.random() * 15, maxLife: 37, size: 4 + Math.random() * 5, color: `hsl(0, 80%, ${50 + Math.random() * 30}%)` });
       }
     }
-
     function spawnBrickParticles(x, y) {
       for (let i = 0; i < 12; i++) {
-        particles.push({
-          x, y,
-          vx: (Math.random() - 0.5) * 8,
-          vy: (Math.random() - 0.5) * 8 - 4,
-          life: 22 + Math.random() * 15, maxLife: 37,
-          size: 4 + Math.random() * 5,
-          color: `hsl(${20 + Math.random() * 20}, 60%, ${40 + Math.random() * 20}%)`
-        });
+        particles.push({ x, y, vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8 - 4, life: 22 + Math.random() * 15, maxLife: 37, size: 4 + Math.random() * 5, color: `hsl(${20 + Math.random() * 20}, 60%, ${40 + Math.random() * 20}%)` });
       }
     }
-
     function spawnPowerupParticles(x, y) {
       for (let i = 0; i < 18; i++) {
-        particles.push({
-          x, y,
-          vx: (Math.random() - 0.5) * 9,
-          vy: (Math.random() - 0.5) * 9 - 4,
-          life: 25 + Math.random() * 20, maxLife: 45,
-          size: 4 + Math.random() * 6,
-          color: `hsl(${Math.random() * 360}, 100%, 65%)`
-        });
+        particles.push({ x, y, vx: (Math.random() - 0.5) * 9, vy: (Math.random() - 0.5) * 9 - 4, life: 25 + Math.random() * 20, maxLife: 45, size: 4 + Math.random() * 6, color: `hsl(${Math.random() * 360}, 100%, 65%)` });
       }
     }
-
     function updateParticles(step) {
       for (let i = particles.length - 1; i >= 0; i--) {
         const p = particles[i];
-        p.x += p.vx * step;
-        p.y += p.vy * step;
-        p.vy += 0.15 * step;
-        p.life -= step;
+        p.x += p.vx * step; p.y += p.vy * step; p.vy += 0.15 * step; p.life -= step;
         if (p.life <= 0) particles.splice(i, 1);
       }
     }
@@ -1778,14 +1457,11 @@
     // ================================================================
     function draw() {
       ctx.clearRect(0, 0, W, H);
-
       drawSky();
       drawHills();
       drawClouds();
-
       ctx.save();
       ctx.translate(-Math.floor(cameraX), 0);
-
       drawBushes();
       drawGround();
       drawPipes();
@@ -1799,9 +1475,7 @@
       drawFireballs();
       drawPlayer();
       drawParticles();
-
       ctx.restore();
-
       drawUI();
     }
 
@@ -1824,9 +1498,6 @@
         ctx.quadraticCurveTo(hx + hill.w/2, hill.y - hill.h, hx + hill.w, hill.y);
         ctx.closePath();
         ctx.fill();
-        ctx.strokeStyle = 'rgba(0,0,0,0.1)';
-        ctx.lineWidth = 2;
-        ctx.stroke();
       }
     }
 
@@ -1870,7 +1541,6 @@
         grd.addColorStop(1, '#5d2f0d');
         ctx.fillStyle = grd;
         ctx.fillRect(p.x, p.y, p.w, p.h);
-
         ctx.fillStyle = '#3d9a2a';
         ctx.fillRect(p.x, p.y - 6, p.w, 8);
         ctx.fillStyle = '#4db83a';
@@ -1878,7 +1548,6 @@
           ctx.fillRect(p.x + i, p.y - 10, 6, 6);
           ctx.fillRect(p.x + i + 3, p.y - 14, 4, 6);
         }
-
         ctx.fillStyle = 'rgba(0,0,0,0.15)';
         for (let i = 0; i < p.w; i += 24) {
           ctx.fillRect(p.x + i + 4, p.y + 14, 8, 6);
@@ -1917,8 +1586,6 @@
         ctx.fillRect(b.x + 15, y, 2, 15);
         ctx.fillRect(b.x + 8, y + 15, 2, 17);
         ctx.fillRect(b.x + 24, y + 15, 2, 17);
-        ctx.fillStyle = 'rgba(255,255,255,0.15)';
-        ctx.fillRect(b.x, y, b.w, 4);
       }
     }
 
@@ -1945,11 +1612,6 @@
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText('?', qb.x + qb.w/2, y + qb.h/2 + 1);
-          ctx.fillStyle = '#8b6b00';
-          ctx.fillRect(qb.x + 3, y + 3, 3, 3);
-          ctx.fillRect(qb.x + qb.w - 6, y + 3, 3, 3);
-          ctx.fillRect(qb.x + 3, y + qb.h - 6, 3, 3);
-          ctx.fillRect(qb.x + qb.w - 6, y + qb.h - 6, 3, 3);
         }
       }
     }
@@ -2145,14 +1807,8 @@
         ctx.restore();
         return;
       }
-      // мигание при неуязвимости
       if (player.invuln > 0 && Math.floor(player.invuln / 4) % 2 === 0) return;
-      
-      drawMarioSprite(
-        player.x, player.y, player.w, player.h,
-        player.vx, player.facing, player.big, player.fire,
-        player.anim, player.onGround, player.vy
-      );
+      drawMarioSprite(player.x, player.y, player.w, player.h, player.vx, player.facing, player.big, player.fire, player.anim, player.onGround, player.vy);
     }
 
     function drawMarioSprite(x, y, w, h, vx, facing, big, fire, anim = 0, onGround = true, vy = 0) {
@@ -2165,7 +1821,6 @@
       ctx.translate(cx, by + scaleH);
       ctx.scale(facing, 1);
 
-      // Тень
       ctx.fillStyle = 'rgba(0,0,0,0.2)';
       ctx.beginPath();
       ctx.ellipse(0, 2, scaleW * 0.45, 4, 0, 0, Math.PI*2);
@@ -2174,7 +1829,6 @@
       const walking = Math.abs(vx) > 0.3 && onGround;
       const legPhase = walking ? Math.sin(anim * 2) : 0;
 
-      // Ноги
       ctx.fillStyle = '#1a4d8f';
       const legH = scaleH * 0.28;
       if (!onGround) {
@@ -2188,12 +1842,10 @@
         ctx.fillRect(scaleW*0.1, -legH, scaleW*0.3, legH);
       }
 
-      // Ботинки
       ctx.fillStyle = '#3d1f0d';
       ctx.fillRect(-scaleW*0.45, -6, scaleW*0.4, 8);
       ctx.fillRect(scaleW*0.05, -6, scaleW*0.4, 8);
 
-      // Тело
       const bodyColor = fire ? '#fff' : '#e63946';
       const overalls = fire ? '#e63946' : '#1a4d8f';
       ctx.fillStyle = bodyColor;
@@ -2206,7 +1858,6 @@
       ctx.arc(scaleW*0.15, -legH - scaleH*0.15, 2, 0, Math.PI*2);
       ctx.fill();
 
-      // Руки
       ctx.fillStyle = bodyColor;
       if (!onGround) {
         ctx.fillRect(-scaleW*0.55, -legH - scaleH*0.3, scaleW*0.2, scaleH*0.18);
@@ -2219,7 +1870,6 @@
       ctx.fillRect(-scaleW*0.55, -legH - scaleH*0.3 + scaleH*0.15, scaleW*0.2, 6);
       ctx.fillRect(scaleW*0.35, -legH - scaleH*0.3 + scaleH*0.15, scaleW*0.2, 6);
 
-      // Голова
       const headY = -legH - scaleH*0.35 - scaleH*0.25;
       ctx.fillStyle = '#ffdbac';
       ctx.beginPath();
@@ -2229,13 +1879,11 @@
       ctx.arc(-scaleH*0.14, headY + scaleH*0.12, scaleH*0.04, 0, Math.PI*2);
       ctx.fill();
 
-      // Бакенбарды
       ctx.fillStyle = '#3d1f0d';
       ctx.beginPath();
       ctx.arc(-scaleH*0.1, headY + scaleH*0.08, scaleH*0.05, 0, Math.PI*2);
       ctx.fill();
 
-      // Кепка
       ctx.fillStyle = fire ? '#fff' : '#e63946';
       ctx.beginPath();
       ctx.arc(0, headY + scaleH*0.04, scaleH*0.18, Math.PI, 0);
@@ -2252,7 +1900,6 @@
       ctx.textBaseline = 'middle';
       ctx.fillText('M', 0, headY + scaleH*0.01);
 
-      // Глаз
       ctx.fillStyle = '#fff';
       ctx.beginPath();
       ctx.arc(scaleH*0.04, headY + scaleH*0.12, scaleH*0.04, 0, Math.PI*2);
@@ -2262,7 +1909,6 @@
       ctx.arc(scaleH*0.05, headY + scaleH*0.12, scaleH*0.02, 0, Math.PI*2);
       ctx.fill();
 
-      // Усы
       ctx.fillStyle = '#3d1f0d';
       ctx.fillRect(scaleH*0.0, headY + scaleH*0.16, scaleH*0.1, 3);
 
@@ -2305,7 +1951,6 @@
     }
 
     function drawUI() {
-      // Сообщения поверх canvas
       if (gameOver) {
         ctx.fillStyle = 'rgba(0,0,0,0.7)';
         ctx.fillRect(0, 0, W, H);
@@ -2426,9 +2071,7 @@
       W = canvas.width;
       H = canvas.height;
       GROUND_Y = H * GROUND_Y_BASE;
-      // перезагружаем уровень при resize только если игра активна
       if (!paused && !gameOver && !win) {
-        // сохраняем прогресс
         const savedX = player.x;
         const savedLevel = currentLevel;
         loadLevel(savedLevel);
@@ -2457,18 +2100,8 @@
       });
 
       document.getElementById('marioRestart').addEventListener('click', restartGame);
-      document.getElementById('marioSkipLevel').addEventListener('click', () => {
-        if (currentLevel < TOTAL_LEVELS) {
-          currentLevel++;
-          loadLevel(currentLevel);
-          startLoop();
-        } else {
-          win = true;
-        }
-      });
       setupMobileControls();
 
-      // первая загрузка
       const parentW = canvas.parentElement.clientWidth || 800;
       canvas.width = Math.max(parentW, 320);
       canvas.height = Math.round(canvas.width * 9 / 16);
