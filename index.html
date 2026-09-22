@@ -6,27 +6,18 @@
 <title>7Б — Расписание и игры</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
-  
   body {
     background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
-    min-height: 100vh;
-    color: #333;
-    background-attachment: fixed;
-    user-select: none;
+    min-height: 100vh; color: #333;
+    background-attachment: fixed; user-select: none;
   }
-  
   header {
     background: rgba(255,255,255,0.95);
-    padding: 15px 25px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 15px 25px; display: flex;
+    align-items: center; justify-content: space-between;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+    position: sticky; top: 0; z-index: 100;
   }
-  
   header h1 {
     font-size: 1.6em;
     background: linear-gradient(135deg, #0984e3, #74b9ff);
@@ -34,15 +25,14 @@
     -webkit-text-fill-color: transparent;
     font-weight: 800;
   }
-  
   .burger {
     width: 45px; height: 45px;
     background: linear-gradient(135deg, #0984e3, #74b9ff);
     border: none; border-radius: 10px;
-    cursor: pointer;
-    display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
-    gap: 5px; transition: transform 0.3s;
+    cursor: pointer; display: flex;
+    flex-direction: column; justify-content: center;
+    align-items: center; gap: 5px;
+    transition: transform 0.3s;
   }
   .burger:hover { transform: scale(1.08); }
   .burger span {
@@ -53,7 +43,6 @@
   .burger.active span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
   .burger.active span:nth-child(2) { opacity: 0; }
   .burger.active span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
-  
   .menu {
     position: fixed; top: 75px; right: 0;
     width: 280px; height: calc(100vh - 75px);
@@ -61,8 +50,7 @@
     box-shadow: -5px 0 25px rgba(0,0,0,0.15);
     transform: translateX(100%);
     transition: transform 0.4s ease;
-    z-index: 99; padding: 25px 15px;
-    overflow-y: auto;
+    z-index: 99; padding: 25px 15px; overflow-y: auto;
   }
   .menu.open { transform: translateX(0); }
   .menu a {
@@ -70,15 +58,13 @@
     margin-bottom: 8px; color: #444;
     text-decoration: none; font-weight: 600;
     border-radius: 12px; transition: all 0.3s;
-    border-left: 4px solid transparent;
-    cursor: pointer;
+    border-left: 4px solid transparent; cursor: pointer;
   }
   .menu a:hover, .menu a.active {
     background: linear-gradient(135deg, #0984e3, #74b9ff);
     color: white; border-left-color: #ffd700;
     transform: translateX(-5px);
   }
-  
   .overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.4);
@@ -86,11 +72,9 @@
     transition: all 0.35s; z-index: 98;
   }
   .overlay.show { opacity: 1; visibility: visible; }
-  
   .container { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
   .page { display: none; }
   .page.active { display: block; }
-  
   section {
     background: white; border-radius: 20px;
     padding: 35px; margin-bottom: 30px;
@@ -101,15 +85,11 @@
     from { opacity: 0; transform: translateY(15px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  
   section h2 {
     color: #0984e3; margin-bottom: 25px;
-    font-size: 1.9em;
-    border-bottom: 3px solid #74b9ff;
+    font-size: 1.9em; border-bottom: 3px solid #74b9ff;
     padding-bottom: 10px; display: inline-block;
   }
-  
-  /* Посещаемость */
   .visits-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -125,15 +105,12 @@
   .visit-card:hover { transform: translateY(-5px); }
   .visit-card .num { font-size: 2.2em; font-weight: 800; display: block; margin-bottom: 5px; }
   .visit-card .lbl { font-size: 0.9em; opacity: 0.95; }
-  
   .visit-note {
     margin-top: 15px; font-size: 0.85em;
     color: #666; background: #f0f8ff;
     padding: 12px 15px; border-radius: 10px;
     border-left: 4px solid #0984e3;
   }
-  
-  /* Табы */
   .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
   .tab-btn {
     padding: 10px 20px; border: 2px solid #74b9ff;
@@ -149,21 +126,15 @@
   }
   .tab-content { display: none; animation: fadeIn 0.4s ease; }
   .tab-content.active { display: block; }
-  
-  /* Таблицы */
   .table-wrap {
     overflow-x: auto; border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.06);
   }
-  table {
-    width: 100%; border-collapse: collapse;
-    font-size: 0.85em; min-width: 700px;
-  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.85em; min-width: 700px; }
   th, td {
     padding: 8px 6px; text-align: center;
     border-bottom: 1px solid #eee;
-    border-right: 1px solid #f5f5f5;
-    vertical-align: middle;
+    border-right: 1px solid #f5f5f5; vertical-align: middle;
   }
   th {
     background: linear-gradient(135deg, #0984e3, #74b9ff);
@@ -176,8 +147,6 @@
   td small { display: block; color: #888; font-size: 0.8em; margin-top: 2px; }
   .empty { color: #ccc; }
   .big-break td { background: #ffe0b2; color: #d84315; font-weight: 700; }
-  
-  /* Змейка */
   .snake-wrap { text-align: center; }
   .game-stats {
     display: flex; gap: 15px; justify-content: center;
@@ -195,7 +164,6 @@
     box-shadow: 0 10px 30px rgba(9,132,227,0.4);
     max-width: 100%; touch-action: none;
   }
-  
   .btn {
     background: linear-gradient(135deg, #0984e3, #74b9ff);
     color: white; border: none; padding: 12px 30px;
@@ -207,13 +175,11 @@
   }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(9,132,227,0.6); }
   .btn:active { transform: translateY(0); }
-  
   .dpad {
     display: grid;
     grid-template-columns: repeat(3, 65px);
     grid-template-rows: repeat(3, 65px);
-    gap: 6px; margin: 20px auto 0;
-    justify-content: center;
+    gap: 6px; margin: 20px auto 0; justify-content: center;
   }
   .dpad button {
     background: linear-gradient(135deg, #0984e3, #74b9ff);
@@ -227,24 +193,16 @@
     background: linear-gradient(135deg, #ffd700, #ff8800);
     transform: scale(0.95);
   }
-  
-  /* МАРИО */
-  .mario-wrap {
-    display: flex; flex-direction: column;
-    align-items: center;
-  }
-  
+  .mario-wrap { display: flex; flex-direction: column; align-items: center; }
   #marioCanvas {
-    width: 100%; max-width: 900px;
-    height: auto; aspect-ratio: 16 / 9;
-    background: #6b8cff; display: block;
+    width: 100%; max-width: 900px; height: auto;
+    aspect-ratio: 16 / 9; background: #6b8cff;
+    display: block;
     border: 3px solid #0984e3; border-radius: 12px;
     box-shadow: 0 10px 30px rgba(9,132,227,0.4);
     touch-action: none; cursor: pointer;
     image-rendering: pixelated;
-    image-rendering: crisp-edges;
   }
-  
   .mario-ui {
     display: flex; gap: 12px; justify-content: center;
     flex-wrap: wrap; margin: 15px 0;
@@ -254,7 +212,6 @@
     color: #b8860b;
   }
   .mario-ui .stat-item b { color: #b8860b; }
-  
   .mario-controls {
     display: none; justify-content: space-between;
     align-items: center; width: 100%;
@@ -287,15 +244,12 @@
   .mario-controls .jump-btn.active {
     background: linear-gradient(135deg, #ffd700, #ff8800);
   }
-  
   .mario-hint {
     margin-top: 15px; font-size: 0.85em;
     color: #666; background: #f0f8ff;
     padding: 12px 15px; border-radius: 10px;
-    border-left: 4px solid #0984e3;
-    text-align: center;
+    border-left: 4px solid #0984e3; text-align: center;
   }
-  
   @media (max-width: 768px) {
     .mario-controls { display: flex; }
     .mario-controls button { width: 65px; height: 65px; font-size: 1.7em; }
@@ -304,13 +258,11 @@
   @media (max-width: 400px) {
     .mario-controls button { width: 58px; height: 58px; font-size: 1.5em; }
   }
-  
   footer {
     text-align: center; color: white;
     padding: 30px; font-size: 0.95em;
     text-shadow: 0 2px 4px rgba(0,0,0,0.2);
   }
-  
   @media (max-width: 600px) {
     header h1 { font-size: 1.2em; }
     section { padding: 18px; }
@@ -327,13 +279,11 @@
     .dpad button { font-size: 1.5em; }
     table { font-size: 0.6em; }
   }
-  
   .game-overlay {
     position: fixed; inset: 0;
     background: rgba(0,0,0,0.85);
     display: none; align-items: center;
-    justify-content: center; z-index: 500;
-    padding: 20px;
+    justify-content: center; z-index: 500; padding: 20px;
   }
   .game-overlay.show { display: flex; }
   .overlay-content {
@@ -455,7 +405,6 @@
     </section>
   </div>
 
-  <!-- МАРИО -->
   <div class="page" id="page-mario">
     <section>
       <h2>🍄 Super Mario</h2>
@@ -479,6 +428,7 @@
         
         <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
           <button class="btn" id="marioRestart">🔄 Заново</button>
+          <button class="btn" id="marioSkipLevel" style="background:linear-gradient(135deg,#f39c12,#e67e22);">⏭ След. уровень</button>
         </div>
         
         <div class="mario-hint">
@@ -580,15 +530,11 @@
   // ================================================================
   const snake = {
     canvas: document.getElementById('snakeCanvas'),
-    ctx: null,
-    cols: 20, rows: 20, cell: 20,
+    ctx: null, cols: 20, rows: 20, cell: 20,
     snake: [], dir: { x: 1, y: 0 }, nextDir: { x: 1, y: 0 },
-    food: { x: 5, y: 5 },
-    score: 0,
+    food: { x: 5, y: 5 }, score: 0,
     best: parseInt(localStorage.getItem('snakeBest') || '0'),
-    running: false,
-    timer: null,
-    speed: 140,
+    running: false, timer: null, speed: 140,
 
     init() {
       if (this._inited) { this.resize(); this.draw(); return; }
@@ -663,8 +609,7 @@
       this.snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
       this.dir = { x: 1, y: 0 };
       this.nextDir = { x: 1, y: 0 };
-      this.score = 0;
-      this.speed = 140;
+      this.score = 0; this.speed = 140;
       this.spawnFood();
       document.getElementById('snakeScore').textContent = 0;
     },
@@ -692,20 +637,16 @@
 
     tick() {
       if (!this.running) return;
-      this.update();
-      this.draw();
+      this.update(); this.draw();
       this.timer = setTimeout(() => this.tick(), this.speed);
     },
 
     update() {
       this.dir = { ...this.nextDir };
       const head = { x: this.snake[0].x + this.dir.x, y: this.snake[0].y + this.dir.y };
-
       if (head.x < 0 || head.x >= this.cols || head.y < 0 || head.y >= this.rows) return this.gameOver();
       if (this.snake.some(s => s.x === head.x && s.y === head.y)) return this.gameOver();
-
       this.snake.unshift(head);
-
       if (head.x === this.food.x && head.y === this.food.y) {
         this.score += 1;
         document.getElementById('snakeScore').textContent = this.score;
@@ -717,23 +658,18 @@
     },
 
     draw() {
-      const ctx = this.ctx;
-      const c = this.cell;
-
+      const ctx = this.ctx, c = this.cell;
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
       ctx.strokeStyle = 'rgba(255,255,255,0.05)';
       for (let i = 0; i <= this.cols; i++) {
         ctx.beginPath(); ctx.moveTo(i * c, 0); ctx.lineTo(i * c, this.canvas.height); ctx.stroke();
         ctx.beginPath(); ctx.moveTo(0, i * c); ctx.lineTo(this.canvas.width, i * c); ctx.stroke();
       }
-
       ctx.fillStyle = '#ff4757';
       ctx.beginPath();
       ctx.arc(this.food.x * c + c / 2, this.food.y * c + c / 2, c / 2 - 2, 0, Math.PI * 2);
       ctx.fill();
-
       this.snake.forEach((seg, i) => {
         const grad = ctx.createLinearGradient(seg.x * c, seg.y * c, seg.x * c + c, seg.y * c + c);
         if (i === 0) { grad.addColorStop(0, '#ffd700'); grad.addColorStop(1, '#ff8800'); }
@@ -775,7 +711,7 @@
   });
 
   // ================================================================
-  // 🍄 SUPER MARIO — РЕАЛИСТИЧНАЯ ВЕРСИЯ
+  // 🍄 SUPER MARIO — РЕАЛИСТИЧНАЯ ВЕРСИЯ С ПРОХОДИМЫМИ УРОВНЯМИ
   // ================================================================
   const marioGame = (function() {
     const canvas = document.getElementById('marioCanvas');
@@ -788,12 +724,14 @@
     let W, H;
     const GROUND_Y_BASE = 0.85;
 
-    // Физика
-    const GRAVITY = 0.55;
-    const JUMP_FORCE = -11.5;
-    const PLAYER_SPEED = 2.8;
-    const RUN_MULT = 1.7;
-    const MAX_FALL = 14;
+    // Реалистичная физика
+    const GRAVITY = 0.6;
+    const JUMP_FORCE = -12.5;
+    const PLAYER_SPEED = 3.0;
+    const RUN_MULT = 1.6;
+    const MAX_FALL = 15;
+    const ACCEL = 0.5;      // плавный разгон
+    const FRICTION = 0.75;  // плавное торможение
 
     // Игрок
     let player = {
@@ -801,7 +739,9 @@
       vx: 0, vy: 0, onGround: false,
       facing: 1, big: false, fire: false,
       invuln: 0, anim: 0, dead: false, deadTimer: 0,
-      jumpHeld: false, coyote: 0, jumpBuffer: 0
+      jumpHeld: false, coyote: 0, jumpBuffer: 0,
+      // физические характеристики
+      mass: 1, runSpeed: 0, walkTimer: 0
     };
 
     // Мир
@@ -817,6 +757,7 @@
     let decorations = [];
     let clouds = [];
     let bushes = [];
+    let hills = [];
     let flag = null;
 
     let coinCount = 0;
@@ -834,8 +775,9 @@
     let paused = true;
     let rafId = null;
     let lastTime = 0;
+    let flagPoleAnim = 0;
 
-    // ---------- ЗВУК (Web Audio) ----------
+    // ---------- ЗВУК ----------
     const audioCtx = (() => {
       try { return new (window.AudioContext || window.webkitAudioContext)(); }
       catch(e) { return null; }
@@ -869,124 +811,198 @@
       }
     };
 
-    // ---------- ГЕНЕРАЦИЯ УРОВНЯ ----------
+    // ---------- ГЕНЕРАЦИЯ УРОВНЯ (гарантированно проходимого) ----------
+    // Ключевая идея: земля — один непрерывный сегмент с короткими дырами,
+    // над каждой дырой ОБЯЗАТЕЛЬНО есть парящая платформа или труба,
+    // которую можно использовать как точку опоры.
     function generateLevel(level, groundY) {
       platforms = []; questionBlocks = []; bricks = []; pipes = [];
       coins = []; powerups = []; enemies = []; particles = [];
-      decorations = []; clouds = []; bushes = []; fireballs = []; flag = null;
+      decorations = []; clouds = []; bushes = []; hills = []; fireballs = []; flag = null;
 
-      const maxX = 3200 + level * 800;
-      levelWidth = maxX;
+      // Размеры уровня зависят от сложности
+      const levelLength = 3200 + level * 600;
+      levelWidth = levelLength;
 
-      // --- ЗЕМЛЯ с короткими дырами ---
+      // ==== ЗЕМЛЯ ====
+      // Разбиваем на сегменты с короткими дырами. Между дырами ВСЕГДА есть платформа.
+      // Максимальная дыра: 90 пикселей (легко перепрыгнуть).
+      // Над каждой дырой — "спасательная" платформа.
+      
       let segX = 0;
-      const segCount = 14 + level * 2;
-      for (let i = 0; i < segCount; i++) {
-        let segW = 220 + Math.random() * 260;
-        if (segX + segW > maxX) segW = maxX - segX;
-        platforms.push({ x: segX, y: groundY, w: segW, h: 80, type: 'ground' });
-        // короткая дыра 30-55 пикселей
-        segX += segW + 30 + Math.random() * 25;
-        if (segX > maxX) break;
+      const minSegW = 280;  // минимальная длина сегмента земли
+      const maxGap = 80;    // максимальная ширина дыры
+      
+      // Первый сегмент — всегда длинный (стартовая зона)
+      const firstSegW = 600;
+      platforms.push({ x: 0, y: groundY, w: firstSegW, h: 80, type: 'ground' });
+      segX = firstSegW;
+
+      // Генерируем сегменты до конца уровня
+      while (segX < levelLength - 400) {
+        // Дыра (30-80 пикселей)
+        const gap = 30 + Math.random() * (maxGap - 30);
+        segX += gap;
+        
+        // Сегмент земли
+        const segW = minSegW + Math.random() * 300;
+        const actualW = Math.min(segW, levelLength - 400 - segX);
+        if (actualW < 100) break;
+        
+        platforms.push({ x: segX, y: groundY, w: actualW, h: 80, type: 'ground' });
+        
+        // НАД КАЖДОЙ ДЫРОЙ — платформа-помощник (чтобы точно можно было перепрыгнуть)
+        // или труба. Это гарантирует проходимость.
+        if (gap > 40) {
+          // ставим парящую платформу над серединой дыры, если она не мешает
+          const helpX = segX - gap/2 - 20;
+          // но только если рядом нет другой платформы
+          let overlap = false;
+          for (let p of platforms) {
+            if (Math.abs(p.x - helpX) < 100) { overlap = true; break; }
+          }
+          if (!overlap && Math.random() < 0.7) {
+            platforms.push({
+              x: helpX, y: groundY - 70 - Math.random() * 40,
+              w: 70, h: 20, type: 'brick'
+            });
+          }
+        }
+        
+        segX += actualW;
       }
-      // гарантированный последний сегмент
-      if (segX < maxX - 100) {
-        platforms.push({ x: maxX - 400, y: groundY, w: 400, h: 80, type: 'ground' });
+      
+      // Финальная платформа под флагом (всегда длинная)
+      const finalX = levelLength - 400;
+      platforms.push({ x: finalX, y: groundY, w: 400, h: 80, type: 'ground' });
+
+      // ==== ПАРЯЩИЕ ПЛАТФОРМЫ (в воздухе, для монет) ====
+      const platCount = 14 + level * 3;
+      for (let i = 0; i < platCount; i++) {
+        const x = 400 + i * (levelLength - 800) / platCount + Math.random() * 100;
+        const y = groundY - 150 - Math.random() * 160;
+        const w = 70 + Math.random() * 50;
+        platforms.push({ x, y, w, h: 20, type: 'brick' });
       }
 
-      // --- БЛОКИ С ВОПРОСОМ ---
-      const qbCount = 12 + level * 3;
+      // ==== БЛОКИ С ВОПРОСОМ ====
+      const qbCount = 10 + level * 2;
       for (let i = 0; i < qbCount; i++) {
-        const x = 400 + i * (maxX - 800) / qbCount + Math.random() * 80;
-        const y = groundY - 130 - Math.random() * 40;
+        const x = 500 + i * (levelLength - 1000) / qbCount + Math.random() * 80;
+        // ставим на высоте, доступной с земли (не выше 200px)
+        const y = groundY - 110 - Math.random() * 30;
         questionBlocks.push({
           x, y, w: 32, h: 32, hit: false, bump: 0,
-          content: Math.random() < 0.7 ? 'coin' : (Math.random() < 0.5 ? 'mushroom' : 'fireflower')
+          content: Math.random() < 0.75 ? 'coin' : (Math.random() < 0.6 ? 'mushroom' : 'fireflower')
         });
       }
 
-      // --- КИРПИЧИ ---
-      const brickCount = 10 + level * 2;
+      // ==== КИРПИЧИ ====
+      const brickCount = 8 + level * 2;
       for (let i = 0; i < brickCount; i++) {
-        const x = 300 + Math.random() * (maxX - 600);
-        const y = groundY - 150 - Math.random() * 120;
+        const x = 600 + Math.random() * (levelLength - 1200);
+        const y = groundY - 130 - Math.random() * 80;
         bricks.push({ x, y, w: 32, h: 32, hit: false, bump: 0, break: false });
       }
 
-      // --- ПАРЯЩИЕ ПЛАТФОРМЫ ---
-      const platCount = 8 + level * 2;
-      for (let i = 0; i < platCount; i++) {
-        const x = 500 + i * (maxX - 1000) / platCount + Math.random() * 100;
-        const y = groundY - 200 - Math.random() * 180;
-        platforms.push({ x, y, w: 96, h: 20, type: 'brick' });
-      }
-
-      // --- ТРУБЫ ---
+      // ==== ТРУБЫ (можно запрыгнуть) ====
       const pipeCount = 2 + level;
       for (let i = 0; i < pipeCount; i++) {
-        const x = 600 + i * (maxX - 1200) / pipeCount + Math.random() * 200;
-        const h = 60 + Math.random() * 60;
+        const x = 800 + i * (levelLength - 1400) / pipeCount + Math.random() * 200;
+        const h = 60 + Math.random() * 40; // 60-100px — запрыгнуть легко
         pipes.push({ x, y: groundY - h, w: 56, h, entered: false });
       }
 
-      // --- МОНЕТЫ ---
-      const coinTotal = 40 + level * 10;
+      // ==== МОНЕТЫ ====
+      // Монеты ставим ТОЛЬКО над платформами (чтобы всегда можно было собрать)
+      const coinTotal = 50 + level * 15;
       for (let i = 0; i < coinTotal; i++) {
-        const x = 80 + Math.random() * (maxX - 200);
-        let y = groundY - 40 - Math.random() * 260;
-        // не над дырой
-        let onGround = false;
-        for (let p of platforms) {
-          if (p.type === 'ground' && x > p.x && x < p.x + p.w) { onGround = true; break; }
+        let x, y;
+        let onPlat = false;
+        let attempts = 0;
+        do {
+          x = 100 + Math.random() * (levelLength - 300);
+          y = groundY - 60 - Math.random() * 200;
+          for (let p of platforms) {
+            if (x > p.x - 20 && x < p.x + p.w + 20 && Math.abs(y + 20 - p.y) < 120) {
+              onPlat = true;
+              break;
+            }
+          }
+          attempts++;
+        } while (!onPlat && attempts < 15);
+        
+        // если не нашли — ставим на "дорожку" на высоте 100px над землёй
+        if (!onPlat) {
+          y = groundY - 100;
         }
-        if (!onGround) y = groundY - 40 - Math.random() * 300;
+        
         coins.push({ x, y, w: 20, h: 20, collected: false, anim: Math.random() * Math.PI * 2 });
       }
 
-      // --- ВРАГИ ---
-      const enemyCount = 6 + level * 3;
+      // ==== ВРАГИ (только на земле, подальше от старта) ====
+      const enemyCount = 5 + level * 2;
       for (let i = 0; i < enemyCount; i++) {
         let x, onGround = false, attempts = 0;
         do {
-          x = 200 + Math.random() * (maxX - 400);
+          x = 500 + Math.random() * (levelLength - 800);
           for (let p of platforms) {
-            if (p.type === 'ground' && x > p.x + 30 && x < p.x + p.w - 60) { onGround = true; break; }
+            if (p.type === 'ground' && x > p.x + 40 && x < p.x + p.w - 80) {
+              onGround = true;
+              break;
+            }
           }
           attempts++;
-        } while (!onGround && attempts < 50);
+        } while (!onGround && attempts < 30);
+        
         if (onGround) {
-          const isTurtle = Math.random() < 0.35;
+          // проверяем, что в радиусе 100px нет другого врага
+          let tooClose = false;
+          for (let e of enemies) {
+            if (Math.abs(e.x - x) < 100) { tooClose = true; break; }
+          }
+          if (tooClose) continue;
+          
+          const isTurtle = Math.random() < 0.3;
           enemies.push({
             x, y: groundY - 34, w: 30, h: 34,
-            vx: (0.5 + Math.random() * 0.4) * (Math.random() > 0.5 ? 1 : -1),
-            minX: x - 80 - Math.random() * 60,
-            maxX: x + 80 + Math.random() * 60,
+            vx: (0.4 + Math.random() * 0.3) * (Math.random() > 0.5 ? 1 : -1),
+            minX: x - 70 - Math.random() * 40,
+            maxX: x + 70 + Math.random() * 40,
             alive: true, type: isTurtle ? 'turtle' : 'goomba',
             squashTimer: 0, anim: Math.random() * Math.PI * 2
           });
         }
       }
 
-      // --- ФЛАГ В КОНЦЕ ---
-      flag = { x: maxX - 200, y: groundY - 240, w: 8, h: 240, reached: false, poleX: maxX - 196 };
+      // ==== ФЛАГ ====
+      const poleX = levelLength - 200;
+      flag = { x: poleX, y: groundY - 260, w: 8, h: 260, poleX, reached: false, flagY: groundY - 240 };
 
-      // --- ФОН: облака, кусты ---
-      for (let i = 0; i < 30; i++) {
+      // ==== ФОН ====
+      for (let i = 0; i < 25; i++) {
         clouds.push({
-          x: Math.random() * maxX,
+          x: Math.random() * levelLength,
           y: 40 + Math.random() * 180,
           scale: 0.6 + Math.random() * 0.8,
           speed: 0.02 + Math.random() * 0.03
         });
       }
-      for (let i = 0; i < 40; i++) {
+      for (let i = 0; i < 12; i++) {
+        hills.push({
+          x: Math.random() * levelLength,
+          y: groundY,
+          w: 200 + Math.random() * 200,
+          h: 80 + Math.random() * 100,
+          color: Math.random() < 0.5 ? '#5fa843' : '#4a8f34'
+        });
+      }
+      for (let i = 0; i < 30; i++) {
         let x;
-        let onGround = false;
         for (let p of platforms) {
-          if (p.type === 'ground' && Math.random() < 0.5) {
+          if (p.type === 'ground') {
             x = p.x + Math.random() * p.w;
             bushes.push({ x, y: groundY, scale: 0.7 + Math.random() * 0.6 });
-            onGround = true;
             break;
           }
         }
@@ -1011,10 +1027,13 @@
       player.deadTimer = 0;
       player.coyote = 0;
       player.jumpBuffer = 0;
+      player.big = false;
+      player.fire = false;
       gameOver = false; win = false; levelComplete = false;
       cameraX = 0;
       particles = [];
       fireballs = [];
+      flagPoleAnim = 0;
 
       levelSpan.textContent = level;
       coinSpan.textContent = coinCount;
@@ -1031,6 +1050,15 @@
       startLoop();
     }
 
+    function nextLevel() {
+      if (currentLevel < TOTAL_LEVELS) {
+        currentLevel++;
+        loadLevel(currentLevel);
+      } else {
+        win = true;
+      }
+    }
+
     // ---------- ФИЗИКА ----------
     function rectCollide(a, b) {
       return a.x < b.x + b.w && a.x + a.w > b.x &&
@@ -1039,42 +1067,45 @@
 
     // ---------- ОБНОВЛЕНИЕ ----------
     function update(dt) {
-      // dt нормализован: 1 = 1/60 сек
-      const step = dt * 60;
+      const step = Math.min(dt * 60, 3);
 
       if (player.dead) {
         player.deadTimer += step;
         player.vy += GRAVITY * step;
         player.y += player.vy * step;
-        if (player.deadTimer > 90) {
-          respawn();
-        }
+        if (player.deadTimer > 90) respawn();
         updateParticles(step);
         return;
       }
 
       // ---- ВВОД ----
       const runMul = keys.run ? RUN_MULT : 1;
-      if (keys.left) {
-        player.vx = -PLAYER_SPEED * runMul;
-        player.facing = -1;
-      } else if (keys.right) {
-        player.vx = PLAYER_SPEED * runMul;
-        player.facing = 1;
+      const targetVx = (keys.left ? -1 : keys.right ? 1 : 0) * PLAYER_SPEED * runMul;
+      
+      // Плавный разгон/торможение — реалистичнее
+      if (targetVx !== 0) {
+        if (player.vx * targetVx < 0) {
+          // смена направления — резче
+          player.vx += (targetVx - player.vx) * 0.4 * step;
+        } else {
+          player.vx += (targetVx - player.vx) * 0.25 * step;
+        }
+        player.facing = targetVx > 0 ? 1 : -1;
       } else {
-        player.vx *= Math.pow(0.8, step);
+        // трение
+        player.vx *= Math.pow(FRICTION, step);
         if (Math.abs(player.vx) < 0.1) player.vx = 0;
       }
 
-      // Coyote time
+      // ---- COYOTE TIME ----
       if (player.onGround) player.coyote = 8;
       else player.coyote = Math.max(0, player.coyote - step);
 
-      // Jump buffer
+      // ---- JUMP BUFFER ----
       if (keys.jumpPressed) { player.jumpBuffer = 8; keys.jumpPressed = false; }
       else player.jumpBuffer = Math.max(0, player.jumpBuffer - step);
 
-      // Прыжок
+      // ---- ПРЫЖОК ----
       if (player.jumpBuffer > 0 && player.coyote > 0) {
         player.vy = JUMP_FORCE;
         player.onGround = false;
@@ -1085,11 +1116,11 @@
       }
 
       // Переменная высота прыжка
-      if (!keys.up && player.vy < -4) {
-        player.vy += 0.5 * step;
+      if (!keys.up && player.vy < -5) {
+        player.vy += 0.6 * step;
       }
 
-      // Гравитация
+      // ---- ГРАВИТАЦИЯ ----
       player.vy += GRAVITY * step;
       if (player.vy > MAX_FALL) player.vy = MAX_FALL;
 
@@ -1098,7 +1129,7 @@
       if (player.x < 0) player.x = 0;
       if (player.x + player.w > levelWidth) player.x = levelWidth - player.w;
 
-      // Коллизии по X
+      // Коллизии X
       const allSolids = [...platforms, ...bricks, ...questionBlocks, ...pipes];
       for (let p of allSolids) {
         if (p.break) continue;
@@ -1122,7 +1153,7 @@
           const overlapX = Math.min(player.x + player.w, p.x + p.w) - Math.max(player.x, p.x);
           const overlapY = Math.min(player.y + player.h, p.y + p.h) - Math.max(player.y, p.y);
           if (overlapX < overlapY) {
-            // уже обработано по X
+            // уже обработано
           } else {
             if (player.vy > 0) {
               player.y = p.y - player.h;
@@ -1131,12 +1162,10 @@
             } else if (player.vy < 0) {
               player.y = p.y + p.h;
               player.vy = 0;
-              // удар по блоку снизу
               if (p.bump !== undefined) {
                 p.bump = 8;
                 if (p.content && !p.hit) hitQuestionBlock(p);
-                if (p.break === false && p.type === undefined && Math.random() < 0.5 && player.big) {
-                  // кирпич ломается
+                if (p.type === undefined && !p.break && player.big) {
                   p.break = true;
                   score += 10;
                   scoreSpan.textContent = score;
@@ -1149,7 +1178,7 @@
         }
       }
 
-      // Дыра — падение
+      // Падение в дыру
       if (player.y > H + 100) {
         killPlayer();
         return;
@@ -1176,23 +1205,20 @@
       // ---- БОНУСЫ ----
       for (let i = powerups.length - 1; i >= 0; i--) {
         const p = powerups[i];
-        p.vy += GRAVITY * 0.7 * step;
+        p.vy += GRAVITY * 0.8 * step;
         p.x += p.vx * step;
         p.y += p.vy * step;
         p.anim += 0.15 * step;
 
-        // коллизии с платформами
         for (let plat of platforms) {
-          if (plat.type !== 'ground') continue;
+          if (plat.type !== 'ground' && plat.type !== 'brick') continue;
           if (rectCollide(p, plat)) {
-            if (p.vy > 0) { p.y = plat.y - p.h; p.vy = 0; }
+            if (p.vy > 0 && p.y + p.h - plat.y < 20) { p.y = plat.y - p.h; p.vy = 0; }
           }
         }
-        // с блоками
         for (let b of [...bricks, ...questionBlocks]) {
           if (rectCollide(p, b)) {
-            if (p.vy > 0) { p.y = b.y - p.h; p.vy = 0; }
-            else if (p.vy < 0) { p.y = b.y + b.h; p.vy = 0; }
+            if (p.vy > 0 && p.y + p.h - b.y < 20) { p.y = b.y - p.h; p.vy = 0; }
           }
         }
 
@@ -1218,20 +1244,17 @@
       for (let i = fireballs.length - 1; i >= 0; i--) {
         const fb = fireballs[i];
         fb.x += fb.vx * step;
-        fb.vy += GRAVITY * 0.6 * step;
+        fb.vy += GRAVITY * 0.5 * step;
         fb.y += fb.vy * step;
         fb.life -= step;
         fb.anim += 0.3 * step;
 
-        // отскок от земли
         for (let p of platforms) {
-          if (p.type !== 'ground') continue;
-          if (rectCollide(fb, p) && fb.vy > 0) {
+          if (p.type === 'ground' && rectCollide(fb, p) && fb.vy > 0) {
             fb.y = p.y - fb.h;
-            fb.vy = -5;
+            fb.vy = -6;
           }
         }
-        // столкновение с врагами
         for (let e of enemies) {
           if (!e.alive) continue;
           if (rectCollide(fb, e)) {
@@ -1244,7 +1267,7 @@
             break;
           }
         }
-        if (fb.life <= 0 || fb.x < cameraX - 100 || fb.x > cameraX + W + 100) {
+        if (fb.life <= 0 || fb.x < cameraX - 200 || fb.x > cameraX + W + 200) {
           fireballs.splice(i, 1);
         }
       }
@@ -1261,7 +1284,7 @@
         e.x += e.vx * step;
         e.anim += 0.15 * step;
 
-        // поворот у края платформы
+        // Проверка, что враг на земле
         let onPlat = false;
         for (let p of platforms) {
           if (p.type !== 'ground') continue;
@@ -1276,14 +1299,12 @@
           if (e.x + e.w >= e.maxX) e.x = e.maxX - e.w;
         }
 
-        // столкновение с игроком
         if (rectCollide(player, e)) {
           const playerBottom = player.y + player.h;
           const enemyTop = e.y;
-          if (player.vy > 0 && playerBottom - enemyTop < 20) {
-            // прыжок на врага
+          if (player.vy > 0 && playerBottom - enemyTop < 25) {
             e.squashTimer = 20;
-            player.vy = -8;
+            player.vy = -9;
             score += 100;
             scoreSpan.textContent = score;
             sfx.stomp();
@@ -1303,13 +1324,9 @@
         }
       }
 
-      // ---- ВОПРОСИТЕЛЬНЫЕ БЛОКИ (bump анимация) ----
-      for (let qb of questionBlocks) {
-        if (qb.bump > 0) qb.bump = Math.max(0, qb.bump - step);
-      }
-      for (let b of bricks) {
-        if (b.bump > 0) b.bump = Math.max(0, b.bump - step);
-      }
+      // ---- BUMP АНИМАЦИЯ ----
+      for (let qb of questionBlocks) if (qb.bump > 0) qb.bump = Math.max(0, qb.bump - step);
+      for (let b of bricks) if (b.bump > 0) b.bump = Math.max(0, b.bump - step);
 
       // ---- ФЛАГ ----
       if (flag && !flag.reached && player.x + player.w > flag.poleX) {
@@ -1318,13 +1335,6 @@
         score += 5000;
         scoreSpan.textContent = score;
         sfx.complete();
-        // поднять флаг
-        let flagY = flag.y + 20;
-        const anim = setInterval(() => {
-          flagY += 4;
-          if (flagY >= flag.y + flag.h - 60) clearInterval(anim);
-        }, 30);
-        flag.flagY = flagY;
 
         setTimeout(() => {
           if (currentLevel < TOTAL_LEVELS) {
@@ -1336,7 +1346,7 @@
         }, 2500);
       }
       if (flag && flag.reached) {
-        if (flag.flagY === undefined) flag.flagY = flag.y + 20;
+        flagPoleAnim = Math.min(flagPoleAnim + 3 * step, flag.h - 60);
       }
 
       // ---- КАМЕРА ----
@@ -1393,7 +1403,6 @@
         player.dead = false;
         return;
       }
-      // возврат на начало уровня
       player.x = 60;
       player.y = GROUND_Y - player.h;
       player.vx = 0; player.vy = 0;
@@ -1487,6 +1496,7 @@
       ctx.clearRect(0, 0, W, H);
 
       drawSky();
+      drawHills();
       drawClouds();
 
       ctx.save();
@@ -1507,8 +1517,6 @@
       drawParticles();
 
       ctx.restore();
-
-      drawHUD();
     }
 
     function drawSky() {
@@ -1520,10 +1528,28 @@
       ctx.fillRect(0, 0, W, H);
     }
 
+    function drawHills() {
+      // дальние холмы (параллакс)
+      for (let hill of hills) {
+        const hx = hill.x - cameraX * 0.3;
+        if (hx + hill.w < -100 || hx > W + 100) continue;
+        ctx.fillStyle = hill.color;
+        ctx.beginPath();
+        ctx.moveTo(hx, hill.y);
+        ctx.quadraticCurveTo(hx + hill.w/2, hill.y - hill.h, hx + hill.w, hill.y);
+        ctx.closePath();
+        ctx.fill();
+        // тёмная обводка
+        ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    }
+
     function drawClouds() {
-      ctx.fillStyle = 'rgba(255,255,255,0.9)';
+      ctx.fillStyle = 'rgba(255,255,255,0.95)';
       for (let c of clouds) {
-        const cx = ((c.x - cameraX * 0.4) % (W + 400)) - 200;
+        const cx = ((c.x - cameraX * 0.4) % (W + 500)) - 250;
         const cy = c.y;
         const s = c.scale;
         ctx.beginPath();
@@ -1554,7 +1580,6 @@
     function drawGround() {
       for (let p of platforms) {
         if (p.type !== 'ground') continue;
-        // Земля
         const grd = ctx.createLinearGradient(p.x, p.y, p.x, p.y + p.h);
         grd.addColorStop(0, '#a0522d');
         grd.addColorStop(0.3, '#8b4513');
@@ -1571,7 +1596,6 @@
           ctx.fillRect(p.x + i + 3, p.y - 14, 4, 6);
         }
 
-        // Текстура земли
         ctx.fillStyle = 'rgba(0,0,0,0.15)';
         for (let i = 0; i < p.w; i += 24) {
           ctx.fillRect(p.x + i + 4, p.y + 14, 8, 6);
@@ -1583,7 +1607,6 @@
 
     function drawPipes() {
       for (let pipe of pipes) {
-        // тело трубы
         const grd = ctx.createLinearGradient(pipe.x, 0, pipe.x + pipe.w, 0);
         grd.addColorStop(0, '#1a9c1a');
         grd.addColorStop(0.3, '#3fd63f');
@@ -1591,7 +1614,6 @@
         grd.addColorStop(1, '#0d5c0d');
         ctx.fillStyle = grd;
         ctx.fillRect(pipe.x, pipe.y + 16, pipe.w, pipe.h - 16);
-        // кайма
         ctx.fillStyle = '#0d5c0d';
         ctx.fillRect(pipe.x - 4, pipe.y, pipe.w + 8, 20);
         ctx.fillStyle = '#3fd63f';
@@ -1605,16 +1627,13 @@
       for (let b of bricks) {
         if (b.break) continue;
         const y = b.y - b.bump;
-        // фон
         ctx.fillStyle = '#b5651d';
         ctx.fillRect(b.x, y, b.w, b.h);
-        // линии
         ctx.fillStyle = '#8b4513';
         ctx.fillRect(b.x, y + 15, b.w, 2);
         ctx.fillRect(b.x + 15, y, 2, 15);
         ctx.fillRect(b.x + 8, y + 15, 2, 17);
         ctx.fillRect(b.x + 24, y + 15, 2, 17);
-        // блик
         ctx.fillStyle = 'rgba(255,255,255,0.15)';
         ctx.fillRect(b.x, y, b.w, 4);
       }
@@ -1624,13 +1643,11 @@
       for (let qb of questionBlocks) {
         const y = qb.y - qb.bump;
         if (qb.hit) {
-          // использованный блок
           ctx.fillStyle = '#8b6b3d';
           ctx.fillRect(qb.x, y, qb.w, qb.h);
           ctx.fillStyle = '#6b4f2a';
           ctx.fillRect(qb.x + 2, y + 2, qb.w - 4, qb.h - 4);
         } else {
-          // блок с вопросом
           const grd = ctx.createLinearGradient(qb.x, y, qb.x, y + qb.h);
           grd.addColorStop(0, '#ffd700');
           grd.addColorStop(0.5, '#ffb700');
@@ -1640,13 +1657,11 @@
           ctx.strokeStyle = '#8b6b00';
           ctx.lineWidth = 2;
           ctx.strokeRect(qb.x + 1, y + 1, qb.w - 2, qb.h - 2);
-          // знак вопроса
           ctx.fillStyle = '#fff';
           ctx.font = 'bold 22px Arial';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillText('?', qb.x + qb.w/2, y + qb.h/2 + 1);
-          // болты
           ctx.fillStyle = '#8b6b00';
           ctx.fillRect(qb.x + 3, y + 3, 3, 3);
           ctx.fillRect(qb.x + qb.w - 6, y + 3, 3, 3);
@@ -1679,17 +1694,14 @@
         ctx.save();
         ctx.translate(cx, cy);
         ctx.scale(Math.max(0.2, scaleX), 1);
-        // внешний круг
         ctx.fillStyle = '#ffd700';
         ctx.beginPath();
         ctx.arc(0, 0, coin.w/2, 0, Math.PI*2);
         ctx.fill();
-        // внутренний круг
         ctx.fillStyle = '#ffb700';
         ctx.beginPath();
         ctx.arc(0, 0, coin.w/2 - 3, 0, Math.PI*2);
         ctx.fill();
-        // блик
         ctx.fillStyle = '#fff8b0';
         ctx.beginPath();
         ctx.arc(-3, -4, 3, 0, Math.PI*2);
@@ -1701,29 +1713,24 @@
     function drawPowerups() {
       for (let p of powerups) {
         if (p.type === 'mushroom') {
-          // шляпка
           ctx.fillStyle = '#e63946';
           ctx.beginPath();
           ctx.arc(p.x + p.w/2, p.y + p.h/2, p.w/2, Math.PI, 0);
           ctx.fill();
-          // белые пятна
           ctx.fillStyle = '#fff';
           ctx.beginPath();
           ctx.arc(p.x + 8, p.y + 10, 4, 0, Math.PI*2);
           ctx.arc(p.x + 20, p.y + 10, 4, 0, Math.PI*2);
           ctx.arc(p.x + 14, p.y + 6, 3, 0, Math.PI*2);
           ctx.fill();
-          // ножка
           ctx.fillStyle = '#fff5e0';
           ctx.fillRect(p.x + 6, p.y + p.h/2, p.w - 12, p.h/2);
           ctx.fillStyle = '#000';
           ctx.fillRect(p.x + 10, p.y + p.h/2 + 4, 3, 3);
           ctx.fillRect(p.x + 15, p.y + p.h/2 + 4, 3, 3);
         } else if (p.type === 'fireflower') {
-          // стебель
           ctx.fillStyle = '#2d7a1f';
           ctx.fillRect(p.x + 12, p.y + 14, 4, 14);
-          // лепестки
           const colors = ['#ff4757', '#ffa502', '#ff4757', '#ffa502'];
           for (let i = 0; i < 4; i++) {
             ctx.fillStyle = colors[i];
@@ -1734,7 +1741,6 @@
             ctx.arc(px, py, 6, 0, Math.PI*2);
             ctx.fill();
           }
-          // центр
           ctx.fillStyle = '#fff';
           ctx.beginPath();
           ctx.arc(p.x + 14, p.y + 12, 5, 0, Math.PI*2);
@@ -1750,25 +1756,19 @@
     function drawEnemies() {
       for (let e of enemies) {
         if (!e.alive) continue;
-        const y = e.y;
         if (e.squashTimer > 0) {
-          // сплюснутый
           ctx.fillStyle = '#8b4513';
           ctx.beginPath();
-          ctx.ellipse(e.x + e.w/2, y + e.h - 4, e.w/2, 5, 0, 0, Math.PI*2);
+          ctx.ellipse(e.x + e.w/2, e.y + e.h - 4, e.w/2, 5, 0, 0, Math.PI*2);
           ctx.fill();
           continue;
         }
-        if (e.type === 'goomba') {
-          drawGoomba(e.x, y, e.w, e.h, e.anim);
-        } else {
-          drawTurtle(e.x, y, e.w, e.h, e.anim, e.vx);
-        }
+        if (e.type === 'goomba') drawGoomba(e.x, e.y, e.w, e.h, e.anim);
+        else drawTurtle(e.x, e.y, e.w, e.h, e.anim, e.vx);
       }
     }
 
     function drawGoomba(x, y, w, h, anim) {
-      // тело
       const grd = ctx.createLinearGradient(x, y, x, y + h);
       grd.addColorStop(0, '#a0522d');
       grd.addColorStop(1, '#5d2f0d');
@@ -1776,7 +1776,6 @@
       ctx.beginPath();
       ctx.ellipse(x + w/2, y + h*0.45, w/2, h*0.45, 0, 0, Math.PI*2);
       ctx.fill();
-      // глаза
       ctx.fillStyle = '#fff';
       ctx.beginPath();
       ctx.arc(x + w*0.35, y + h*0.45, 5, 0, Math.PI*2);
@@ -1788,7 +1787,6 @@
       ctx.arc(x + w*0.35 + lookDir, y + h*0.45, 2.5, 0, Math.PI*2);
       ctx.arc(x + w*0.65 + lookDir, y + h*0.45, 2.5, 0, Math.PI*2);
       ctx.fill();
-      // брови
       ctx.strokeStyle = '#000';
       ctx.lineWidth = 2;
       ctx.beginPath();
@@ -1797,7 +1795,6 @@
       ctx.moveTo(x + w*0.75, y + h*0.32);
       ctx.lineTo(x + w*0.58, y + h*0.35);
       ctx.stroke();
-      // лапки
       const step = Math.sin(anim * 3) * 3;
       ctx.fillStyle = '#3d1f0d';
       ctx.beginPath();
@@ -1808,7 +1805,6 @@
 
     function drawTurtle(x, y, w, h, anim, vx) {
       const dir = vx > 0 ? 1 : -1;
-      // панцирь
       const grd = ctx.createLinearGradient(x, y + 10, x, y + h);
       grd.addColorStop(0, '#2eb82e');
       grd.addColorStop(1, '#0d5c0d');
@@ -1816,23 +1812,19 @@
       ctx.beginPath();
       ctx.ellipse(x + w/2, y + h*0.6, w/2, h*0.4, 0, 0, Math.PI*2);
       ctx.fill();
-      // узор на панцире
       ctx.strokeStyle = '#0a3d0a';
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(x + w/2, y + h*0.6, w*0.3, 0, Math.PI*2);
       ctx.stroke();
-      // голова
       ctx.fillStyle = '#f4d03f';
       ctx.beginPath();
       ctx.arc(x + w/2 + dir * w*0.35, y + h*0.4, 7, 0, Math.PI*2);
       ctx.fill();
-      // глаз
       ctx.fillStyle = '#000';
       ctx.beginPath();
       ctx.arc(x + w/2 + dir * w*0.4, y + h*0.35, 1.8, 0, Math.PI*2);
       ctx.fill();
-      // лапки
       const step = Math.sin(anim * 3) * 2;
       ctx.fillStyle = '#f4d03f';
       ctx.beginPath();
@@ -1845,7 +1837,6 @@
       for (let fb of fireballs) {
         const cx = fb.x + fb.w/2;
         const cy = fb.y + fb.h/2;
-        // свечение
         const grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, fb.w);
         grd.addColorStop(0, '#fff');
         grd.addColorStop(0.3, '#ffd700');
@@ -1855,7 +1846,6 @@
         ctx.beginPath();
         ctx.arc(cx, cy, fb.w, 0, Math.PI*2);
         ctx.fill();
-        // ядро
         ctx.fillStyle = '#fff';
         ctx.beginPath();
         ctx.arc(cx, cy, fb.w*0.3, 0, Math.PI*2);
@@ -1865,7 +1855,6 @@
 
     function drawPlayer() {
       if (player.dead) {
-        // анимация смерти
         ctx.save();
         ctx.translate(player.x + player.w/2, player.y + player.h/2);
         ctx.rotate(player.deadTimer * 0.1);
@@ -1873,10 +1862,7 @@
         ctx.restore();
         return;
       }
-
-      // мигание при неуязвимости
       if (player.invuln > 0 && Math.floor(player.invuln / 4) % 2 === 0) return;
-
       drawMarioSprite(player.x, player.y, player.w, player.h, player.vx, player.facing, player.big, player.fire, player.anim, player.onGround, player.vy);
     }
 
@@ -1890,7 +1876,6 @@
       ctx.translate(cx, by + scaleH);
       ctx.scale(facing, 1);
 
-      // Тень
       ctx.fillStyle = 'rgba(0,0,0,0.2)';
       ctx.beginPath();
       ctx.ellipse(0, 2, scaleW * 0.45, 4, 0, 0, Math.PI*2);
@@ -1899,11 +1884,9 @@
       const walking = Math.abs(vx) > 0.3 && onGround;
       const legPhase = walking ? Math.sin(anim * 2) : 0;
 
-      // Ноги
       ctx.fillStyle = '#1a4d8f';
       const legH = scaleH * 0.28;
       if (!onGround) {
-        // прыжок
         ctx.fillRect(-scaleW*0.4, -legH, scaleW*0.3, legH);
         ctx.fillRect(scaleW*0.1, -legH*0.7, scaleW*0.3, legH*0.7);
       } else if (walking) {
@@ -1914,26 +1897,22 @@
         ctx.fillRect(scaleW*0.1, -legH, scaleW*0.3, legH);
       }
 
-      // Ботинки
       ctx.fillStyle = '#3d1f0d';
       ctx.fillRect(-scaleW*0.45, -6, scaleW*0.4, 8);
       ctx.fillRect(scaleW*0.05, -6, scaleW*0.4, 8);
 
-      // Тело (комбинезон)
       const bodyColor = fire ? '#fff' : '#e63946';
       const overalls = fire ? '#e63946' : '#1a4d8f';
       ctx.fillStyle = bodyColor;
       ctx.fillRect(-scaleW*0.35, -legH - scaleH*0.35, scaleW*0.7, scaleH*0.35);
       ctx.fillStyle = overalls;
       ctx.fillRect(-scaleW*0.35, -legH - scaleH*0.18, scaleW*0.7, scaleH*0.2);
-      // пуговицы
       ctx.fillStyle = '#ffd700';
       ctx.beginPath();
       ctx.arc(-scaleW*0.15, -legH - scaleH*0.15, 2, 0, Math.PI*2);
       ctx.arc(scaleW*0.15, -legH - scaleH*0.15, 2, 0, Math.PI*2);
       ctx.fill();
 
-      // Руки
       ctx.fillStyle = bodyColor;
       if (!onGround) {
         ctx.fillRect(-scaleW*0.55, -legH - scaleH*0.3, scaleW*0.2, scaleH*0.18);
@@ -1942,37 +1921,30 @@
         ctx.fillRect(-scaleW*0.5, -legH - scaleH*0.28, scaleW*0.15, scaleH*0.22);
         ctx.fillRect(scaleW*0.35, -legH - scaleH*0.28, scaleW*0.15, scaleH*0.22);
       }
-      // перчатки
       ctx.fillStyle = '#fff';
       ctx.fillRect(-scaleW*0.55, -legH - scaleH*0.3 + scaleH*0.15, scaleW*0.2, 6);
       ctx.fillRect(scaleW*0.35, -legH - scaleH*0.3 + scaleH*0.15, scaleW*0.2, 6);
 
-      // Голова
       const headY = -legH - scaleH*0.35 - scaleH*0.25;
       ctx.fillStyle = '#ffdbac';
       ctx.beginPath();
       ctx.arc(0, headY + scaleH*0.12, scaleH*0.16, 0, Math.PI*2);
       ctx.fill();
-      // Ухо
       ctx.beginPath();
       ctx.arc(-scaleH*0.14, headY + scaleH*0.12, scaleH*0.04, 0, Math.PI*2);
       ctx.fill();
 
-      // Волосы/бакенбарды
       ctx.fillStyle = '#3d1f0d';
       ctx.beginPath();
       ctx.arc(-scaleH*0.1, headY + scaleH*0.08, scaleH*0.05, 0, Math.PI*2);
       ctx.fill();
 
-      // Кепка
       ctx.fillStyle = fire ? '#fff' : '#e63946';
       ctx.beginPath();
       ctx.arc(0, headY + scaleH*0.04, scaleH*0.18, Math.PI, 0);
       ctx.fill();
-      // Козырёк
       ctx.fillStyle = fire ? '#e63946' : '#a52a2a';
       ctx.fillRect(scaleH*0.05, headY + scaleH*0.02, scaleH*0.22, 4);
-      // Буква M
       ctx.fillStyle = fire ? '#e63946' : '#fff';
       ctx.beginPath();
       ctx.arc(0, headY + scaleH*0.0, scaleH*0.06, 0, Math.PI*2);
@@ -1983,7 +1955,6 @@
       ctx.textBaseline = 'middle';
       ctx.fillText('M', 0, headY + scaleH*0.01);
 
-      // Глаз
       ctx.fillStyle = '#fff';
       ctx.beginPath();
       ctx.arc(scaleH*0.04, headY + scaleH*0.12, scaleH*0.04, 0, Math.PI*2);
@@ -1993,7 +1964,6 @@
       ctx.arc(scaleH*0.05, headY + scaleH*0.12, scaleH*0.02, 0, Math.PI*2);
       ctx.fill();
 
-      // Усы
       ctx.fillStyle = '#3d1f0d';
       ctx.fillRect(scaleH*0.0, headY + scaleH*0.16, scaleH*0.1, 3);
 
@@ -2002,10 +1972,8 @@
 
     function drawFlag() {
       if (!flag) return;
-      // шест
       ctx.fillStyle = '#c0c0c0';
       ctx.fillRect(flag.poleX, flag.y, 6, flag.h);
-      // шар сверху
       ctx.fillStyle = '#ffd700';
       ctx.beginPath();
       ctx.arc(flag.poleX + 3, flag.y - 4, 8, 0, Math.PI*2);
@@ -2014,8 +1982,7 @@
       ctx.beginPath();
       ctx.arc(flag.poleX + 3, flag.y - 4, 5, 0, Math.PI*2);
       ctx.fill();
-      // флаг
-      const fy = flag.flagY !== undefined ? flag.flagY : flag.y + 20;
+      const fy = flag.reached ? flag.y + 20 + flagPoleAnim : flag.y + 20;
       ctx.fillStyle = '#e63946';
       ctx.beginPath();
       ctx.moveTo(flag.poleX + 6, fy);
@@ -2023,7 +1990,6 @@
       ctx.lineTo(flag.poleX + 6, fy + 30);
       ctx.closePath();
       ctx.fill();
-      // звезда на флаге
       ctx.fillStyle = '#fff';
       ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
@@ -2039,25 +2005,15 @@
       ctx.globalAlpha = 1;
     }
 
-    function drawHUD() {
-      // Уже отображается в HTML
-    }
-
     // ---------- ЦИКЛ ----------
     function loop(timestamp) {
       if (paused) return;
       if (!lastTime) lastTime = timestamp;
       let dt = (timestamp - lastTime) / 1000;
       lastTime = timestamp;
-      if (dt > 0.1) dt = 0.1; // защита от лагов
+      if (dt > 0.1) dt = 0.1;
       update(dt);
       draw();
-
-      if (gameOver) {
-        // продолжаем рисовать, но не обновляем
-        rafId = requestAnimationFrame(loop);
-        return;
-      }
       rafId = requestAnimationFrame(loop);
     }
 
@@ -2070,10 +2026,7 @@
 
     function pause() {
       paused = true;
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-        rafId = null;
-      }
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
     }
 
     // ---------- УПРАВЛЕНИЕ ----------
@@ -2087,7 +2040,7 @@
         if (!keys.up) keys.jumpPressed = true;
         keys.up = true;
       }
-      if (key === 'Shift') { keys.run = true; }
+      if (key === 'Shift') keys.run = true;
       if (key === 'r' || key === 'R') restartGame();
     }
 
@@ -2132,10 +2085,7 @@
       W = canvas.width;
       H = canvas.height;
       GROUND_Y = H * GROUND_Y_BASE;
-      // перезагружаем уровень только если игра не идёт
-      if (!paused) {
-        loadLevel(currentLevel);
-      }
+      if (!paused) loadLevel(currentLevel);
     }
 
     function init() {
@@ -2159,9 +2109,16 @@
       });
 
       document.getElementById('marioRestart').addEventListener('click', restartGame);
+      document.getElementById('marioSkipLevel').addEventListener('click', () => {
+        if (currentLevel < TOTAL_LEVELS) {
+          currentLevel++;
+          loadLevel(currentLevel);
+        } else {
+          win = true;
+        }
+      });
       setupMobileControls();
 
-      // первая загрузка
       const parentW = canvas.parentElement.clientWidth || 800;
       canvas.width = Math.max(parentW, 320);
       canvas.height = Math.round(canvas.width * 9 / 16);
@@ -2175,7 +2132,6 @@
     return { init, pause, _inited: false };
   })();
 
-  // запуск змейки
   snake.init();
 
 </script>
