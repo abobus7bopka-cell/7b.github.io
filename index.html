@@ -352,6 +352,117 @@
     transform: scale(0.95);
   }
   
+  /* ====== МАРИО ====== */
+  .mario-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #marioCanvas {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    background: #6b8cff;
+    display: block;
+    border: 3px solid #0984e3;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(9,132,227,0.4);
+    touch-action: none;
+    cursor: pointer;
+  }
+  
+  .mario-ui {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 15px 0;
+  }
+  
+  .mario-ui .stat-item {
+    background: #fff8e1;
+    border: 2px solid #f7d44a;
+    color: #b8860b;
+  }
+  
+  .mario-ui .stat-item b { color: #b8860b; }
+  
+  /* Мобильное управление Марио */
+  .mario-controls {
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    margin-top: 20px;
+    gap: 20px;
+    padding: 0 10px;
+  }
+  
+  .mario-controls .move-pad {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .mario-controls button {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(135deg, #0984e3, #74b9ff);
+    color: white;
+    font-size: 2em;
+    font-weight: bold;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    box-shadow: 0 6px 15px rgba(9,132,227,0.5);
+    transition: all 0.1s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .mario-controls button:active,
+  .mario-controls button.active {
+    background: linear-gradient(135deg, #ffd700, #ff8800);
+    transform: scale(0.92);
+  }
+  
+  .mario-controls .jump-btn {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    box-shadow: 0 6px 15px rgba(0,206,201,0.5);
+    font-size: 1.4em;
+  }
+  
+  .mario-controls .jump-btn:active,
+  .mario-controls .jump-btn.active {
+    background: linear-gradient(135deg, #ffd700, #ff8800);
+  }
+  
+  .mario-hint {
+    margin-top: 15px;
+    font-size: 0.85em;
+    color: #666;
+    background: #f0f8ff;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border-left: 4px solid #0984e3;
+    text-align: center;
+  }
+  
+  @media (max-width: 768px) {
+    .mario-controls { display: flex; }
+    .mario-controls button { width: 65px; height: 65px; font-size: 1.7em; }
+    .mario-controls .jump-btn { font-size: 1.2em; }
+  }
+  
+  @media (max-width: 400px) {
+    .mario-controls button { width: 58px; height: 58px; font-size: 1.5em; }
+  }
+  
   /* Футер */
   footer {
     text-align: center;
@@ -442,6 +553,7 @@
   <a data-page="schedule" class="active">📅 Расписание</a>
   <a data-page="visits">📊 Посещаемость</a>
   <a data-page="snake">🐍 Змейка</a>
+  <a data-page="mario">🍄 Марио</a>
 </nav>
 
 <div class="overlay" id="overlay"></div>
@@ -629,9 +741,42 @@
     </section>
   </div>
 
+  <!-- ============ МАРИО ============ -->
+  <div class="page" id="page-mario">
+    <section>
+      <h2>🍄 Super Mario</h2>
+      <div class="mario-wrap">
+        <div class="mario-ui">
+          <div class="stat-item">🏁 Уровень: <b id="marioLevel">1</b></div>
+          <div class="stat-item">🪙 Монеты: <b id="marioCoins">0</b></div>
+        </div>
+        
+        <canvas id="marioCanvas"></canvas>
+        
+        <!-- Мобильное управление -->
+        <div class="mario-controls" id="marioControls">
+          <div class="move-pad">
+            <button id="marioLeft" aria-label="Влево">◀</button>
+            <button id="marioRight" aria-label="Вправо">▶</button>
+          </div>
+          <button class="jump-btn" id="marioJump" aria-label="Прыжок">⬆ ПРЫЖОК</button>
+        </div>
+        
+        <div style="margin-top:15px; display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+          <button class="btn" id="marioRestart">🔄 Заново</button>
+        </div>
+        
+        <div class="mario-hint">
+          💻 На компьютере: <b>← →</b> или <b>A D</b> — движение, <b>Пробел / W / ↑</b> — прыжок<br>
+          📱 На телефоне: используй кнопки ниже
+        </div>
+      </div>
+    </section>
+  </div>
+
 </div>
 
-<!-- Оверлей конец игры -->
+<!-- Оверлей конец игры (Змейка) -->
 <div class="game-overlay" id="gameOver">
   <div class="overlay-content">
     <h2 id="overTitle">🐍 ИГРА ОКОНЧЕНА</h2>
@@ -673,8 +818,16 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
       if (menu.classList.contains('open')) toggleMenu();
       
-      if (pageId === 'page-snake') snake.init();
-      else snake.stop();
+      if (pageId === 'page-snake') {
+        snake.init();
+        marioGame.pause();
+      } else if (pageId === 'page-mario') {
+        snake.stop();
+        marioGame.init();
+      } else {
+        snake.stop();
+        marioGame.pause();
+      }
     });
   });
 
@@ -690,7 +843,7 @@
   });
 
   // ================================================================
-  // СЧЁТЧИК ПОСЕЩЕНИЙ (локальный — для отдельного устройства)
+  // СЧЁТЧИК ПОСЕЩЕНИЙ
   // ================================================================
   (function() {
     const today = new Date().toISOString().split('T')[0];
@@ -751,9 +904,9 @@
       };
       
       window.addEventListener('keydown', (e) => {
+        if (!this.running) return;
         const k = e.key.toLowerCase();
         if (['arrowup','arrowdown','arrowleft','arrowright'].includes(k)) e.preventDefault();
-        if (!this.running) return;
         if ((k === 'w' || k === 'arrowup') && this.dir.y === 0) this.nextDir = { x: 0, y: -1 };
         if ((k === 's' || k === 'arrowdown') && this.dir.y === 0) this.nextDir = { x: 0, y: 1 };
         if ((k === 'a' || k === 'arrowleft') && this.dir.x === 0) this.nextDir = { x: -1, y: 0 };
@@ -948,6 +1101,724 @@
       snake.draw();
     }
   });
+
+  // ================================================================
+  // 🍄 МАРИО (адаптированный)
+  // ================================================================
+  const marioGame = (function() {
+    const canvas = document.getElementById('marioCanvas');
+    const ctx = canvas.getContext('2d');
+    const coinSpan = document.getElementById('marioCoins');
+    const levelSpan = document.getElementById('marioLevel');
+
+    let W, H;
+    const GROUND_Y_BASE = 0.88;
+
+    const GRAVITY = 0.22;
+    const JUMP_FORCE = -6.8;
+    const PLAYER_SPEED = 1.6;
+    const ENEMY_SPEED_MULT = 0.35;
+
+    let player = {
+      x: 100, y: 0,
+      w: 28, h: 38,
+      vx: 0, vy: 0,
+      onGround: false,
+      facing: 1
+    };
+
+    let platforms = [];
+    let coins = [];
+    let enemies = [];
+    let particles = [];
+    let decorations = [];
+    let portals = [];
+    let movingPlatforms = [];
+    let score = 0;
+    let gameOver = false;
+    let win = false;
+    let keys = { left: false, right: false, up: false };
+    let currentLevel = 1;
+    const TOTAL_LEVELS = 5;
+    let GROUND_Y = 0;
+    let cameraX = 0;
+    let levelWidth = 0;
+    let levelComplete = false;
+    let running = false;
+    let rafId = null;
+    let paused = true;
+
+    function generateLevel(level, groundY) {
+      const platforms = [];
+      const coins = [];
+      const enemies = [];
+      const decorations = [];
+      const portals = [];
+      const movingPlatforms = [];
+      
+      const maxX = 2800 + level * 600;
+      levelWidth = maxX;
+      
+      let groundSegments = [];
+      const segCount = 12 + level * 2;
+      let segX = 0;
+      for (let i = 0; i < segCount; i++) {
+        let segW = 180 + Math.random() * 220;
+        if (segX + segW > maxX) segW = maxX - segX;
+        groundSegments.push({ x: segX, w: segW });
+        segX += segW + 30 + Math.random() * 30;
+        if (segX > maxX) break;
+      }
+      if (groundSegments.length > 0) {
+        const last = groundSegments[groundSegments.length - 1];
+        if (last.x + last.w < maxX - 50) {
+          groundSegments.push({ x: maxX - 150, w: 150 });
+        }
+      }
+      
+      for (let seg of groundSegments) {
+        platforms.push({ x: seg.x, y: groundY, w: seg.w, h: 60 });
+      }
+      
+      const platCount = 25 + level * 4;
+      for (let i = 0; i < platCount; i++) {
+        let x = 60 + i * (maxX / platCount) + Math.random() * 50;
+        let y = groundY - 50 - Math.random() * 200;
+        let w = 45 + Math.random() * 55;
+        platforms.push({ x, y, w, h: 16 });
+      }
+      
+      const movePlatCount = 5 + level * 2;
+      for (let i = 0; i < movePlatCount; i++) {
+        let x = 120 + i * (maxX / (movePlatCount + 1));
+        let y = groundY - 70 - Math.random() * 140;
+        movingPlatforms.push({
+          x, y, w: 60, h: 16,
+          startX: x - 80, endX: x + 80,
+          speed: 0.3 + Math.random() * 0.3,
+          dir: 1
+        });
+      }
+      
+      const coinCount = 35 + level * 8;
+      const coinPositions = [];
+      for (let i = 0; i < coinCount; i++) {
+        let x = 50 + Math.random() * (maxX - 100);
+        let y = groundY - 30 - Math.random() * 240;
+        coinPositions.push({ x, y });
+      }
+      coinPositions.sort((a, b) => a.x - b.x);
+      for (let pos of coinPositions) {
+        coins.push({ x: pos.x, y: pos.y, w: 18, h: 18, collected: false });
+      }
+      
+      const enemyCount = 7 + level * 3;
+      const enemyPositions = [];
+      for (let i = 0; i < enemyCount; i++) {
+        let x, onGround = false;
+        let attempts = 0;
+        do {
+          x = 100 + Math.random() * (maxX - 200);
+          for (let seg of groundSegments) {
+            if (x > seg.x + 20 && x < seg.x + seg.w - 50) { onGround = true; break; }
+          }
+          attempts++;
+        } while (!onGround && attempts < 30);
+        if (onGround) {
+          enemyPositions.push({
+            x,
+            minX: x - 50 - Math.random() * 40,
+            maxX: x + 50 + Math.random() * 40
+          });
+        }
+      }
+      for (let pos of enemyPositions) {
+        enemies.push({
+          x: pos.x, y: groundY - 34,
+          w: 30, h: 34,
+          vx: (0.25 + Math.random() * 0.25) * (Math.random() > 0.5 ? 1 : -1),
+          minX: pos.minX, maxX: pos.maxX, alive: true
+        });
+      }
+      
+      for (let i = 0; i < 70 + level * 10; i++) {
+        decorations.push({
+          x: 20 + Math.random() * (maxX - 40),
+          y: groundY - 4 - Math.random() * 12,
+          type: Math.floor(Math.random() * 5),
+          size: 5 + Math.random() * 18
+        });
+      }
+      
+      const portalX = maxX - 180;
+      portals.push({ x: portalX, y: groundY - 60, w: 60, h: 60, active: true, glow: 0 });
+      platforms.push({ x: portalX - 20, y: groundY, w: 100, h: 60 });
+      
+      return { platforms, coins, enemies, decorations, portals, movingPlatforms };
+    }
+
+    function loadLevel(level) {
+      const rect = canvas.parentElement.getBoundingClientRect();
+      W = canvas.width = Math.max(rect.width, 400);
+      H = canvas.height = Math.max(Math.round(rect.width * 9 / 16), 300);
+      GROUND_Y = H * GROUND_Y_BASE;
+      
+      const data = generateLevel(level, GROUND_Y);
+      platforms = data.platforms;
+      coins = data.coins;
+      enemies = data.enemies;
+      decorations = data.decorations;
+      portals = data.portals;
+      movingPlatforms = data.movingPlatforms;
+      
+      player.x = 100;
+      player.y = GROUND_Y - 38;
+      player.vx = 0;
+      player.vy = 0;
+      player.onGround = false;
+      player.facing = 1;
+      gameOver = false;
+      win = false;
+      levelComplete = false;
+      cameraX = 0;
+      particles = [];
+      levelSpan.textContent = level;
+      levelWidth = Math.max(2800 + level * 600, 2800);
+    }
+
+    function initGame() {
+      currentLevel = 1;
+      score = 0;
+      coinSpan.textContent = '0';
+      loadLevel(currentLevel);
+      startLoop();
+    }
+
+    function rectCollide(a, b) {
+      return a.x < b.x + b.w && a.x + a.w > b.x &&
+             a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    function updatePlayer() {
+      if (gameOver || win || levelComplete) return;
+
+      if (keys.left) { player.vx = -PLAYER_SPEED; player.facing = -1; }
+      else if (keys.right) { player.vx = PLAYER_SPEED; player.facing = 1; }
+      else {
+        player.vx *= 0.92;
+        if (Math.abs(player.vx) < 0.05) player.vx = 0;
+      }
+
+      if (keys.up && player.onGround) {
+        player.vy = JUMP_FORCE;
+        player.onGround = false;
+        for (let i = 0; i < 8; i++) {
+          particles.push({
+            x: player.x + player.w/2 + (Math.random() - 0.5) * 12,
+            y: player.y + player.h,
+            vx: (Math.random() - 0.5) * 2,
+            vy: -Math.random() * 2.5,
+            life: 15 + Math.random() * 12,
+            maxLife: 27,
+            size: 3 + Math.random() * 5,
+            color: `hsl(30, 60%, ${60 + Math.random() * 30}%)`
+          });
+        }
+      }
+
+      player.vy += GRAVITY;
+      if (player.vy > 7) player.vy = 7;
+
+      player.x += player.vx;
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.w > levelWidth) player.x = levelWidth - player.w;
+
+      player.y += player.vy;
+
+      for (let mp of movingPlatforms) {
+        mp.x += mp.speed * mp.dir;
+        if (mp.x >= mp.endX || mp.x <= mp.startX) mp.dir *= -1;
+      }
+
+      player.onGround = false;
+      for (let p of platforms) {
+        if (rectCollide(player, p)) {
+          const overlapX = Math.min(player.x + player.w, p.x + p.w) - Math.max(player.x, p.x);
+          const overlapY = Math.min(player.y + player.h, p.y + p.h) - Math.max(player.y, p.y);
+
+          if (overlapX < overlapY) {
+            if (player.vx > 0) player.x = p.x - player.w;
+            else if (player.vx < 0) player.x = p.x + p.w;
+            player.vx = 0;
+          } else {
+            if (player.vy > 0) {
+              player.y = p.y - player.h;
+              player.vy = 0;
+              player.onGround = true;
+            } else if (player.vy < 0) {
+              player.y = p.y + p.h;
+              player.vy = 0;
+            }
+          }
+        }
+      }
+
+      for (let mp of movingPlatforms) {
+        if (rectCollide(player, mp)) {
+          const overlapX = Math.min(player.x + player.w, mp.x + mp.w) - Math.max(player.x, mp.x);
+          const overlapY = Math.min(player.y + player.h, mp.y + mp.h) - Math.max(player.y, mp.y);
+
+          if (overlapX < overlapY) {
+            if (player.vx > 0) player.x = mp.x - player.w;
+            else if (player.vx < 0) player.x = mp.x + mp.w;
+            player.vx = 0;
+          } else {
+            if (player.vy > 0) {
+              player.y = mp.y - player.h;
+              player.vy = 0;
+              player.onGround = true;
+            } else if (player.vy < 0) {
+              player.y = mp.y + mp.h;
+              player.vy = 0;
+            }
+          }
+        }
+      }
+
+      for (let coin of coins) {
+        if (!coin.collected && rectCollide(player, coin)) {
+          coin.collected = true;
+          score++;
+          coinSpan.textContent = score;
+          for (let i = 0; i < 14; i++) {
+            particles.push({
+              x: coin.x + coin.w/2,
+              y: coin.y + coin.h/2,
+              vx: (Math.random() - 0.5) * 6,
+              vy: (Math.random() - 0.5) * 6 - 2,
+              life: 20 + Math.random() * 15,
+              maxLife: 35,
+              size: 3 + Math.random() * 5,
+              color: `hsl(45, 100%, ${60 + Math.random() * 30}%)`
+            });
+          }
+        }
+      }
+
+      for (let e of enemies) {
+        if (!e.alive) continue;
+        e.x += e.vx * ENEMY_SPEED_MULT;
+        if (e.x <= e.minX || e.x + e.w >= e.maxX) e.vx *= -1;
+
+        if (rectCollide(player, e)) {
+          if (player.vy > 0 && player.y + player.h - e.y < 30) {
+            e.alive = false;
+            player.vy = -4.5;
+            for (let i = 0; i < 20; i++) {
+              particles.push({
+                x: e.x + e.w/2,
+                y: e.y + e.h/2,
+                vx: (Math.random() - 0.5) * 8,
+                vy: (Math.random() - 0.5) * 8 - 3,
+                life: 20 + Math.random() * 20,
+                maxLife: 40,
+                size: 4 + Math.random() * 8,
+                color: `hsl(0, 80%, ${50 + Math.random() * 30}%)`
+              });
+            }
+            score += 2;
+            coinSpan.textContent = score;
+          } else {
+            gameOver = true;
+            return;
+          }
+        }
+      }
+
+      if (player.y > H + 100) { gameOver = true; return; }
+
+      for (let portal of portals) {
+        if (!portal.active) continue;
+        portal.glow = (portal.glow + 0.04) % (Math.PI * 2);
+        
+        if (rectCollide(player, portal)) {
+          portal.active = false;
+          levelComplete = true;
+          
+          for (let i = 0; i < 80; i++) {
+            particles.push({
+              x: portal.x + portal.w/2,
+              y: portal.y + portal.h/2,
+              vx: (Math.random() - 0.5) * 15,
+              vy: (Math.random() - 0.5) * 15 - 5,
+              life: 30 + Math.random() * 30,
+              maxLife: 60,
+              size: 5 + Math.random() * 12,
+              color: `hsl(${200 + Math.random() * 60}, 100%, 60%)`
+            });
+          }
+          
+          setTimeout(() => {
+            if (currentLevel < TOTAL_LEVELS) {
+              currentLevel++;
+              loadLevel(currentLevel);
+              for (let i = 0; i < 50; i++) {
+                particles.push({
+                  x: player.x, y: player.y,
+                  vx: (Math.random() - 0.5) * 12,
+                  vy: (Math.random() - 0.5) * 12 - 4,
+                  life: 25 + Math.random() * 30,
+                  maxLife: 55,
+                  size: 4 + Math.random() * 10,
+                  color: `hsl(${Math.random() * 360}, 100%, 60%)`
+                });
+              }
+            } else {
+              win = true;
+              for (let i = 0; i < 150; i++) {
+                particles.push({
+                  x: player.x, y: player.y,
+                  vx: (Math.random() - 0.5) * 25,
+                  vy: (Math.random() - 0.5) * 25 - 10,
+                  life: 40 + Math.random() * 60,
+                  maxLife: 100,
+                  size: 6 + Math.random() * 16,
+                  color: `hsl(${Math.random() * 360}, 100%, 60%)`
+                });
+              }
+            }
+          }, 500);
+        }
+      }
+
+      let targetCam = player.x - W * 0.3;
+      if (targetCam < 0) targetCam = 0;
+      if (targetCam > levelWidth - W) targetCam = levelWidth - W;
+      cameraX += (targetCam - cameraX) * 0.06;
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        let p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.08;
+        p.life--;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+
+      const grd = ctx.createLinearGradient(0, 0, 0, H);
+      grd.addColorStop(0, '#4a7db5');
+      grd.addColorStop(0.5, '#8bb6e8');
+      grd.addColorStop(1, '#b5d4f0');
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, W, H);
+
+      ctx.fillStyle = 'rgba(255,255,255,0.2)';
+      for (let i = 0; i < 12; i++) {
+        let cx = ((i * 220 + 50 - cameraX * 0.06) % (W + 400)) - 200;
+        let cy = 20 + (i * 33) % 200;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 30 + i % 20, 0, Math.PI*2);
+        ctx.arc(cx+40, cy-6, 35 + i % 15, 0, Math.PI*2);
+        ctx.arc(cx-20, cy-4, 25 + i % 18, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      ctx.save();
+      ctx.translate(-cameraX, 0);
+
+      for (let d of decorations) {
+        const alpha = 0.25 + (d.type % 3) * 0.15;
+        ctx.fillStyle = `hsla(${100 + d.type * 20}, 60%, ${30 + d.type * 12}%, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(d.x, d.y, d.size/2, 0, Math.PI*2);
+        ctx.fill();
+        if (d.type === 2) {
+          ctx.fillStyle = `hsla(60, 80%, 50%, 0.25)`;
+          ctx.fillRect(d.x - 2, d.y - d.size/2 - 5, 4, 5);
+        }
+        if (d.type === 3) {
+          ctx.fillStyle = `hsla(30, 80%, 60%, 0.2)`;
+          for (let j = 0; j < 5; j++) {
+            ctx.fillRect(d.x - 1 + j * 4, d.y - d.size/2 - 3 - j * 2, 2, 3 + j);
+          }
+        }
+        if (d.type === 4) {
+          ctx.fillStyle = `hsla(200, 80%, 60%, 0.2)`;
+          ctx.fillRect(d.x - 3, d.y - d.size/2, 6, d.size/2);
+        }
+      }
+
+      for (let p of platforms) {
+        ctx.fillStyle = '#6b4f3c';
+        ctx.shadowColor = '#3d2b1f';
+        ctx.shadowBlur = 8;
+        ctx.fillRect(p.x, p.y, p.w, p.h);
+        if (p.y === GROUND_Y) {
+          ctx.fillStyle = '#5f8a3c';
+          ctx.shadowBlur = 4;
+          ctx.fillRect(p.x, p.y-4, p.w, 6);
+          ctx.fillStyle = '#4a7a2a';
+          for (let i = 0; i < p.w; i += 14) {
+            ctx.fillRect(p.x + i, p.y-8, 4, 6);
+          }
+        }
+      }
+      ctx.shadowBlur = 0;
+
+      for (let mp of movingPlatforms) {
+        ctx.fillStyle = '#8B7355';
+        ctx.shadowColor = '#5D4E37';
+        ctx.shadowBlur = 8;
+        ctx.fillRect(mp.x, mp.y, mp.w, mp.h);
+        ctx.fillStyle = '#A0896B';
+        ctx.fillRect(mp.x + 4, mp.y - 3, mp.w - 8, 4);
+        ctx.shadowBlur = 0;
+      }
+
+      const time = Date.now() / 300;
+      for (let coin of coins) {
+        if (coin.collected) continue;
+        const pulse = Math.sin(time + coin.x * 0.05) * 0.15 + 1;
+        ctx.save();
+        ctx.translate(coin.x + coin.w/2, coin.y + coin.h/2);
+        ctx.scale(pulse, pulse);
+        ctx.beginPath();
+        ctx.arc(0, 0, coin.w/2, 0, Math.PI*2);
+        ctx.fillStyle = '#f7d44a';
+        ctx.shadowColor = '#f7b32b';
+        ctx.shadowBlur = 25;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = '#c99f2e';
+        ctx.beginPath();
+        ctx.arc(-2, -3, 4, 0, Math.PI*2);
+        ctx.fill();
+        ctx.restore();
+      }
+
+      for (let e of enemies) {
+        if (!e.alive) continue;
+        const bounce = Math.sin(Date.now() / 400 + e.x) * 2;
+        ctx.fillStyle = '#c0392b';
+        ctx.shadowColor = '#a93226';
+        ctx.shadowBlur = 12;
+        ctx.fillRect(e.x, e.y + bounce, e.w, e.h);
+        ctx.fillStyle = '#e67e22';
+        ctx.fillRect(e.x + 4, e.y - 6 + bounce, 6, 8);
+        ctx.fillRect(e.x + e.w - 10, e.y - 6 + bounce, 6, 8);
+        ctx.fillStyle = '#f1c40f';
+        ctx.fillRect(e.x + 6, e.y + 6 + bounce, 6, 6);
+        ctx.fillRect(e.x + e.w - 12, e.y + 6 + bounce, 6, 6);
+        ctx.shadowBlur = 0;
+      }
+
+      for (let portal of portals) {
+        if (!portal.active) continue;
+        const glow = Math.sin(portal.glow) * 0.3 + 0.7;
+        
+        const grad = ctx.createRadialGradient(
+          portal.x + portal.w/2, portal.y + portal.h/2, 0,
+          portal.x + portal.w/2, portal.y + portal.h/2, 80
+        );
+        grad.addColorStop(0, `rgba(100, 200, 255, ${0.5 * glow})`);
+        grad.addColorStop(0.5, `rgba(50, 150, 255, ${0.25 * glow})`);
+        grad.addColorStop(1, 'rgba(0, 50, 150, 0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(portal.x - 40, portal.y - 40, portal.w + 80, portal.h + 80);
+        
+        ctx.strokeStyle = `rgba(100, 200, 255, ${0.7 * glow})`;
+        ctx.lineWidth = 4;
+        ctx.shadowColor = '#00aaff';
+        ctx.shadowBlur = 35;
+        ctx.strokeRect(portal.x, portal.y, portal.w, portal.h);
+        
+        ctx.fillStyle = `rgba(0, 100, 255, ${0.35 * glow})`;
+        ctx.shadowBlur = 25;
+        ctx.fillRect(portal.x + 4, portal.y + 4, portal.w - 8, portal.h - 8);
+        
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = `rgba(255, 255, 255, ${0.8 * glow})`;
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('▶ ПОРТАЛ ◀', portal.x + portal.w/2, portal.y + portal.h/2 + 6);
+        
+        ctx.fillStyle = `rgba(100, 255, 100, ${0.4 * glow})`;
+        ctx.font = 'bold 22px Arial';
+        ctx.fillText('▼', portal.x + portal.w/2, portal.y + portal.h + 22);
+        ctx.shadowBlur = 0;
+      }
+
+      const p = player;
+      ctx.shadowColor = '#2c3e50';
+      ctx.shadowBlur = 12;
+      ctx.fillStyle = '#e74c3c';
+      ctx.fillRect(p.x, p.y, p.w, p.h);
+      ctx.fillStyle = '#f5cba7';
+      ctx.fillRect(p.x + 4, p.y - 8, 20, 12);
+      ctx.fillStyle = '#c0392b';
+      ctx.fillRect(p.x + 2, p.y - 14, 24, 8);
+      ctx.fillRect(p.x - 2, p.y - 8, 8, 6);
+      ctx.fillRect(p.x + p.w - 6, p.y - 8, 8, 6);
+      ctx.fillStyle = '#2c3e50';
+      if (p.facing === 1) {
+        ctx.fillRect(p.x + 16, p.y - 4, 4, 5);
+        ctx.fillRect(p.x + 6, p.y - 4, 4, 5);
+      } else {
+        ctx.fillRect(p.x + 18, p.y - 4, 4, 5);
+        ctx.fillRect(p.x + 8, p.y - 4, 4, 5);
+      }
+      ctx.fillStyle = '#5d4037';
+      ctx.fillRect(p.x + 4, p.y + 2, 20, 4);
+      ctx.fillStyle = '#f1c40f';
+      ctx.fillRect(p.x + 6, p.y + 12, 5, 5);
+      ctx.fillRect(p.x + 16, p.y + 12, 5, 5);
+      ctx.fillStyle = '#2c3e50';
+      ctx.fillRect(p.x + 2, p.y + p.h - 6, 8, 6);
+      ctx.fillRect(p.x + p.w - 10, p.y + p.h - 6, 8, 6);
+      ctx.shadowBlur = 0;
+
+      for (let pt of particles) {
+        ctx.globalAlpha = pt.life / pt.maxLife;
+        ctx.fillStyle = pt.color;
+        ctx.shadowBlur = 16;
+        ctx.shadowColor = pt.color;
+        ctx.fillRect(pt.x - pt.size/2, pt.y - pt.size/2, pt.size, pt.size);
+      }
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+
+      ctx.restore();
+
+      if (gameOver) {
+        ctx.font = 'bold 50px Arial';
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillText('💀 GAME OVER', W/2 - 160, H/2 - 20);
+        ctx.fillStyle = '#e74c3c';
+        ctx.fillText('💀 GAME OVER', W/2 - 164, H/2 - 24);
+      } else if (win) {
+        ctx.font = 'bold 50px Arial';
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillText('🎉 ПОБЕДА!', W/2 - 140, H/2 - 20);
+        ctx.fillStyle = '#f1c40f';
+        ctx.fillText('🎉 ПОБЕДА!', W/2 - 144, H/2 - 24);
+        ctx.font = '24px Arial';
+        ctx.fillStyle = '#fff';
+        ctx.fillText('Вы прошли все 5 уровней!', W/2 - 130, H/2 + 40);
+      } else if (levelComplete) {
+        ctx.font = 'bold 36px Arial';
+        ctx.fillStyle = 'rgba(255,255,255,0.8)';
+        ctx.fillText('✨ УРОВЕНЬ ПРОЙДЕН! ✨', W/2 - 170, H/2 - 20);
+      }
+    }
+
+    function gameLoop() {
+      if (paused) return;
+      updatePlayer();
+      draw();
+      rafId = requestAnimationFrame(gameLoop);
+    }
+
+    function startLoop() {
+      paused = false;
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(gameLoop);
+    }
+
+    function pause() {
+      paused = true;
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    }
+
+    // Управление клавиатурой
+    function handleKeyDown(e) {
+      if (!document.getElementById('page-mario').classList.contains('active')) return;
+      const key = e.key;
+      if (key === 'ArrowLeft' || key === 'a' || key === 'A') { e.preventDefault(); keys.left = true; }
+      if (key === 'ArrowRight' || key === 'd' || key === 'D') { e.preventDefault(); keys.right = true; }
+      if (key === ' ' || key === 'ArrowUp' || key === 'w' || key === 'W') { e.preventDefault(); keys.up = true; }
+      if (key === 'r' || key === 'R') initGame();
+    }
+
+    function handleKeyUp(e) {
+      const key = e.key;
+      if (key === 'ArrowLeft' || key === 'a' || key === 'A') { e.preventDefault(); keys.left = false; }
+      if (key === 'ArrowRight' || key === 'd' || key === 'D') { e.preventDefault(); keys.right = false; }
+      if (key === ' ' || key === 'ArrowUp' || key === 'w' || key === 'W') { e.preventDefault(); keys.up = false; }
+    }
+
+    // Мобильные кнопки
+    function setupMobileControls() {
+      const btnLeft = document.getElementById('marioLeft');
+      const btnRight = document.getElementById('marioRight');
+      const btnJump = document.getElementById('marioJump');
+
+      function bindHold(btn, setter) {
+        const start = (e) => { e.preventDefault(); btn.classList.add('active'); setter(true); };
+        const end = (e) => { e.preventDefault(); btn.classList.remove('active'); setter(false); };
+        btn.addEventListener('touchstart', start, { passive: false });
+        btn.addEventListener('touchend', end);
+        btn.addEventListener('touchcancel', end);
+        btn.addEventListener('mousedown', start);
+        btn.addEventListener('mouseup', end);
+        btn.addEventListener('mouseleave', end);
+      }
+
+      bindHold(btnLeft, (v) => { keys.left = v; });
+      bindHold(btnRight, (v) => { keys.right = v; });
+      bindHold(btnJump, (v) => { keys.up = v; });
+    }
+
+    function handleResize() {
+      if (!document.getElementById('page-mario').classList.contains('active')) return;
+      const rect = canvas.parentElement.getBoundingClientRect();
+      const newW = Math.max(rect.width, 300);
+      W = canvas.width = newW;
+      H = canvas.height = Math.round(newW * 9 / 16);
+      GROUND_Y = H * GROUND_Y_BASE;
+      loadLevel(currentLevel);
+    }
+
+    function init() {
+      handleResize();
+      if (!marioGame._inited) {
+        marioGame._inited = true;
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+        window.addEventListener('resize', handleResize);
+        canvas.addEventListener('click', () => {
+          if (!gameOver && !win && !levelComplete) {
+            keys.up = true;
+            setTimeout(() => { keys.up = false; }, 150);
+          }
+        });
+        document.getElementById('marioRestart').addEventListener('click', () => {
+          initGame();
+        });
+        setupMobileControls();
+        loadLevel(currentLevel);
+      } else {
+        loadLevel(currentLevel);
+      }
+      startLoop();
+    }
+
+    return {
+      init,
+      pause,
+      _inited: false
+    };
+  })();
+
+  // Запуск змейки при первой загрузке (если открыта)
+  snake.init();
+
 </script>
 <script data-goatcounter="https://abobusbopka.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
